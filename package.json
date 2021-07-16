@@ -1,0 +1,24 @@
+{
+  "name": "matrix-client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "inferno": "^7.4.8",
+    "inferno-scripts": "7.0.4"
+  },
+  "scripts": {
+    "start": "inferno-scripts start",
+    "build": "inferno-scripts build",
+    "test": "inferno-scripts test",
+    "eject": "inferno-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "inferno-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
