@@ -3,8 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "KaiUI": "git+https://github.com/AdrianMachado/KaiUI.git",
+    "classnames": "^2.3.1",
     "inferno": "^7.4.8",
-    "inferno-scripts": "7.0.4"
+    "inferno-extras": "^7.4.8",
+    "inferno-scripts": "7.0.4",
+    "localforage": "^1.9.0",
+    "matrix-js-sdk": "^12.0.1",
+    "prettier": "^2.3.2",
+    "querystring-browser": "^1.0.4"
   },
   "scripts": {
     "start": "inferno-scripts start",
@@ -15,10 +22,5 @@
   "eslintConfig": {
     "extends": "inferno-app"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "browserslist": "ff 48"
 }
