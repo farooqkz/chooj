@@ -1,20 +1,51 @@
-import { version, Component } from 'inferno';
-import Logo from './logo';
-import './App.css';
+import { Component } from "inferno";
+import "./App.css";
+import Waiting from "./Waiting";
+import * as localforage from "localforage";
+import Matrix from "./Matrix";
+import Login from "./Login";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.loginData = null;
+    this.state = {
+      state: null,
+    };
+    localforage.getItem("loginData").then((login) => {
+      if (login) {
+        this.loginData = login;
+        this.setState({ state: "matrix" });
+      } else {
+        this.setState({ state: "login" });
+      }
+    });
+  }
+
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <Logo width="80" height="80" />
-          <p>{`Welcome to Inferno ${version}`}</p>
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-        </header>
-      </div>
-    );
+    if (this.state.state === null) {
+      return (
+        <div>
+          <Waiting />
+        </div>
+      );
+    }
+
+    if (this.state.state === "login") {
+      return (
+        <div>
+          <Login />
+        </div>
+      );
+    }
+
+    if (this.state.state === "matrix") {
+      return (
+        <div>
+          <Matrix data={this.loginData} />
+        </div>
+      );
+    }
   }
 }
 
