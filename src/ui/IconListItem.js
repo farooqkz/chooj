@@ -11,9 +11,7 @@ const primaryCls = `${prefixCls}-line`;
 class IconListItem extends Component {
   constructor(props) {
     super(props);
-    this.secondaryCls = `${prefixCls}-secondary ${props.secondary ? "" : "hidden"}`;
-    this.disabledCls = props.disabled ? `${prefixCls}-disabled` : "";
-        this.divRef = createRef();
+    this.divRef = createRef();
   }
 
   componentDidUpdate(lastProps, lastState) {
@@ -28,6 +26,8 @@ class IconListItem extends Component {
     const iconCls = `${prefixCls}-icon-${
       this.props.isFocused ? "focused" : "unfocused"
     }`;
+    const secondaryCls = `${prefixCls}-secondary ${this.props.secondary ? "" : "hidden"}`;
+    const disabledCls = this.props.disabled ? `${prefixCls}-disabled` : "";
     let renderedIcon;
     if (this.props.iconSrc)
       renderedIcon = <img src={this.props.iconSrc} alt="" width={this.props.iconWidth || 50} />;
@@ -37,13 +37,13 @@ class IconListItem extends Component {
       );
     // Then we assume it is a valid element TODO: check for this
     else renderedIcon = <span>{this.props.icon}</span>;
-
+    
     return (
       <div
         tabIndex={this.disabled ? undefined : 1}
         className={classNames(
           itemCls,
-          this.disabledCls,
+          disabledCls,
           this.props.className,
           focusedCls
         )}
@@ -61,7 +61,7 @@ class IconListItem extends Component {
           <span className={primaryCls} $HasVNodeChildren>
             {createTextVNode(this.props.primary)}
           </span>
-          <label className={this.secondaryCls} $HasVNodeChildren>
+          <label className={secondaryCls} $HasVNodeChildren>
             {createTextVNode(this.props.secondary)}
           </label>
         </div>

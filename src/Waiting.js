@@ -9,7 +9,7 @@ let tips = [
 ];
 
 function randomTip() {
-  return tips[Math.random() * tips.length];
+  return tips[parseInt(Math.random() * tips.length)];
 }
 
 class Waiting extends Component {

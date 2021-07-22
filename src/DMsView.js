@@ -42,7 +42,6 @@ class DMsView extends Component {
   render() {
     const rooms = window.mClient.getVisibleRooms().filter(this.getDMs);
     let renderedRooms = rooms.map((room) => {
-      console.log(room);
       let theOtherId = room.guessDMUserId();
       let mxcUrl = window.mClient.getUser(theOtherId).avatarUrl;
       let avatarUrl;
@@ -60,7 +59,7 @@ class DMsView extends Component {
       }
       return <ChatDMItem userId={theOtherId} avatar={avatarUrl} />;
     });
-    console.log("================");
+
     if (renderedRooms.length === 0) {
       renderedRooms.push(<TextListItem primary="No DM :(" />);
     }

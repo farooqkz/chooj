@@ -4,6 +4,7 @@ import * as matrixcs from "matrix-js-sdk";
 import TabView from "./TabView";
 import SoftKey from "./ui/SoftKey";
 import DMsView from "./DMsView";
+import Waiting from "./Waiting";
 
 class Matrix extends Component {
   onTabChange = (index) => {
@@ -41,15 +42,24 @@ class Matrix extends Component {
         }
       });
     });
+    client.on("sync", (state, prevState, res) => {
+      this.setState({ syncDone: true });
+    });
     client.startClient({ initialSyncLimit: 3, lazyLoadMembers: true });
     this.tabs = ["People", "Rooms", "Invites", "Settings", "About"];
     this.state = {
       currentTab: 0,
-      isCall: false
+      isCall: false,
+      syncDone: false,
     };
   }
 
   render() {
+    if (!this.state.syncDone) {
+      return (<>
+        <Waiting />
+        </>);
+    } else {
     return (
       <>
         <TabView tabLabels={this.tabs} onChangeIndex={this.onTabChange}>
@@ -69,6 +79,7 @@ class Matrix extends Component {
       </footer>
       </>
     );
+  }
   }
 }
 
