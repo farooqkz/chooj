@@ -12,7 +12,7 @@ class App extends Component {
     this.state = {
       state: null,
     };
-    localforage.getItem("loginData").then((login) => {
+    localforage.getItem("login").then((login) => {
       if (login) {
         this.loginData = login;
         this.setState({ state: "matrix" });

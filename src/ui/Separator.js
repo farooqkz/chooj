@@ -8,13 +8,12 @@ class Separator extends Component {
   constructor(props) {
     props.unFocusable = true;
     super(props);
-    this.text = props.text;
   }
 
   render() {
     return (
       <div className={prefixCls}>
-        <span className={textCls}>{this.text}</span>
+        <span className={textCls}>{this.props.text}</span>
       </div>
     );
   }

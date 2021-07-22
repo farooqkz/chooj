@@ -31,7 +31,7 @@ class Login extends Component {
       case "m.login.password":
         window.mClient
           .loginWithPassword(
-            `@${this.username}:${this.homeserverUrl}`,
+            `@${this.username}:${this.homeserverUrl.replace("https://", "")}`,
             this.password
           )
           .then((result) => {
@@ -42,7 +42,6 @@ class Login extends Component {
             });
           })
           .catch((err) => {
-            window.e666 = err;
             switch (err.errcode) {
               case "M_FORBIDDEN":
                 alert("Incorrect login credentials");
@@ -177,12 +176,14 @@ class Login extends Component {
         >
           {listViewChildren}
         </ListView>
+      <footer $HasVNodeChildren>
         <SoftKey
           leftText="Quit"
           leftCb={() => window.close()}
           rightText="Next"
           rightCb={this.rightCb}
         />
+      </footer>
       </div>
     );
   }

@@ -6,13 +6,11 @@ const prefixCls = "kai-tab";
 
 class Tab extends Component {
   constructor(props) {
-    const { label, onTabChange, focusColor } = props;
+    const { focusColor } = props;
     super(props);
     this.style = {
       "--tab-underline-color": focusColor || colors.defaultFocusColor,
     };
-    this.onTabChange = onTabChange;
-    this.label = label;
   }
 
   render() {
@@ -22,14 +20,14 @@ class Tab extends Component {
     return (
       <div
         onClick={() => {
-          this.onTabChange && this.onTabChange(this.index);
+          this.props.onTabChange && this.props.onTabChange(this.index);
         }}
         className={actPrefixCls}
         style={this.style}
         key={this.props.isActive}
       >
         <div className={`${actPrefixCls}-label`} $HasVNodeChildren>
-          {createTextVNode(this.label)}
+          {createTextVNode(this.props.label)}
         </div>
       </div>
     );

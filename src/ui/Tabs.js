@@ -9,11 +9,11 @@ class Tabs extends Component {
     if (!["ArrowLeft", "ArrowRight"].includes(evt.key)) return;
     let index = this.state.activeChild;
     console.log("[Tabs] Old activeChild:", index);
-    this.children[index].props.isActive = false;
+    this.props.children[index].props.isActive = false;
     switch (evt.key) {
       case "ArrowLeft":
         index--;
-        index += this.children.length;
+        index += this.props.children.length;
         break;
       case "ArrowRight":
         index++;
@@ -21,22 +21,19 @@ class Tabs extends Component {
       default:
         break;
     }
-    index %= this.children.length;
-    this.children[index].props.isActive = true;
-    findDOMNode(this.children[index]).scrollIntoView({
+    index %= this.props.children.length;
+    this.props.children[index].props.isActive = true;
+    findDOMNode(this.props.children[index]).scrollIntoView({
       behavior: "auto",
       block: "start",
       inline: "center",
     });
     this.setState({ activeChild: index });
-    this.onChangeIndex && this.onChangeIndex(index);
+    this.props.onChangeIndex && this.props.onChangeIndex(index);
   };
 
   constructor(props) {
-    const { onChangeIndex, children } = props;
     super(props);
-    this.children = children;
-    this.onChangeIndex = onChangeIndex;
     this.state = { activeChild: 0 };
   }
 
@@ -49,7 +46,7 @@ class Tabs extends Component {
   }
 
   render() {
-    return <div className={prefixCls}>{this.children}</div>;
+    return <div className={prefixCls}>{this.props.children}</div>;
   }
 }
 

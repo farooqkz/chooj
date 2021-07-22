@@ -4,41 +4,16 @@ import "KaiUI/src/components/IconListItem/IconListItem.scss";
 import morecolor from "../morecolor.scss";
 
 const prefixCls = "kai-il";
+const lineCls = `${prefixCls}-line`;
+const itemCls = prefixCls;
+const primaryCls = `${prefixCls}-line`;
 
 class IconListItem extends Component {
   constructor(props) {
     super(props);
-    const {
-      primary,
-      secondary,
-      icon,
-      iconSrc,
-      focusClass,
-      iconWidth,
-      disabled,
-      className,
-      onClick,
-    } = props;
-    this.primary = primary;
-    this.secondary = secondary;
-    this.itemCls = prefixCls;
-    this.lineCls = `${prefixCls}-line`;
-    this.primaryCls = `${this.primaryCls}-primary`;
-    this.secondaryCls = `${prefixCls}-secondary ${secondary ? "" : "hidden"}`;
-    this.disabledCls = disabled ? `${prefixCls}-disabled` : "";
-    this.disabled = disabled;
-    this.className = className;
-    this.focusClass = focusClass;
-    this.handleClick = onClick;
-    if (iconSrc)
-      this.renderedIcon = <img src={iconSrc} alt="" width={iconWidth || 50} />;
-    else if (icon instanceof String && icon.startsWith("kai"))
-      this.renderedIcon = (
-        <span className={icon} style={{ width: iconWidth }} />
-      );
-    // Then we assume it is a valid element TODO: check for this
-    else this.renderedIcon = <span>{icon}</span>;
-    this.divRef = createRef();
+    this.secondaryCls = `${prefixCls}-secondary ${props.secondary ? "" : "hidden"}`;
+    this.disabledCls = props.disabled ? `${prefixCls}-disabled` : "";
+        this.divRef = createRef();
   }
 
   componentDidUpdate(lastProps, lastState) {
@@ -53,17 +28,26 @@ class IconListItem extends Component {
     const iconCls = `${prefixCls}-icon-${
       this.props.isFocused ? "focused" : "unfocused"
     }`;
+    let renderedIcon;
+    if (this.props.iconSrc)
+      renderedIcon = <img src={this.props.iconSrc} alt="" width={this.props.iconWidth || 50} />;
+    else if (this.props.icon instanceof String && this.props.icon.startsWith("kai"))
+      renderedIcon = (
+        <span className={this.props.icon} style={{ width: this.props.iconWidth }} />
+      );
+    // Then we assume it is a valid element TODO: check for this
+    else renderedIcon = <span>{this.props.icon}</span>;
 
     return (
       <div
         tabIndex={this.disabled ? undefined : 1}
         className={classNames(
-          this.itemCls,
+          itemCls,
           this.disabledCls,
-          this.className,
+          this.props.className,
           focusedCls
         )}
-        onClick={this.handleClick}
+        onClick={this.props.onClick}
         key={this.props.isFocused}
         ref={this.divRef}
         style={{
@@ -72,13 +56,13 @@ class IconListItem extends Component {
             : "",
         }}
       >
-        <div className={iconCls}>{this.renderedIcon}</div>
-        <div className={this.lineCls}>
-          <span className={this.primaryCls} $HasVNodeChildren>
-            {createTextVNode(this.primary)}
+        <div className={iconCls}>{renderedIcon}</div>
+        <div className={lineCls}>
+          <span className={primaryCls} $HasVNodeChildren>
+            {createTextVNode(this.props.primary)}
           </span>
           <label className={this.secondaryCls} $HasVNodeChildren>
-            {createTextVNode(this.secondary)}
+            {createTextVNode(this.props.secondary)}
           </label>
         </div>
       </div>
