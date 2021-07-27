@@ -1,4 +1,4 @@
-import { createTextVNode, Component } from "inferno";
+import { createTextVNode } from "inferno";
 import "./waiting.css";
 import cow from "./cowsay-pleasewait.png";
 
@@ -12,17 +12,14 @@ function randomTip() {
   return tips[parseInt(Math.random() * tips.length)];
 }
 
-class Waiting extends Component {
-  render() {
-    return (
-      <>
-        <img className="waiting" src={cow} alt="" />
-        <p className="waiting" $HasVNodeChildren>
-          {createTextVNode(randomTip())}
-        </p>
-      </>
-    );
-  }
+function Waiting(props) {
+  return (
+    <>
+      <img className="waiting" src={cow} alt="" />
+      <p className="waiting" $HasVNodeChildren>
+        {createTextVNode(randomTip())}
+      </p>
+    </>);
 }
 
 export default Waiting;
