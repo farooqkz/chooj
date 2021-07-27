@@ -176,14 +176,14 @@ class Login extends Component {
         >
           {listViewChildren}
         </ListView>
-      <footer $HasVNodeChildren>
-        <SoftKey
-          leftText="Quit"
-          leftCb={() => window.close()}
-          rightText="Next"
-          rightCb={this.rightCb}
-        />
-      </footer>
+        <footer $HasVNodeChildren>
+          <SoftKey
+            leftText="Quit"
+            leftCb={() => window.close()}
+            rightText="Next"
+            rightCb={this.rightCb}
+          />
+        </footer>
       </div>
     );
   }

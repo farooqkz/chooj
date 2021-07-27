@@ -37,10 +37,10 @@ class IconListItem extends Component {
       );
     // Then we assume it is a valid element TODO: check for this
     else renderedIcon = <span>{this.props.icon}</span>;
-    
+
     return (
       <div
-        tabIndex={this.disabled ? undefined : 1}
+        tabIndex={this.props.disabled ? undefined : 1}
         className={classNames(
           itemCls,
           disabledCls,

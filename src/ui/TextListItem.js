@@ -22,7 +22,7 @@ class TextListItem extends Component {
   }
 
   componentDidUpdate() {
-    if (this.props.isFocused) this.divRef.current.focus();
+    if (this.props.isFocused && this.divRef.current) this.divRef.current.focus();
   }
 
   render() {

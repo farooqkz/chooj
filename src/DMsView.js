@@ -1,26 +1,68 @@
-import { Component } from "inferno";
+import { Component, createPortal } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
 
 import ListView from "./ListView";
 import personIcon from "./person_icon.png";
 import ChatDMItem from "./ChatDMItem";
 import TextListItem from "./ui/TextListItem";
+import CallScreen from "./CallScreen";
+import DropDownMenu from "./DropDownMenu";
 
 const AVATAR_WIDTH = 36;
 const AVATAR_HEIGHT = 36;
 
+function CallSelectionMenu(props) {
+  return (
+    <DropDownMenu
+      title="Start call"
+      selectCb={(cursor) => props.selectCb(["voice", "video"][cursor])}
+    >
+      <TextListItem primary="Voice call" />
+      <TextListItem primary="Video call" />
+    </DropDownMenu>
+  );
+}
+
 class DMsView extends Component {
   handleKeyDown = (evt) => {
     if (evt.key === "Call" || evt.key === "c") {
-      // 1. show a dialog to select call type
-      // 2. start a call
+      if (this.rooms.length === 0) {
+        window.alert("You're lonely... there is no one to call!");
+        return;
+      }
+      this.setState({ showCallSelection: true });
     }
+
+    if (evt.key === "b" || evt.key === "Backspace") {
+      if (this.state.showCallSelection) {
+        this.setState({ showCallSelection: true });
+      }
+      if (this.state.inCall !== "") {
+        this.setState({ inCall: "" });
+      }
+    }
+  };
+  
+  startCall = (type) => {
+    if (type !== "voice") {
+      alert("Not implemented");
+      return;
+    }
+    const roomId = this.rooms[this.state.cursor].roomId;
+    this.call = matrixcs.createNewMatrixCall(window.mClient, roomId);
+    let audio = new Audio();
+    audio.mozAudioChannelType = "telephony";
+    this.call.placeVoiceCall();
+    this.setState({
+      inCall: this.rooms[this.state.cursor].guessDMUserId()
+    });
   };
 
   cursorChangeCb = (cursor) => {
-    this.setState({ cursor: cursor });
+    if (!this.state.showCallSelection)
+      this.setState({ cursor: cursor });
   };
-  
+
   getDMs = (room) =>
     room.getJoinedMemberCount() === 2 && room.getMyMembership() === "join";
   constructor(props) {
@@ -28,6 +70,7 @@ class DMsView extends Component {
     this.rooms = [];
     this.state = {
       cursor: 0,
+      showCallSelection: false,
     };
   }
 
@@ -40,8 +83,8 @@ class DMsView extends Component {
   }
 
   render() {
-    const rooms = window.mClient.getVisibleRooms().filter(this.getDMs);
-    let renderedRooms = rooms.map((room) => {
+    this.rooms = window.mClient.getVisibleRooms().filter(this.getDMs);
+    let renderedRooms = this.rooms.map((room, index) => {
       let theOtherId = room.guessDMUserId();
       let mxcUrl = window.mClient.getUser(theOtherId).avatarUrl;
       let avatarUrl;
@@ -57,11 +100,41 @@ class DMsView extends Component {
       } else {
         avatarUrl = personIcon;
       }
-      return <ChatDMItem userId={theOtherId} avatar={avatarUrl} />;
+      if (index === this.state.cursor)
+        return <ChatDMItem userId={theOtherId} avatar={avatarUrl} isFocused />;
+      else return <ChatDMItem userId={theOtherId} avatar={avatarUrl} />;
     });
 
     if (renderedRooms.length === 0) {
-      renderedRooms.push(<TextListItem primary="No DM :(" />);
+      renderedRooms.push(<TextListItem primary="No DM :(" isFocused />);
+    }
+    if (this.state.showCallSelection)
+      return (
+        <>
+          <ListView
+            cursor={this.state.cursor}
+            cursorChangeCb={this.cursorChangeCb}
+          >
+            {renderedRooms}
+          </ListView>
+          {createPortal(
+            <CallSelectionMenu selectCb={this.startCall} />,
+            document.getElementById("menu")
+          )}
+        </>
+      );
+    if (this.state.inCall !== "") {
+      return (
+        <>
+        <ListView cursor={this.state.cursor}
+        cursorChangeCb={this.cursorChangeCb}>
+          {renderedRooms}
+        </ListView>
+        {createPortal(
+          <CallScreen userId={this.state.inCall} />,
+          document.getElementById("callscreen")
+        )}
+        </>);
     }
     return (
       <ListView cursor={this.state.cursor} cursorChangeCb={this.cursorChangeCb}>

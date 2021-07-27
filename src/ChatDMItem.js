@@ -31,8 +31,8 @@ class ChatDMItem extends Component {
   render() {
     return (
       <IconListItem
-        icon=<Avatar avatar={this.props.avatar} online={this.state.online}/>
-        primary={this.state.displayName}
+        icon=<Avatar avatar={this.props.avatar} online={this.state.online} />
+        primary={this.state.displayName || this.props.userId}
         secondary={this.state.lastEvent}
         key={this.props.isFocused}
         isFocused={this.props.isFocused}

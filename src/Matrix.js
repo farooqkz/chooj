@@ -26,15 +26,16 @@ class Matrix extends Component {
     client.on("RoomMember.membership", (event, member) => {
       const myId = client.getUserId();
       if (member.membership === "invite" && member.userId === myId) {
-        client.joinRoom(member.roomId).then(() => 
-          alert(`Auto joined ${member.name} after invite`));
+        client
+          .joinRoom(member.roomId)
+          .then(() => alert(`Auto joined ${member.name} after invite`));
       }
     });
     client.on("Call.incoming", (call) => {
       call.once("state", (state) => {
         if (this.state.isCall) {
           // reject this call if there's already
-          // a call going 
+          // a call going
           call.reject();
         } else {
           this.call = call;
@@ -56,30 +57,32 @@ class Matrix extends Component {
 
   render() {
     if (!this.state.syncDone) {
-      return (<>
-        <Waiting />
-        </>);
+      return (
+        <>
+          <Waiting />
+        </>
+      );
     } else {
-    return (
-      <>
-        <TabView tabLabels={this.tabs} onChangeIndex={this.onTabChange}>
-          <DMsView rooms={this.dmRooms} />
-          <p>{"Rooms not implemented"}</p>
-          <p>{"Invites are not implemented and auto accepted"}</p>
-          <p>{"Settings not implemented"}</p>
-          <p>{"About info coming soon..."}</p>
-        </TabView>
-      <footer $HasVNodeChildren>
-        <SoftKey
-          leftText="Quit"
-          leftCb={() => {
-            if (window.confirm("Quit?")) window.close();
-          }}
-        />
-      </footer>
-      </>
-    );
-  }
+      return (
+        <>
+          <TabView tabLabels={this.tabs} onChangeIndex={this.onTabChange}>
+            <DMsView rooms={this.dmRooms} />
+            <p>{"Rooms not implemented"}</p>
+            <p>{"Invites are not implemented and auto accepted"}</p>
+            <p>{"Settings not implemented"}</p>
+            <p>{"About info coming soon..."}</p>
+          </TabView>
+          <footer $HasVNodeChildren>
+            <SoftKey
+              leftText="Quit"
+              leftCb={() => {
+                if (window.confirm("Quit?")) window.close();
+              }}
+            />
+          </footer>
+        </>
+      );
+    }
   }
 }
 

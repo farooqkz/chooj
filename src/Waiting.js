@@ -16,8 +16,10 @@ class Waiting extends Component {
   render() {
     return (
       <>
-        <img src={cow} alt="" />
-        <p $HasVNodeChildren>{createTextVNode(randomTip())}</p>
+        <img className="waiting" src={cow} alt="" />
+        <p className="waiting" $HasVNodeChildren>
+          {createTextVNode(randomTip())}
+        </p>
       </>
     );
   }
