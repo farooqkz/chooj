@@ -19,7 +19,8 @@ function Waiting(props) {
       <p className="waiting" $HasVNodeChildren>
         {createTextVNode(randomTip())}
       </p>
-    </>);
+    </>
+  );
 }
 
 export default Waiting;

@@ -42,7 +42,7 @@ class DMsView extends Component {
       }
     }
   };
-  
+
   startCall = (type) => {
     if (type !== "voice") {
       alert("Not implemented");
@@ -54,13 +54,12 @@ class DMsView extends Component {
     audio.mozAudioChannelType = "telephony";
     this.call.placeVoiceCall();
     this.setState({
-      inCall: this.rooms[this.state.cursor].guessDMUserId()
+      inCall: this.rooms[this.state.cursor].guessDMUserId(),
     });
   };
 
   cursorChangeCb = (cursor) => {
-    if (!this.state.showCallSelection)
-      this.setState({ cursor: cursor });
+    if (!this.state.showCallSelection) this.setState({ cursor: cursor });
   };
 
   getDMs = (room) =>
@@ -126,15 +125,18 @@ class DMsView extends Component {
     if (this.state.inCall !== "") {
       return (
         <>
-        <ListView cursor={this.state.cursor}
-        cursorChangeCb={this.cursorChangeCb}>
-          {renderedRooms}
-        </ListView>
-        {createPortal(
-          <CallScreen userId={this.state.inCall} />,
-          document.getElementById("callscreen")
-        )}
-        </>);
+          <ListView
+            cursor={this.state.cursor}
+            cursorChangeCb={this.cursorChangeCb}
+          >
+            {renderedRooms}
+          </ListView>
+          {createPortal(
+            <CallScreen userId={this.state.inCall} />,
+            document.getElementById("callscreen")
+          )}
+        </>
+      );
     }
     return (
       <ListView cursor={this.state.cursor} cursorChangeCb={this.cursorChangeCb}>

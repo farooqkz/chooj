@@ -13,16 +13,20 @@ class DropDownMenu extends Component {
 
   render() {
     return (
-      <div style={{ 
-          "min-height": `calc(100vh - ${this.props.children.length * 6}rem - 1.6rem)`,
+      <div
+        style={{
+          "min-height": `calc(100vh - ${
+            this.props.children.length * 6
+          }rem - 1.6rem)`,
           position: "absolute",
           left: 0,
           right: 0,
           bottom: 0,
-          "top": "auto",
+          top: "auto",
           "z-index": 9999,
           width: "100%",
-      }}> 
+        }}
+      >
         <Header text={this.props.title} />
         <ListView
           cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}
@@ -37,10 +41,10 @@ class DropDownMenu extends Component {
             return item;
           })}
         </ListView>
-          <SoftKey
-            centerText="Select"
-            centerCb={() => this.props.selectCb(this.state.cursor)}
-          />
+        <SoftKey
+          centerText="Select"
+          centerCb={() => this.props.selectCb(this.state.cursor)}
+        />
       </div>
     );
   }
