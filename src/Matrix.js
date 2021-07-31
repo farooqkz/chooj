@@ -66,7 +66,7 @@ class Matrix extends Component {
       return (
         <>
           <TabView tabLabels={this.tabs} onChangeIndex={this.onTabChange}>
-            <DMsView rooms={this.dmRooms} />
+            <DMsView setCall={(isCall) => this.setState({ isCall: isCall })} />
             <p>{"Rooms not implemented"}</p>
             <p>{"Invites are not implemented and auto accepted"}</p>
             <p>{"Settings not implemented"}</p>

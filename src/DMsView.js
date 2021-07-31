@@ -35,9 +35,10 @@ class DMsView extends Component {
 
     if (evt.key === "b" || evt.key === "Backspace") {
       if (this.state.showCallSelection) {
-        this.setState({ showCallSelection: true });
+        this.setState({ showCallSelection: false });
       }
       if (this.state.inCall !== "") {
+        // TODO: this.call.reject()
         this.setState({ inCall: "" });
       }
     }
@@ -55,6 +56,7 @@ class DMsView extends Component {
     this.call.placeVoiceCall();
     this.setState({
       inCall: this.rooms[this.state.cursor].guessDMUserId(),
+      showCallSelection: false,
     });
   };
 
@@ -70,6 +72,7 @@ class DMsView extends Component {
     this.state = {
       cursor: 0,
       showCallSelection: false,
+      inCall: "",
     };
   }
 
@@ -82,26 +85,36 @@ class DMsView extends Component {
   }
 
   render() {
-    this.rooms = window.mClient.getVisibleRooms().filter(this.getDMs);
+    this.rooms = window.mClient
+      .getVisibleRooms()
+      .filter(this.getDMs)
+      .map((room) => {
+        let theOtherId = room.guessDMUserId();
+        let mxcUrl = window.mClient.getUser(theOtherId).avatarUrl;
+        let avatarUrl;
+        if (mxcUrl) {
+          avatarUrl = matrixcs.getHttpUriForMxc(
+            window.mClient.getHomeserverUrl(),
+            mxcUrl,
+            AVATAR_WIDTH,
+            AVATAR_HEIGHT,
+            "scale",
+            true
+          );
+        } else {
+          avatarUrl = personIcon;
+        }
+        return { userId: theOtherId, avatarUrl: avatarUrl };
+      })
+      .sort((first, second) => {
+        return first.userId > second.userId;
+      });
     let renderedRooms = this.rooms.map((room, index) => {
-      let theOtherId = room.guessDMUserId();
-      let mxcUrl = window.mClient.getUser(theOtherId).avatarUrl;
-      let avatarUrl;
-      if (mxcUrl) {
-        avatarUrl = matrixcs.getHttpUriForMxc(
-          window.mClient.getHomeserverUrl(),
-          mxcUrl,
-          AVATAR_WIDTH,
-          AVATAR_HEIGHT,
-          "scale",
-          true
-        );
-      } else {
-        avatarUrl = personIcon;
-      }
       if (index === this.state.cursor)
-        return <ChatDMItem userId={theOtherId} avatar={avatarUrl} isFocused />;
-      else return <ChatDMItem userId={theOtherId} avatar={avatarUrl} />;
+        return (
+          <ChatDMItem userId={room.userId} avatar={room.avatarUrl} isFocused />
+        );
+      else return <ChatDMItem userId={room.userId} avatar={room.avatarUrl} />;
     });
 
     if (renderedRooms.length === 0) {
