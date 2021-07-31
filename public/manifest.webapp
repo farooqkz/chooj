@@ -1,15 +1,26 @@
 {
-  "short_name": "Inferno App",
-  "name": "Create Inferno App Sample",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "version": "0.0.0",
+  "name": "Matrix client",
+  "description": "Matrix client for KaiOS",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "Farooq Karimi Zadeh",
+    "url": "https://github.com/farooqkz/matrix-client"
+  },
+  "type": "certified",
+  "permissions": {
+    "audio-capture": "Used for voice calls",
+    "desktop-notification": "",
+    "systemXHR": "",
+    "audio-channel-telephony": "Used for voice calls",
+    "audio-channel-notification": "",
+    "audio-channel-ringer": "Used for ringtone for incoming voice calls",
+    "attention": "Used to show attention screen for incoming voice calls",
+    "push": "Used for receiving push notification",
+    "serviceworker": ""
+  },
+  "messages": [
+    { "push": "/index.html" },
+    { "push-register": "/index.html" }
+  ]
 }
