@@ -7,7 +7,9 @@ Part of this project is done through crowdfunding. About 100 dollars was donated
 Check related BananaHackers blog posts for more information.
 ### Nightly builds
 
-You can download and sideload ZIP for each time I push stuff from [here](https://farooqkz.de1.hashbang.sh/matrix-client-builds/). Thanks to hashbang which let's me host stuff there. Old ZIPs will be deleted after a short time. Please allow a few minutes after each commit so that the files show up there.
+You can download and sideload ZIP for each time I push stuff from [here](https://farooqkz.de1.hashbang.sh/matrix-client-builds/). Thanks to hashbang which let's me host stuff there. Old ZIPs will be deleted after a short time. Please allow a few minutes after each commit and the file will show up there.
+
+**NOTE: While I try to test stuff before pushing but you might find some broken builds there. There is no automated test yet.**
 
 ### How to build?
 
