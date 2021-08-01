@@ -29,7 +29,6 @@ jobs:
         uses: actions/setup-node@v2.3.0
         with:
           node-version: v12.22.3
-          cache: npm
       
       - name: Install packages
         run: |
@@ -47,5 +46,3 @@ jobs:
       - name: Upload the ZIP
         run: |
           curl -F "file=@$GITHUB_SHA.zip" $UPLOAD_URL_SECRET
-          
-      
