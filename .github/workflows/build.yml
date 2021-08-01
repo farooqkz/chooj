@@ -36,7 +36,7 @@ jobs:
       
       - name: Build things
         run: |
-          npm build
+          npm run build
       
       - name: Zip things
         run: |
