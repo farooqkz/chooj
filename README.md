@@ -5,6 +5,9 @@ This is a free(open source) software Matrix client for KaiOS which is going to s
 Part of this project is done through crowdfunding. About 100 dollars was donated so that I could buy a Nokia 800 Tough and start the project.
 
 Check related BananaHackers blog posts for more information.
+### Nightly builds
+
+You can download and sideload ZIP for each time I push stuff from [here](https://farooqkz.de1.hashbang.sh/matrix-client-builds/). Thanks to hashbang which let's me host stuff there. Old ZIPs will be deleted after a short time. Please allow a few minutes after each commit so that the files show up there.
 
 ### How to build?
 
