@@ -48,4 +48,5 @@ jobs:
           UPLOAD_URL_SECRET: ${{ secrets.UPLOAD_URL_SECRET }}
           
         run: |
+          cd build/
           curl -F file=@$GITHUB_SHA.zip $env:UPLOAD_URL_SECRET
