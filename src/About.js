@@ -6,7 +6,7 @@ import Separator from "./ui/Separator";
 import FarooqAvatar from "./FarooqAvatar.png";
 import AdrianAvatar from "./AdrianAvatar.png";
 import DropDownMenu from "./DropDownMenu";
-import { startDM } from "./utils";
+import { startDM } from "./utils"; // eslint-disable-line no-unused-vars
 
 function ContactSelectionMenu(props) {
   return (
@@ -42,6 +42,7 @@ function contactFarooq(contactWay) {
 class About extends Component {
   handleKeyDown = (evt) => {
     if (evt.key === "Call" || evt.key === "c") {
+      console.log("Okay they want to contact Farooq...");
       this.setState({ showContactScreen: true });
     }
   };
