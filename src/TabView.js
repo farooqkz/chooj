@@ -29,7 +29,7 @@ class TabView extends Component {
     return (
       <div className={prefixCls}>
         <div className={tabViewTabs}>
-          <Tabs onChangeIndex={this.handleChangeIndex} $HasNonKeyedChildren>
+          <Tabs onChangeIndex={this.handleChangeIndex} >
             {this.tabs}
           </Tabs>
         </div>

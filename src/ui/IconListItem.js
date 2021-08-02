@@ -26,14 +26,28 @@ class IconListItem extends Component {
     const iconCls = `${prefixCls}-icon-${
       this.props.isFocused ? "focused" : "unfocused"
     }`;
-    const secondaryCls = `${prefixCls}-secondary ${this.props.secondary ? "" : "hidden"}`;
+    const secondaryCls = `${prefixCls}-secondary ${
+      this.props.secondary ? "" : "hidden"
+    }`;
     const disabledCls = this.props.disabled ? `${prefixCls}-disabled` : "";
     let renderedIcon;
     if (this.props.iconSrc)
-      renderedIcon = <img src={this.props.iconSrc} alt="" width={this.props.iconWidth || 50} />;
-    else if (this.props.icon instanceof String && this.props.icon.startsWith("kai"))
       renderedIcon = (
-        <span className={this.props.icon} style={{ width: this.props.iconWidth }} />
+        <img
+          src={this.props.iconSrc}
+          alt=""
+          width={this.props.iconWidth || 50}
+        />
+      );
+    else if (
+      this.props.icon instanceof String &&
+      this.props.icon.startsWith("kai")
+    )
+      renderedIcon = (
+        <span
+          className={this.props.icon}
+          style={{ width: this.props.iconWidth }}
+        />
       );
     // Then we assume it is a valid element TODO: check for this
     else renderedIcon = <span>{this.props.icon}</span>;

@@ -16,7 +16,8 @@ function ContactSelectionMenu(props) {
     >
       <TextListItem primary="Email" />
       <TextListItem primary="Matrix" />
-    </DropDownMenu>);
+    </DropDownMenu>
+  );
 }
 
 function contactFarooq(contactWay) {
@@ -24,14 +25,17 @@ function contactFarooq(contactWay) {
   let myEmailAddr = "mailto:" + "f" + "kz" + "@" + "riseup.net";
   switch (contactWay) {
     case "email":
-      let mail = new MozActivity({ // eslint-disable-line no-undef
+      // eslint-disable-next-line no-undef
+      let mail = new MozActivity({
         name: "view",
         data: {
           type: "url",
           url: myEmailAddr,
-        }
+        },
       });
-      mail.onerror = (error) => console.log("MozActivity", error) && window.alert("Cannot start Email app :(");
+      mail.onerror = (error) =>
+        console.log("MozActivity", error) &&
+        window.alert("Cannot start Email app :(");
       break;
     default:
       window.alert("Not implemented yet...");
@@ -46,7 +50,7 @@ class About extends Component {
       this.setState({ showContactScreen: true });
     }
   };
-  
+
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown);
   }
@@ -65,36 +69,44 @@ class About extends Component {
 
   render() {
     let items = [
-        <TextListItem tertiary="Press Call button while in this Tab to contact Farooq the developer of this app" />,
-        <IconListItem
-          iconSrc={FarooqAvatar}
-          primary="Farooq Karimi Zadeh"
-          secondary="App Developer" />,
-        <Separator text="Libraries and modules" />,
-        <IconListItem
-          iconSrc={AdrianAvatar}
-          primary="Adrian Machado"
-          secondary="KaiUI" />,
-        <TextListItem
-          primary="matrix.org"
-          secondary="matrix-js-sdk" />
+      <TextListItem tertiary="Press Call button while in this Tab to contact Farooq the developer of this app" />,
+      <IconListItem
+        iconSrc={FarooqAvatar}
+        primary="Farooq Karimi Zadeh"
+        secondary="App Developer"
+      />,
+      <Separator text="Libraries and modules" />,
+      <IconListItem
+        iconSrc={AdrianAvatar}
+        primary="Adrian Machado"
+        secondary="KaiUI"
+      />,
+      <TextListItem primary="matrix.org" secondary="matrix-js-sdk" />,
     ];
-    return (<>
-      <ListView
-        cursor={this.state.cursor}
-        cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}>
-        {items.map((item, index) => {
-          item.props.isFocused = index === this.state.cursor;
-          return item;
-        })}
-      </ListView>
-      {
-        this.state.showContactScreen?
-          createPortal(
-            <ContactSelectionMenu selectCb={(selection) => { this.setState({ showContactScreen: false }); contactFarooq(selection); }} />,
-            document.querySelector("#menu")):null
-      }
-    </>);
+    return (
+      <>
+        <ListView
+          cursor={this.state.cursor}
+          cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}
+        >
+          {items.map((item, index) => {
+            item.props.isFocused = index === this.state.cursor;
+            return item;
+          })}
+        </ListView>
+        {this.state.showContactScreen
+          ? createPortal(
+              <ContactSelectionMenu
+                selectCb={(selection) => {
+                  this.setState({ showContactScreen: false });
+                  contactFarooq(selection);
+                }}
+              />,
+              document.querySelector("#menu")
+            )
+          : null}
+      </>
+    );
   }
 }
 

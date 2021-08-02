@@ -11,10 +11,10 @@ class Matrix extends Component {
   onTabChange = (index) => {
     this.setState({ currentTab: index });
   };
-  
+
   softCenterText = () => {
     switch (this.tabs[this.state.currentTab]) {
-      case "About": 
+      case "About":
         return "Repo.";
       case "People":
         return "";
@@ -24,7 +24,7 @@ class Matrix extends Component {
         return "";
       case "Settings":
         return "";
-      default: 
+      default:
         return "";
     }
   };
@@ -101,7 +101,7 @@ class Matrix extends Component {
             <p>{"Settings not implemented"}</p>
             <About />
           </TabView>
-          <footer $HasVNodeChildren>
+          <footer HasVNodeChildren>
             <SoftKey
               leftText="Quit"
               leftCb={() => {

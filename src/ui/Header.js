@@ -6,11 +6,13 @@ function Header(props) {
   return (
     <header
       className="kai-header"
-      style={{ background: props.backgroundColor || colors.headerBlue }}>
-        <h1 className="h1" $HasVNodeChildren>
-          {createTextVNode(props.text)}
-        </h1>
-    </header>);
+      style={{ background: props.backgroundColor || colors.headerBlue }}
+    >
+      <h1 className="h1" $HasVNodeChildren>
+        {createTextVNode(props.text)}
+      </h1>
+    </header>
+  );
 }
 
 export default Header;

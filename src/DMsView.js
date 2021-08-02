@@ -148,7 +148,7 @@ class DMsView extends Component {
             {renderedRooms}
           </ListView>
           {createPortal(
-            <CallScreen userId={this.state.inCall} />,
+            <CallScreen userId={this.state.inCall} callState="Hmm?" />,
             document.getElementById("callscreen")
           )}
         </>
