@@ -4,11 +4,39 @@ import * as matrixcs from "matrix-js-sdk";
 import TabView from "./TabView";
 import SoftKey from "./ui/SoftKey";
 import DMsView from "./DMsView";
+import About from "./About";
 import Waiting from "./Waiting";
 
 class Matrix extends Component {
   onTabChange = (index) => {
     this.setState({ currentTab: index });
+  };
+  
+  softCenterText = () => {
+    switch (this.tabs[this.state.currentTab]) {
+      case "About": 
+        return "Repo.";
+      case "People":
+        return "";
+      case "Rooms":
+        return "";
+      case "Invites":
+        return "";
+      case "Settings":
+        return "";
+      default: 
+        return "";
+    }
+  };
+
+  softCenterCb = () => {
+    switch (this.tabs[this.state.currentTab]) {
+      case "About":
+        window.open("https://github.com/farooqkz/matrix-client", "_blank");
+        break;
+      default:
+        break;
+    }
   };
 
   constructor(props) {
@@ -70,7 +98,7 @@ class Matrix extends Component {
             <p>{"Rooms not implemented"}</p>
             <p>{"Invites are not implemented and auto accepted"}</p>
             <p>{"Settings not implemented"}</p>
-            <p>{"About info coming soon..."}</p>
+            <About />
           </TabView>
           <footer $HasVNodeChildren>
             <SoftKey
@@ -78,6 +106,8 @@ class Matrix extends Component {
               leftCb={() => {
                 if (window.confirm("Quit?")) window.close();
               }}
+              centerText={this.softCenterText()}
+              centerCb={this.softCenterCb}
             />
           </footer>
         </>

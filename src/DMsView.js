@@ -47,6 +47,9 @@ class DMsView extends Component {
   startCall = (type) => {
     if (type !== "voice") {
       alert("Not implemented");
+      this.setState({
+        showCallSelection: false,
+      });
       return;
     }
     const roomId = this.rooms[this.state.cursor].roomId;
@@ -55,7 +58,7 @@ class DMsView extends Component {
     audio.mozAudioChannelType = "telephony";
     this.call.placeVoiceCall();
     this.setState({
-      inCall: this.rooms[this.state.cursor].guessDMUserId(),
+      inCall: this.rooms[this.state.cursor].userId,
       showCallSelection: false,
     });
   };
@@ -135,7 +138,7 @@ class DMsView extends Component {
           )}
         </>
       );
-    if (this.state.inCall !== "") {
+    if (this.state.inCall) {
       return (
         <>
           <ListView

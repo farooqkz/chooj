@@ -21,7 +21,7 @@ class TextListItem extends Component {
     this.divRef = createRef();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(lastProps) {
     if (this.props.isFocused && this.divRef.current) this.divRef.current.focus();
   }
 
