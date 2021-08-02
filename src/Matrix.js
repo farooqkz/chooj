@@ -30,6 +30,7 @@ class Matrix extends Component {
   };
 
   softCenterCb = () => {
+    if (document.querySelector("#menu").innerHTML) return;
     switch (this.tabs[this.state.currentTab]) {
       case "About":
         window.open("https://github.com/farooqkz/matrix-client", "_blank");

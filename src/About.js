@@ -46,6 +46,14 @@ class About extends Component {
       this.setState({ showContactScreen: true });
     }
   };
+  
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleKeyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown);
+  }
 
   constructor(props) {
     super(props);
@@ -83,7 +91,7 @@ class About extends Component {
       {
         this.state.showContactScreen?
           createPortal(
-            <ContactSelectionMenu selectCb={contactFarooq} />,
+            <ContactSelectionMenu selectCb={(selection) => { this.setState({ showContactScreen: false }); contactFarooq(selection); }} />,
             document.querySelector("#menu")):null
       }
     </>);
