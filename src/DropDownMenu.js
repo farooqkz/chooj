@@ -33,11 +33,7 @@ class DropDownMenu extends Component {
           cursor={this.state.cursor}
         >
           {this.props.children.map((item, index) => {
-            if (index === this.state.cursor) {
-              item.props.isFocused = true;
-            } else {
-              item.props.isFocused = false;
-            }
+            item.props.isFocused = index === this.state.cursor;
             return item;
           })}
         </ListView>
