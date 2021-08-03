@@ -75,7 +75,7 @@ class Matrix extends Component {
     client.on("sync", (state, prevState, res) => {
       this.setState({ syncDone: true });
     });
-    client.startClient({ initialSyncLimit: 3, lazyLoadMembers: true });
+    client.startClient({ lazyLoadMembers: true });
     this.tabs = ["People", "Rooms", "Invites", "Settings", "About"];
     this.state = {
       currentTab: 0,

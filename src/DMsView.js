@@ -7,6 +7,7 @@ import ChatDMItem from "./ChatDMItem";
 import TextListItem from "./ui/TextListItem";
 import CallScreen from "./CallScreen";
 import DropDownMenu from "./DropDownMenu";
+import { makeHumanReadableEvent } from "./utils";
 
 const AVATAR_WIDTH = 36;
 const AVATAR_HEIGHT = 36;
@@ -92,6 +93,12 @@ class DMsView extends Component {
       .getVisibleRooms()
       .filter(this.getDMs)
       .map((room) => {
+        let roomEvents = room.getLiveTimeline().getEvents();
+        let lastEvent = roomEvents[roomEvents.length - 1];
+        let lastEventTime = lastEvent.getTs();
+        let lastEventContent = lastEvent.getContent();
+        let lastEventType = lastEvent.getType();
+        let lastEventSender = lastEvent.getSender();
         let theOtherId = room.guessDMUserId();
         let mxcUrl = window.mClient.getUser(theOtherId).avatarUrl;
         let avatarUrl;
@@ -107,17 +114,30 @@ class DMsView extends Component {
         } else {
           avatarUrl = personIcon;
         }
-        return { userId: theOtherId, avatarUrl: avatarUrl };
+        return {
+          userId: theOtherId,
+          avatarUrl: avatarUrl,
+          lastEvent: makeHumanReadableEvent(
+            lastEventType,
+            lastEventContent,
+            lastEventSender,
+            window.mClient.getUserId(),
+            true),
+          lastEventTime: lastEventTime,
+        };
       })
       .sort((first, second) => {
         return first.userId > second.userId;
       });
     let renderedRooms = this.rooms.map((room, index) => {
-      if (index === this.state.cursor)
-        return (
-          <ChatDMItem userId={room.userId} avatar={room.avatarUrl} isFocused />
-        );
-      else return <ChatDMItem userId={room.userId} avatar={room.avatarUrl} />;
+      let item = (
+        <ChatDMItem
+          userId={room.userId}
+          avatar={room.avatarUrl}
+          lastEvent={room.lastEvent} />
+      );
+      item.props.isFocused = (index === this.state.cursor);
+      return item;
     });
 
     if (renderedRooms.length === 0) {

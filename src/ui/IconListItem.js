@@ -72,12 +72,12 @@ class IconListItem extends Component {
       >
         <div className={iconCls}>{renderedIcon}</div>
         <div className={lineCls}>
-          <span className={primaryCls} $HasVNodeChildren>
-            {createTextVNode(this.props.primary)}
-          </span>
           <label className={secondaryCls} $HasVNodeChildren>
             {createTextVNode(this.props.secondary)}
           </label>
+          <span className={primaryCls} $HasVNodeChildren>
+            {createTextVNode(this.props.primary)}
+          </span>
         </div>
       </div>
     );

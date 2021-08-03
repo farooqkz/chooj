@@ -10,11 +10,17 @@ class ChatDMItem extends Component {
         displayName: user.displayName,
       });
   };
+  
+  updateLastEvent = (event, room, ts) => {
+    if (!ts)
+      console.log(event, room);
+  };
 
   constructor(props) {
     super(props);
+    this.lastEventTime = -1;
     this.state = {
-      lastEvent: "",
+      lastEvent: props.lastEvent, 
       online: "offline",
       displayName: "",
     };
@@ -22,18 +28,20 @@ class ChatDMItem extends Component {
 
   componentWillMount() {
     window.mClient.addListener("User.presence", this.updatePresence);
+    window.mClient.addListener("Room.timeline", this.updateLastEvent);
   }
 
   componentWillUnmount() {
     window.mClient.removeListener("User.presence", this.updatePresence);
+    window.mClient.removeListener("Room.timeline", this.updateLastEvent);
   }
 
   render() {
     return (
       <IconListItem
         icon=<Avatar avatar={this.props.avatar} online={this.state.online} />
-        primary={this.state.displayName || this.props.userId}
-        secondary={this.state.lastEvent}
+        secondary={this.state.displayName || this.props.userId}
+        primary={this.state.lastEvent}
         key={this.props.isFocused}
         isFocused={this.props.isFocused}
       />
