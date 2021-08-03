@@ -65,7 +65,10 @@ class DMsView extends Component {
   };
 
   cursorChangeCb = (cursor) => {
-    if (!this.state.showCallSelection) this.setState({ cursor: cursor });
+    if (!this.state.showCallSelection) {
+      this.props.selectedRoomCb(this.rooms[cursor].roomId);
+      this.setState({ cursor: cursor });
+    }
   };
 
   getDMs = (room) =>
@@ -95,11 +98,12 @@ class DMsView extends Component {
       .map((room) => {
         let roomEvents = room.getLiveTimeline().getEvents();
         let lastEvent = roomEvents[roomEvents.length - 1];
-        let lastEventTime = lastEvent.getTs();
-        let lastEventContent = lastEvent.getContent();
-        let lastEventType = lastEvent.getType();
-        let lastEventSender = lastEvent.getSender();
-        let theOtherId = room.guessDMUserId();
+        const lastEventTime = lastEvent.getTs();
+        const lastEventContent = lastEvent.getContent();
+        const lastEventType = lastEvent.getType();
+        const lastEventSender = lastEvent.getSender();
+        const theOtherId = room.guessDMUserId();
+        const roomId = room.roomId;
         let mxcUrl = window.mClient.getUser(theOtherId).avatarUrl;
         let avatarUrl;
         if (mxcUrl) {
@@ -115,6 +119,7 @@ class DMsView extends Component {
           avatarUrl = personIcon;
         }
         return {
+          roomId: roomId,
           userId: theOtherId,
           avatarUrl: avatarUrl,
           lastEvent: makeHumanReadableEvent(
@@ -122,7 +127,8 @@ class DMsView extends Component {
             lastEventContent,
             lastEventSender,
             window.mClient.getUserId(),
-            true),
+            true
+          ),
           lastEventTime: lastEventTime,
         };
       })
@@ -134,9 +140,10 @@ class DMsView extends Component {
         <ChatDMItem
           userId={room.userId}
           avatar={room.avatarUrl}
-          lastEvent={room.lastEvent} />
+          lastEvent={room.lastEvent}
+        />
       );
-      item.props.isFocused = (index === this.state.cursor);
+      item.props.isFocused = index === this.state.cursor;
       return item;
     });
 

@@ -10,17 +10,16 @@ class ChatDMItem extends Component {
         displayName: user.displayName,
       });
   };
-  
+
   updateLastEvent = (event, room, ts) => {
-    if (!ts)
-      console.log(event, room);
+    if (!ts) console.log(event, room);
   };
 
   constructor(props) {
     super(props);
     this.lastEventTime = -1;
     this.state = {
-      lastEvent: props.lastEvent, 
+      lastEvent: props.lastEvent,
       online: "offline",
       displayName: "",
     };

@@ -6,6 +6,7 @@ import SoftKey from "./ui/SoftKey";
 import DMsView from "./DMsView";
 import About from "./About";
 import Waiting from "./Waiting";
+import RoomView from "./RoomView";
 
 class Matrix extends Component {
   onTabChange = (index) => {
@@ -17,7 +18,7 @@ class Matrix extends Component {
       case "About":
         return "Repo.";
       case "People":
-        return "";
+        return "Open";
       case "Rooms":
         return "";
       case "Invites":
@@ -29,11 +30,18 @@ class Matrix extends Component {
     }
   };
 
+  openRoom = () => {
+    this.setState({ openRoomId: this.roomId });
+  };
+
   softCenterCb = () => {
     if (document.querySelector("#menu").innerHTML) return;
     switch (this.tabs[this.state.currentTab]) {
       case "About":
         window.open("https://github.com/farooqkz/matrix-client", "_blank");
+        break;
+      case "People":
+        this.openRoom();
         break;
       default:
         break;
@@ -77,10 +85,12 @@ class Matrix extends Component {
     });
     client.startClient({ lazyLoadMembers: true });
     this.tabs = ["People", "Rooms", "Invites", "Settings", "About"];
+    this.roomId = "";
     this.state = {
       currentTab: 0,
       isCall: false,
       syncDone: false,
+      openRoomId: "",
     };
   }
 
@@ -91,17 +101,22 @@ class Matrix extends Component {
           <Waiting />
         </>
       );
-    } else {
+    } else if (this.state.openRoomId === "") {
       return (
         <>
           <TabView tabLabels={this.tabs} onChangeIndex={this.onTabChange}>
-            <DMsView setCall={(isCall) => this.setState({ isCall: isCall })} />
+            <DMsView
+              setCall={(isCall) => this.setState({ isCall: isCall })}
+              selectedRoomCb={(roomId) => {
+                this.roomId = roomId;
+              }}
+            />
             <p>{"Rooms not implemented"}</p>
             <p>{"Invites are not implemented and auto accepted"}</p>
             <p>{"Settings not implemented"}</p>
             <About />
           </TabView>
-          <footer HasVNodeChildren>
+          <footer $HasVNodeChildren>
             <SoftKey
               leftText="Quit"
               leftCb={() => {
@@ -113,6 +128,8 @@ class Matrix extends Component {
           </footer>
         </>
       );
+    } else {
+      return <RoomView roomId={this.state.openRoomId} />;
     }
   }
 }

@@ -29,9 +29,7 @@ class TabView extends Component {
     return (
       <div className={prefixCls}>
         <div className={tabViewTabs}>
-          <Tabs onChangeIndex={this.handleChangeIndex} >
-            {this.tabs}
-          </Tabs>
+          <Tabs onChangeIndex={this.handleChangeIndex}>{this.tabs}</Tabs>
         </div>
         <div className={tabViewContent}>
           {this.props.children.map(

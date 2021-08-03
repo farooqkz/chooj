@@ -21,9 +21,14 @@ function makeHumanReadableEvent(type, content, sender, myself, dm) {
     case "m.call.reject":
       return eventSender(sender, myself, dm) + " rejected the call";
     case "m.room.member":
-      return eventSender(sender, myself, dm) + " " + content.membership + "ed the room";
+      return (
+        eventSender(sender, myself, dm) +
+        " " +
+        content.membership +
+        "ed the room"
+      );
     default:
-      return eventSender(sender, myself, dm) + type
+      return eventSender(sender, myself, dm) + type;
   }
 }
 
