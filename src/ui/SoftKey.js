@@ -42,9 +42,15 @@ class SoftKey extends Component {
     }
   };
 
-  constructor(props) {
-    super(props);
-    this.softKeyAttrs = [
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleKeyDown);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown);
+  }
+
+  render() {
+    let softKeyAttrs = [
       {
         id: "leftSoftKey",
         text: this.props.leftText,
@@ -64,19 +70,10 @@ class SoftKey extends Component {
         handleClick: () => this.handleKeyDown({ key: "SoftRight" }),
       },
     ];
-  }
 
-  componentDidMount() {
-    document.addEventListener("keydown", this.handleKeyDown);
-  }
-  componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown);
-  }
-
-  render() {
     return (
       <div className={`${prefixCls} visible`}>
-        {this.softKeyAttrs.map((attrs) => (
+        {softKeyAttrs.map((attrs) => (
           <Button {...attrs} />
         ))}
       </div>
