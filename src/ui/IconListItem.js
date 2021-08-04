@@ -15,7 +15,7 @@ class IconListItem extends Component {
   }
 
   componentDidUpdate(lastProps, lastState) {
-    if (this.props.isFocused) {
+    if (this.props.isFocused && this.divRef.current) {
       this.divRef.current.focus();
     }
   }

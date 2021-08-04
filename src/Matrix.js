@@ -80,7 +80,7 @@ class Matrix extends Component {
         }
       });
     });
-    client.on("sync", (state, prevState, res) => {
+    client.once("sync", (state, prevState, res) => {
       this.setState({ syncDone: true });
     });
     client.startClient({ lazyLoadMembers: true });
@@ -129,7 +129,7 @@ class Matrix extends Component {
         </>
       );
     } else {
-      return <RoomView roomId={this.state.openRoomId} />;
+      return <RoomView roomId={this.state.openRoomId} props={() => this.setState({ openRoomId: "" })} />;
     }
   }
 }

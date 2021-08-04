@@ -1,0 +1,24 @@
+.ircmsg {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  height: auto;
+  width: 100%;
+}
+
+.ircmsg > p {
+  font-size: 12px !important;
+}
+
+.ircmsg--focused {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  height: auto;
+  width: 100%;
+  font-size: 12px !important;
+  background-color: black;
+  color: white;
+}
+
+.ircmsg--focused > p {
+  font-size: 12px !important;
+}

@@ -57,7 +57,7 @@ class ListView extends Component {
     return (
       <div
         className={"kai-list-view"}
-        style={{ position: "fixed", height: "calc(100vh - 60px)" }}
+        style={{ position: "fixed", height: this.props.height || "calc(100vh - 60px)" }}
       >
         {this.props.children}
       </div>

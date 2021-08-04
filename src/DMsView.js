@@ -73,9 +73,11 @@ class DMsView extends Component {
 
   getDMs = (room) =>
     room.getJoinedMemberCount() === 2 && room.getMyMembership() === "join";
+
   constructor(props) {
     super(props);
     this.rooms = [];
+    this.call = null;
     this.state = {
       cursor: 0,
       showCallSelection: false,
