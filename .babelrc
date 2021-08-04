@@ -5,7 +5,7 @@
       {
         "rules": [
           {
-            "search": /XMLHttpRequest\(\)/,
+            "search": "XMLHttpRequest()",
             "replace": "XMLHttpRequest({ mozSystem: true })"
           }
         ]
