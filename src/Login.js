@@ -94,6 +94,12 @@ class Login extends Component {
         break;
     }
   };
+  
+  centerCb = () => {
+    if (this.state.stage === 2) {
+      window.alert(this.password);
+    }
+  };
 
   constructor(props) {
     super(props);
@@ -180,6 +186,8 @@ class Login extends Component {
           <SoftKey
             leftText="Quit"
             leftCb={() => window.close()}
+            centerCb={this.centerCb}
+            centerText={this.state.stage === 2? "Show":""}
             rightText="Next"
             rightCb={this.rightCb}
           />
