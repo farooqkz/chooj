@@ -15,7 +15,7 @@ You can download and sideload ZIP for each time I push stuff from [here](https:/
 
  - Install Node v12.x if you haven't
  - `npm install` in project's directory
- - `INLINE_RUNTIME_CHUNK=false npm build` to build for KaiOS
+ - `npm run build` to build for KaiOS
  - Now you can sideload the application in `build/` to your device.
 
 You can check guides on how to prepare your device for sideloading stuff
