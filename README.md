@@ -1,4 +1,5 @@
-# Matrix client for KaiOS
+# Chooj
+## Matrix client for KaiOS with VoIP call support
 
 This is a free(open source) software Matrix client for KaiOS which is going to support VoIP calls. Perhaps voice call is already working, in this case please send a Pull Request to update this README.
 
