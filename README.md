@@ -41,3 +41,7 @@ See [this post](https://blog.bananahackers.net/farooqkz/the-development-of-the-m
  - https://blog.bananahackers.net/farooqkz/the-development-of-the-matrix-client-has-started
  - https://blog.bananahackers.net/farooqkz/developing-a-call-only-matrix-client-with-crowdfunding-2
  - https://blog.bananahackers.net/farooqkz/developing-a-call-only-matrix-client-with-crowdfunding
+
+### License
+
+This project is free software under GNU GPLv3 and comes without any warranty from author(s) of the project.
