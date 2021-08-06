@@ -1,11 +1,11 @@
 {
   "version": "0.0.0",
-  "name": "Matrix client",
+  "name": "Chooj",
   "description": "Matrix client for KaiOS",
   "launch_path": "/index.html",
   "developer": {
     "name": "Farooq Karimi Zadeh",
-    "url": "https://github.com/farooqkz/matrix-client"
+    "url": "https://github.com/farooqkz/chooj"
   },
   "type": "certified",
   "permissions": {
