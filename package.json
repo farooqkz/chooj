@@ -129,7 +129,4 @@
     ]
 
   },
-  "devDependencies": {
-    "babel-plugin-search-and-replace": "^1.1.0"
-  }
 }
