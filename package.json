@@ -113,20 +113,5 @@
   "babel": {
     "presets": [
       "inferno-app"
-    ],
-    "plugins": [
-      [
-        "search-and-replace",
-        {
-          "rules": [
-            {
-              "search": "XMLHttpRequest()",
-              "replace": "XMLHttpRequest({ mozSystem: true })"
-            }
-          ]
-        }
-      ]
     ]
-
-  },
 }
