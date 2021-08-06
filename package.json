@@ -114,4 +114,5 @@
     "presets": [
       "inferno-app"
     ]
+  }
 }
