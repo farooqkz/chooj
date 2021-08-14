@@ -12,7 +12,9 @@
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/farooqkz/chooj?style=social)
 
-![Licence badge](https://img.shields.io/badge/licence-GPLv3-blueviolet)
+![Licence badge](https://img.shields.io/badge/licence-GPLv3-yellow)
+
+![KaiOS badge](https://img.shields.io/badge/KaiOS-2.5.2%2B-%236f02b5)
 
 This is a free(open source) software Matrix client for KaiOS which is going to support VoIP calls. Perhaps voice call is already working, in this case please send a Pull Request to update this README.
 
