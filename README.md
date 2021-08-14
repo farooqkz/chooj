@@ -1,25 +1,18 @@
 # Chooj
 ## Matrix client for KaiOS with VoIP call support
 
-<p align="center">
+<div style="text-align: center">
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/farooqkz/chooj/Build/master)
-
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/farooqkz/chooj)
-
 ![Lines of code](https://img.shields.io/tokei/lines/github/farooqkz/chooj)
-
 ![GitHub repo size](https://img.shields.io/github/repo-size/farooqkz/chooj)
-
 ![GitHub all releases](https://img.shields.io/github/downloads/farooqkz/chooj/total)
-
 ![GitHub Repo stars](https://img.shields.io/github/stars/farooqkz/chooj?style=social)
-
 ![Licence badge](https://img.shields.io/badge/licence-GPLv3-yellow)
-
 ![KaiOS badge](https://img.shields.io/badge/KaiOS-2.5.2%2B-%236f02b5)
 
-</p>
+</div>
 
 This is a free(open source) software Matrix client for KaiOS which is going to support VoIP calls. Perhaps voice call is already working, in this case please send a Pull Request to update this README.
 
