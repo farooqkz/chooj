@@ -11,7 +11,7 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/farooqkz/chooj/total)
 ![GitHub Repo stars](https://img.shields.io/github/stars/farooqkz/chooj?style=social)
 ![Licence badge](https://img.shields.io/badge/licence-GPLv3-yellow)
-![KaiOS badge](https://img.shields.io/badge/KaiOS-2.5.2%2B-%236f02b5)
+![KaiOS badge](https://img.shields.io/badge/KaiOS-2.5%2B-%236f02b5)
 
 </div>
 
