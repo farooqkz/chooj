@@ -1,4 +1,4 @@
-import { Component, } from "inferno";
+import { Component } from "inferno";
 import ListView from "./ListView";
 import Header from "./ui/Header";
 import SoftKey from "./ui/SoftKey";
@@ -7,7 +7,7 @@ import "./UnsupportedEventItem.css";
 
 function UnsupportedEventItem(props) {
   return (
-    <div className={"unsupportedevent" + (props.isFocused? "--focused":"")}>
+    <div className={"unsupportedevent" + (props.isFocused ? "--focused" : "")}>
       <p>Unsupported Event from {props.senderId}</p>
     </div>
   );

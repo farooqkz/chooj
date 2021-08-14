@@ -94,7 +94,8 @@ class DMsView extends Component {
   }
 
   render() {
-    this.rooms = window.mClient
+    const client = window.mClient;
+    this.rooms = client
       .getVisibleRooms()
       .filter(this.getDMs)
       .map((room) => {
@@ -106,11 +107,11 @@ class DMsView extends Component {
         const lastEventSender = lastEvent.getSender();
         const theOtherId = room.guessDMUserId();
         const roomId = room.roomId;
-        let mxcUrl = window.mClient.getUser(theOtherId).avatarUrl;
+        let mxcUrl = client.getUser(theOtherId).avatarUrl;
         let avatarUrl;
         if (mxcUrl) {
           avatarUrl = matrixcs.getHttpUriForMxc(
-            window.mClient.getHomeserverUrl(),
+            client.getHomeserverUrl(),
             mxcUrl,
             AVATAR_WIDTH,
             AVATAR_HEIGHT,
@@ -128,7 +129,7 @@ class DMsView extends Component {
             lastEventType,
             lastEventContent,
             lastEventSender,
-            window.mClient.getUserId(),
+            client.getUserId(),
             true
           ),
           lastEventTime: lastEventTime,

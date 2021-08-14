@@ -129,7 +129,12 @@ class Matrix extends Component {
         </>
       );
     } else {
-      return <RoomView roomId={this.state.openRoomId} props={() => this.setState({ openRoomId: "" })} />;
+      return (
+        <RoomView
+          roomId={this.state.openRoomId}
+          props={() => this.setState({ openRoomId: "" })}
+        />
+      );
     }
   }
 }

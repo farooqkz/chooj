@@ -94,7 +94,7 @@ class Login extends Component {
         break;
     }
   };
-  
+
   centerCb = () => {
     if (this.state.stage === 2) {
       window.alert(this.password);
@@ -187,7 +187,7 @@ class Login extends Component {
             leftText="Quit"
             leftCb={() => window.close()}
             centerCb={this.centerCb}
-            centerText={this.state.stage === 2? "Show":""}
+            centerText={this.state.stage === 2 ? "Show" : ""}
             rightText="Next"
             rightCb={this.rightCb}
           />
