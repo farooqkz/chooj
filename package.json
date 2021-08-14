@@ -60,19 +60,13 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "INLINE_RUNTIME_CHUNK=false node scripts/build.js",
+    "devbuild": "INLINE_RUNTIME_CHUNK=false node scripts/devbuild.js",
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
     "extends": "inferno-app"
   },
-  "browserslist": {
-    "production": "ff 48",
-    "development": [
-      "last 3 firefox version",
-      "last 3 chrome version",
-      "last 3 safari version"
-    ]
-  },
+  "browserslist": "ff 48",
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
@@ -114,5 +108,7 @@
     "presets": [
       "inferno-app"
     ]
+  },
+  "devDependencies": {
   }
 }

@@ -87,7 +87,7 @@ module.exports = {
     // the line below with these two lines if you prefer the stock client:
     // require.resolve('webpack-dev-server/client') + '?/',
     // require.resolve('webpack/hot/dev-server'),
-    require.resolve('inferno-dev-utils/webpackHotDevClient'),
+    //require.resolve('inferno-dev-utils/webpackHotDevClient'),
     // Finally, this is your app's code:
     paths.appIndexJs,
     // We include the app code last so that if there is a runtime error during
@@ -96,6 +96,7 @@ module.exports = {
   ],
   output: {
     // Add /* filename */ comments to generated require()s in the output.
+    path: paths.appBuild,
     pathinfo: true,
     // This does not produce a real file. It's just the virtual path that is
     // served by WebpackDevServer in development. This is the JS bundle
@@ -161,7 +162,7 @@ module.exports = {
     plugins: [
       // Adds support for installing with Plug'n'Play, leading to faster installs and adding
       // guards against forgotten dependencies and such.
-      PnpWebpackPlugin,
+      //PnpWebpackPlugin,
       // Prevents users from importing files from outside of src/ (or node_modules/).
       // This often causes confusion because we only process files within src/ with babel.
       // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
@@ -174,7 +175,7 @@ module.exports = {
     plugins: [
       // Also related to Plug'n'Play, but this time it tells Webpack to load its loaders
       // from the current package.
-      PnpWebpackPlugin.moduleLoader(module),
+      //PnpWebpackPlugin.moduleLoader(module),
     ],
   },
   module: {
@@ -348,7 +349,7 @@ module.exports = {
     // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
     new webpack.DefinePlugin(env.stringified),
     // This is necessary to emit hot updates (currently CSS only):
-    new webpack.HotModuleReplacementPlugin(),
+    //new webpack.HotModuleReplacementPlugin(),
     // Watcher doesn't work well if you mistype casing in a path so we use
     // a plugin that prints an error when you attempt to do this.
     // See https://github.com/facebook/create-react-app/issues/240
@@ -367,10 +368,10 @@ module.exports = {
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
     // having to parse `index.html`.
-    new ManifestPlugin({
-      fileName: 'asset-manifest.json',
-      publicPath: publicPath,
-    }),
+    //new ManifestPlugin({
+    //  fileName: 'asset-manifest.json',
+    //  publicPath: publicPath,
+    //}),
   ],
 
   // Some libraries import Node modules but don't use them in the browser.
