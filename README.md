@@ -4,7 +4,7 @@
 <div style="text-align: center">
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/farooqkz/chooj/Build/master)
-![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/farooqkz/chooj/master)
+[![CodeFactor](https://www.codefactor.io/repository/github/farooqkz/chooj/badge)](https://www.codefactor.io/repository/github/farooqkz/chooj)
 ![Lines of code](https://img.shields.io/tokei/lines/github/farooqkz/chooj)
 ![GitHub repo size](https://img.shields.io/github/repo-size/farooqkz/chooj)
 ![GitHub all releases](https://img.shields.io/github/downloads/farooqkz/chooj/total)
