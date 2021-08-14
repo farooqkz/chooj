@@ -5,6 +5,7 @@
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/farooqkz/chooj/Build/master)
 [![CodeFactor](https://www.codefactor.io/repository/github/farooqkz/chooj/badge)](https://www.codefactor.io/repository/github/farooqkz/chooj)
+[![DeepScan grade](https://deepscan.io/api/teams/15094/projects/18237/branches/443145/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=15094&pid=18237&bid=443145)
 ![Lines of code](https://img.shields.io/tokei/lines/github/farooqkz/chooj)
 ![GitHub repo size](https://img.shields.io/github/repo-size/farooqkz/chooj)
 ![GitHub all releases](https://img.shields.io/github/downloads/farooqkz/chooj/total)
