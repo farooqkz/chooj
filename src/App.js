@@ -24,27 +24,15 @@ class App extends Component {
 
   render() {
     if (this.state.state === null) {
-      return (
-        <div>
-          <Waiting />
-        </div>
-      );
+      return <Waiting />;
     }
 
     if (this.state.state === "login") {
-      return (
-        <div>
-          <Login />
-        </div>
-      );
+      return <Login />;
     }
 
     if (this.state.state === "matrix") {
-      return (
-        <div>
-          <Matrix data={this.loginData} />
-        </div>
-      );
+      return <Matrix data={this.loginData} />;
     }
   }
 }
