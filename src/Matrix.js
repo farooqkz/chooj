@@ -132,7 +132,7 @@ class Matrix extends Component {
       return (
         <RoomView
           roomId={this.state.openRoomId}
-          props={() => this.setState({ openRoomId: "" })}
+          closeRoom={() => this.setState({ openRoomId: "" })}
         />
       );
     }
