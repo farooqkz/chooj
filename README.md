@@ -26,11 +26,19 @@ You can download and sideload ZIP for each time I push stuff from [here](https:/
 
 **NOTE: While I try to test stuff before pushing but you might find some broken builds there. There is no automated test yet.**
 
+### Device compatiblity
+
+This app should work on all KaiOS versions. However it has been also tested on these devices:
+
+ - Nokia 8110 4G(aka The BananaPhone)
+ - Nokia 800 Tough
+
 ### How to build?
 
  - Install Node v12.x if you haven't
  - `npm install` in project's directory
- - `npm run build` to build for KaiOS
+ - `npm run build` to build for KaiOS(production)
+ - or run `npm run devbuild` to create a development build(faster build at the cost of heavier bundle)
  - Now you can sideload the application in `build/` to your device.
 
 You can check guides on how to prepare your device for sideloading stuff
