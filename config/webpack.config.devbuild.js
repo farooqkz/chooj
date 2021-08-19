@@ -241,6 +241,7 @@ module.exports = {
           {
             test: /\.(js|mjs)$/,
             exclude: /@babel(?:\/|\\{1,2})runtime/,
+            include: /node_modules\/.+\.js$/,
             loader: require.resolve('babel-loader'),
             options: {
               babelrc: false,
