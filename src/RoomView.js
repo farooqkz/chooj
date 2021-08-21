@@ -36,7 +36,7 @@ class RoomView extends Component {
     if (event_.key !== "b" && event_.key !== "Backspace") {
       return;
     }
-    if (this.state.textInputFocus) return;
+    if (this.state.textInputFocus && this.state.message) return;
     this.props.closeRoomView();
   };
 
@@ -80,9 +80,10 @@ class RoomView extends Component {
       alert("Cannot retrieve room information");
       props.closeRoomView();
     }
+    const lastEventIndex = this.room.getLiveTimeline().getEvents().length - 1;
     this.state = {
       showMenu: false,
-      cursor: 0,
+      cursor: lastEventIndex,
       message: "",
       textInputFocus: true,
     };
@@ -104,7 +105,7 @@ class RoomView extends Component {
         <ListView
           cursor={this.state.cursor}
           cursorChangeCb={this.cursorChangeCb}
-          height="calc(100vh - 2.8rem - 40px - 16px)"
+          height="calc(100vh - 2.8rem - 40px - 32px)"
         >
           {this.room
             .getLiveTimeline()
