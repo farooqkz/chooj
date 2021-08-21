@@ -32,7 +32,10 @@ class RoomView extends Component {
         alert("Message Info not implemented yet");
         break;
       case "Send":
-        console.log(this.state.message);
+        if (this.state.message === "") {
+          alert("Not sending empty message!");
+          break;
+        }
         window.mClient.sendTextMessage(this.props.roomId, this.state.message);
         this.setState((prevState) => {
           return { message: "", cursor: prevState.cursor + 1 };
@@ -87,7 +90,7 @@ class RoomView extends Component {
                 item = <ChatTextInput
                           message={this.state.message}
                           send={this.sendMessage}
-                          onChangeCb={this.messageChange} />;
+                          onChangeCb={this.messageChangeCb} />;
               } else if (evt.getType() === "m.room.message") {
                 item = (
                   <MessageItem
