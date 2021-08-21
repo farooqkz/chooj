@@ -5,6 +5,8 @@ class ChatTextInput extends Component {
   constructor(props) {
     super(props);
     this.onChange = (event_) => {
+      if (event_.key === "ArrowUp" || event_.key === "ArrowDown")
+        this.props.unFocusIt();
       this.setState({ value: event_.target.value });
       this.props.onChangeCb && this.props.onChangeCb(event_.target.value);
     };
@@ -14,8 +16,12 @@ class ChatTextInput extends Component {
   }
 
   componentDidUpdate(lastProps) {
-    if (this.props.isFocused && this.textInput) {
+    if (!this.textInput) return;
+    console.log("HELLO", this.props.isFocused);
+    if (this.props.isFocused) {
       this.textInput.focus();
+    } else {
+      this.textInput.blur();
     }
   }
 
