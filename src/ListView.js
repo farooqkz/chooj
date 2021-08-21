@@ -20,7 +20,6 @@ class ListView extends Component {
     }
     if (this.props.children && this.props.children[cursor])
       findDOMNode(this.props.children[cursor]).scrollIntoView();
-    console.log(`[ListView] cursor is set on ${cursor}`);
     this.setState({
       cursor: cursor,
     });
