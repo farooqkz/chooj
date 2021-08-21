@@ -79,6 +79,7 @@ class RoomView extends Component {
     if (this.room === null) {
       alert("Cannot retrieve room information");
       props.closeRoomView();
+      return;
     }
     const lastEventIndex = this.room.getLiveTimeline().getEvents().length - 1;
     this.state = {
