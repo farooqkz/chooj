@@ -4,6 +4,7 @@ import * as matrixcs from "matrix-js-sdk";
 import TabView from "./TabView";
 import SoftKey from "./ui/SoftKey";
 import DMsView from "./DMsView";
+import RoomsView from "./RoomsView";
 import About from "./About";
 import Waiting from "./Waiting";
 import RoomView from "./RoomView";
@@ -20,7 +21,7 @@ class Matrix extends Component {
       case "People":
         return "Open";
       case "Rooms":
-        return "";
+        return "Open";
       case "Invites":
         return "";
       case "Settings":
@@ -41,6 +42,7 @@ class Matrix extends Component {
         window.open("https://github.com/farooqkz/matrix-client", "_blank");
         break;
       case "People":
+      case "Rooms":
         this.openRoom();
         break;
       default:
@@ -111,7 +113,11 @@ class Matrix extends Component {
                 this.roomId = roomId;
               }}
             />
-            <p>{"Rooms not implemented"}</p>
+            <RoomsView
+              selectedRoomCb={(roomId) => {
+                this.roomId = roomId;
+              }}
+            />
             <p>{"Invites are not implemented and auto accepted"}</p>
             <p>{"Settings not implemented"}</p>
             <About />
