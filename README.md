@@ -4,6 +4,7 @@
 <div style="text-align: center">
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/farooqkz/chooj/Build/master)
+![Chat on Matrix](https://img.shields.io/matrix/chooj:mozilla.org.svg?server_fqdn=mozilla.modular.im)
 [![CodeFactor](https://www.codefactor.io/repository/github/farooqkz/chooj/badge)](https://www.codefactor.io/repository/github/farooqkz/chooj)
 [![DeepScan grade](https://deepscan.io/api/teams/15094/projects/18237/branches/443145/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=15094&pid=18237&bid=443145)
 ![Lines of code](https://img.shields.io/tokei/lines/github/farooqkz/chooj)
@@ -20,6 +21,26 @@ This is a free(open source) software Matrix client for KaiOS which is going to s
 Part of this project is done through crowdfunding. About 100 dollars was donated so that I could buy a Nokia 800 Tough and start the project.
 
 Check related BananaHackers blog posts for more information.
+
+### What does work so far?
+
+ - Login process with password works **more or less*.
+ - Chat in all room types(group rooms and DMs) works but you will see only a last handful of events.
+ - The Cow says "Please wait" to you kindly :))
+
+### How to help?
+
+ - Create an issue and report a bug
+ - Open a Pull Request and implement some wanted feature or fix some bug
+ - Donate to me with cryptocurrency or hardware(Contact me for any of those)
+ - Tell others about Chooj
+ - Idle in Chooj's Matrix room and help others if they need help
+ - ...
+
+### Matrix room
+
+This project has got a Matrix room. See badges.
+
 ### Nightly builds
 
 You can download and sideload ZIP for each time I push stuff from [here](https://farooqkz.de1.hashbang.sh/matrix-client-builds/). Thanks to hashbang which let's me host stuff there. Old ZIPs will be deleted after a short time. Please allow a few minutes after each commit and the file will show up there.
