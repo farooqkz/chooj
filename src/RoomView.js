@@ -37,6 +37,7 @@ class RoomView extends Component {
       return;
     }
     if (this.state.textInputFocus && this.state.message) return;
+    event_.preventDefault();
     this.props.closeRoomView();
   };
 
@@ -129,6 +130,7 @@ class RoomView extends Component {
         </ListView>
         <ChatTextInput
           message={this.state.message}
+          onChangeCb={this.messageChangeCb}
           isFocused={this.state.textInputFocus}
           unFocusIt={() => this.setState({ textInputFocus: false })} />
       </div>
