@@ -35,6 +35,8 @@ Check related BananaHackers blog posts for more information.
  - Donate to me with cryptocurrency or hardware(Contact me for any of those)
  - Tell others about Chooj
  - Idle in Chooj's Matrix room and help others if they need help
+ - Create Chooj a logo
+ - Get Farooq something in his [wish list](https://github.com/farooqkz/my-wish-list/blob/main/README.md)
  - ...
 
 ### Matrix room
