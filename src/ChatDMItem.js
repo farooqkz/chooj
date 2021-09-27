@@ -20,9 +20,12 @@ class ChatDMItem extends Component {
     this.lastEventTime = -1;
     this.state = {
       lastEvent: props.lastEvent,
-      online: "offline",
+      online: null,
       displayName: "",
     };
+    window.mClient.getPresence(props.userId).then((result) => {
+      this.setState({ online: result.presence });
+    });
   }
 
   componentWillMount() {

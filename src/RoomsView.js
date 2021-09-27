@@ -1,7 +1,7 @@
 import { Component } from "inferno";
 
 import ListView from "./ListView";
-import personIcon from "./person_icon.png";
+import hashIcon from "./hash_icon.png";
 import ChatRoomItem from "./ChatRoomItem";
 import TextListItem from "./ui/TextListItem";
 import { makeHumanReadableEvent } from "./utils";
@@ -48,7 +48,7 @@ class RoomsView extends Component {
         const lastEventSender = lastEvent.getSender();
         const roomId = room.roomId;
         let avatarUrl;
-        avatarUrl = personIcon;
+        avatarUrl = hashIcon;
         return {
           roomId: roomId,
           avatarUrl: avatarUrl,

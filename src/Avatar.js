@@ -10,10 +10,10 @@ function Avatar(props) {
   return (
     <div className="avatar">
       <img className="avatar-img" alt="" src={props.avatar} />
-      <div
+    {props.online? <div
         className="avatar-presence"
         style={{ "background-color": presenceColor[props.online] }}
-      ></div>
+      ></div>:null}
     </div>
   );
 }

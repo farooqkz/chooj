@@ -6,7 +6,7 @@ class ChatRoomItem extends Component {
   updateLastEvent = (event, room, ts) => {
     if (!ts) console.log(event, room);
   };
-
+  
   constructor(props) {
     super(props);
     this.lastEventTime = -1;
@@ -28,7 +28,7 @@ class ChatRoomItem extends Component {
   render() {
     return (
       <IconListItem
-        icon=<Avatar avatar={this.props.avatar} online={"online"} />
+        icon=<Avatar avatar={this.props.avatar} />
         secondary={this.state.displayName}
         primary={this.state.lastEvent}
         key={this.props.isFocused}

@@ -28,7 +28,7 @@ class DMsView extends Component {
   handleKeyDown = (evt) => {
     if (evt.key === "Call" || evt.key === "c") {
       if (this.rooms.length === 0) {
-        window.alert("You're lonely... there is no one to call!");
+        window.alert("You're lonely(no DM)... there is no one to call!");
         return;
       }
       this.setState({ showCallSelection: true });
