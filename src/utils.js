@@ -31,8 +31,9 @@ function makeHumanReadableEvent(type, content, sender, myself, dm) {
       return (
         eventSender(sender, myself, dm) +
         ": " +
-        (["m.text", "m.notice"].includes(content.msgtype) ?
-          content.body : content.msgtype)
+        (["m.text", "m.notice"].includes(content.msgtype)
+          ? content.body
+          : content.msgtype)
       );
     default:
       return eventSender(sender, myself, dm) + " " + type;

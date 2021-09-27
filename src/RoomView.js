@@ -27,17 +27,17 @@ class RoomView extends Component {
       return prevState;
     });
   };
-  
+
   messageChangeCb = (message) => {
     this.setState({ message: message });
   };
-  
-  handleKeyDown = (event_) => {
-    if (event_.key !== "b" && event_.key !== "Backspace") {
+
+  handleKeyDown = (event) => {
+    if (event.key !== "b" && event.key !== "Backspace") {
       return;
     }
     if (this.state.textInputFocus && this.state.message) return;
-    event_.preventDefault();
+    event.preventDefault();
     this.props.closeRoomView();
   };
 
@@ -90,7 +90,7 @@ class RoomView extends Component {
       textInputFocus: true,
     };
   }
-  
+
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown);
   }
@@ -104,36 +104,37 @@ class RoomView extends Component {
       <>
         <Header text={this.room.calculateRoomName()} />
         <div className="eventsandtextinput">
-        <ListView
-          cursor={this.state.cursor}
-          cursorChangeCb={this.cursorChangeCb}
-          height="calc(100vh - 2.8rem - 40px - 32px)"
-        >
-          {this.room
-            .getLiveTimeline()
-            .getEvents()
-            .map((evt, index, ary) => {
-              let item = null;
-              if (evt.getType() === "m.room.message") {
-                item = (
-                  <MessageItem
-                    sender={{ userId: evt.getSender() }}
-                    content={evt.getContent()}
-                  />
-                );
-              } else {
-                item = <UnsupportedEventItem senderId={evt.getSender()} />;
-              }
-              if (item) item.props.isFocused = index === this.state.cursor;
-              return item;
-            })}
-        </ListView>
-        <ChatTextInput
-          message={this.state.message}
-          onChangeCb={this.messageChangeCb}
-          isFocused={this.state.textInputFocus}
-          unFocusIt={() => this.setState({ textInputFocus: false })} />
-      </div>
+          <ListView
+            cursor={this.state.cursor}
+            cursorChangeCb={this.cursorChangeCb}
+            height="calc(100vh - 2.8rem - 40px - 32px)"
+          >
+            {this.room
+              .getLiveTimeline()
+              .getEvents()
+              .map((evt, index, ary) => {
+                let item = null;
+                if (evt.getType() === "m.room.message") {
+                  item = (
+                    <MessageItem
+                      sender={{ userId: evt.getSender() }}
+                      content={evt.getContent()}
+                    />
+                  );
+                } else {
+                  item = <UnsupportedEventItem senderId={evt.getSender()} />;
+                }
+                if (item) item.props.isFocused = index === this.state.cursor;
+                return item;
+              })}
+          </ListView>
+          <ChatTextInput
+            message={this.state.message}
+            onChangeCb={this.messageChangeCb}
+            isFocused={this.state.textInputFocus}
+            unFocusIt={() => this.setState({ textInputFocus: false })}
+          />
+        </div>
         <footer $HasVNodeChildren>
           <SoftKey centerText={this.getCenterText()} centerCb={this.centerCb} />
         </footer>

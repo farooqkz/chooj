@@ -43,7 +43,7 @@ class ListView extends Component {
       cursor: cursor,
     };
   }
-  
+
   componentDidUpdate() {
     findDOMNode(this.props.children[this.props.cursor]).scrollIntoView();
   }

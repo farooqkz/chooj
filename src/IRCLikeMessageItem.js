@@ -44,11 +44,13 @@ function IRCLikeMessageItemUnknown(props) {
 
 function IRCLikeMessageItem(props) {
   const { sender, content, isFocused } = props;
+  const userId = sender.userId;
+  let displayName = window.mClient.getUser(userId).displayName || userId;
   switch (content.msgtype) {
     case "m.text":
       return (
         <IRCLikeMessageItemText
-          sender={sender.userId}
+          sender={displayName}
           text={content.body}
           isFocused={isFocused}
         />
@@ -56,7 +58,7 @@ function IRCLikeMessageItem(props) {
     case "m.notice":
       return (
         <IRCLikeMessageItemNotice
-          sender={sender.userId}
+          sender={displayName}
           notice={content.body}
           isFocused={isFocused}
         />
@@ -70,7 +72,7 @@ function IRCLikeMessageItem(props) {
     default:
       return (
         <IRCLikeMessageItemUnknown
-          sender={sender.userID}
+          sender={sender.userId}
           isFocsued={isFocused}
         />
       );

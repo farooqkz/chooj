@@ -6,7 +6,7 @@ class ChatRoomItem extends Component {
   updateLastEvent = (event, room, ts) => {
     if (!ts) console.log(event, room);
   };
-  
+
   constructor(props) {
     super(props);
     this.lastEventTime = -1;

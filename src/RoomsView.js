@@ -7,8 +7,7 @@ import TextListItem from "./ui/TextListItem";
 import { makeHumanReadableEvent } from "./utils";
 
 class RoomsView extends Component {
-  handleKeyDown = (evt) => {
-  };
+  handleKeyDown = (evt) => {};
 
   cursorChangeCb = (cursor) => {
     this.props.selectedRoomCb(this.rooms[cursor].roomId);
