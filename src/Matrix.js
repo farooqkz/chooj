@@ -39,7 +39,7 @@ class Matrix extends Component {
     if (document.querySelector("#menu").innerHTML) return;
     switch (this.tabs[this.state.currentTab]) {
       case "About":
-        window.open("https://github.com/farooqkz/matrix-client", "_blank");
+        window.open("https://github.com/farooqkz/chooj", "_blank");
         break;
       case "People":
       case "Rooms":
