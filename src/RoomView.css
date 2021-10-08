@@ -4,5 +4,5 @@
   padding: 0;
   display: flex;
   justify-content: space-between;
-  flex-direction: column;
+  flex-direction: column-reverse;
 }
