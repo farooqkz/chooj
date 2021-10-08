@@ -8,10 +8,46 @@ import RoomsView from "./RoomsView";
 import About from "./About";
 import Waiting from "./Waiting";
 import RoomView from "./RoomView";
+import InvitesView from "./InvitesView";
 
 class Matrix extends Component {
   onTabChange = (index) => {
     this.setState({ currentTab: index });
+  };
+  
+  softLeftText = () => {
+   switch(this.tabs[this.state.currentTab]) {
+      case "About":
+        return "";
+      case "People":
+        return "";
+      case "Rooms":
+        return "";
+      case "Invites":
+        return "Accept";
+      case "Settings":
+        return "";
+      default:
+        return "";
+    }
+
+  };
+
+  softRightText = () => {
+    switch(this.tabs[this.state.currentTab]) {
+      case "About":
+        return "";
+      case "People":
+        return "";
+      case "Rooms":
+        return "";
+      case "Invites":
+        return "Decline";
+      case "Settings":
+        return "";
+      default:
+        return "";
+    }
   };
 
   softCenterText = () => {
@@ -33,6 +69,14 @@ class Matrix extends Component {
 
   openRoom = () => {
     this.setState({ openRoomId: this.roomId });
+  };
+  
+  softRightCb = () => {
+    
+  };
+
+  softLeftCb = () => { 
+
   };
 
   softCenterCb = () => {
@@ -62,14 +106,6 @@ class Matrix extends Component {
         props.data.well_known["m.identity_server"].base_url,
     });
     const client = window.mClient;
-    client.on("RoomMember.membership", (event, member) => {
-      const myId = client.getUserId();
-      if (member.membership === "invite" && member.userId === myId) {
-        client
-          .joinRoom(member.roomId)
-          .then(() => alert(`Auto joined ${member.name} after invite`));
-      }
-    });
     client.on("Call.incoming", (call) => {
       call.once("state", (state) => {
         if (this.state.isCall) {
@@ -88,6 +124,7 @@ class Matrix extends Component {
     client.startClient({ lazyLoadMembers: true });
     this.tabs = ["People", "Rooms", "Invites", "Settings", "About"];
     this.roomId = "";
+    this.invite = null;
     this.state = {
       currentTab: 0,
       isCall: false,
@@ -118,16 +155,19 @@ class Matrix extends Component {
                 this.roomId = roomId;
               }}
             />
-            <p>{"Invites are not implemented and auto accepted"}</p>
+            <InvitesView selectedInviteCb={(invite) => {
+              this.invite = invite;
+            }}
+            />
             <p>{"Settings not implemented"}</p>
             <About />
           </TabView>
           <footer $HasVNodeChildren>
             <SoftKey
-              leftText="Quit"
-              leftCb={() => {
-                if (window.confirm("Quit?")) window.close();
-              }}
+              leftText={this.softLeftText()}
+              leftCb={this.softLeftCb}
+              rightText={this.softRightText()}
+              rightCb={this.softRightCb}
               centerText={this.softCenterText()}
               centerCb={this.softCenterCb}
             />

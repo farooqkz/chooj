@@ -1,6 +1,6 @@
 import "KaiUI/src/components/TextListItem/TextListItem.scss";
 import morecolor from "./morecolor.scss";
-import { Component, createRef } from "inferno";
+import { Component, createRef, createTextVNode } from "inferno";
 import classNames from "classnames";
 
 const prefixCls = "kai-tl";
@@ -22,8 +22,8 @@ class TextListItem extends Component {
   }
 
   componentDidUpdate(lastProps) {
-    if (this.props.isFocused && this.divRef.current)
-      this.divRef.current.focus();
+    if (this.props.isFocused && this.divRef.current);
+     // this.divRef.current.focus();
   }
 
   render() {
@@ -39,12 +39,17 @@ class TextListItem extends Component {
         style={`background-color: ${
           this.props.isFocused ? morecolor.item_bg_focus_color : ""
         }`}
+        $HasNonKeyedChildren
       >
-        <span className={classNames(primaryCls, this.className)}>
-          {this.primary}
+        <span className={classNames(primaryCls, this.className)} $HasVNodeChildren>
+          {createTextVNode(this.primary)}
         </span>
-        <label className={this.secondaryCls}>{this.secondary}</label>
-        <label className={this.tertiaryCls}>{this.tertiary}</label>
+        <label className={this.secondaryCls} $HasVNodeChildren>
+          {createTextVNode(this.secondary)}
+        </label>
+        <label className={this.tertiaryCls} $HasVNodeChildren>
+          {createTextVNode(this.tertiary)}
+        </label>
       </div>
     );
   }

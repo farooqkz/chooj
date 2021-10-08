@@ -1,5 +1,6 @@
 import { Component } from "inferno";
-import ListView from "ListView";
+import ListView from "./ListView";
+import TextListItem from "./ui/TextListItem";
 
 class InvitesView extends Component {
   getInvite = (room) => room.getMyMembership() === "invite";
@@ -11,8 +12,17 @@ class InvitesView extends Component {
     };
   }
 
+  cursorChangeCb = (cursor) => {
+    this.props.selectedInviteCb(this.invites[cursor]);
+    this.setState({ cursor: cursor });
+  };
+
   render() {
-    // TODO
+    console.log(this.invites[0]);
+    return (<ListView cursorChangeCb={this.cursorChangeCb} cursor={this.state.cursor}>
+                <TextListItem primary="Hello :)" focused/>
+      </ListView>);
+            
   }
 }
 
