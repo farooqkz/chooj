@@ -9,14 +9,10 @@ const primaryCls = `${prefixCls}-primary`;
 
 class TextListItem extends Component {
   constructor(props) {
-    const { primary, secondary, tertiary, focusClass, className } = props;
+    const { tertiary, secondary, className } = props;
     super(props);
     this.secondaryCls = `${prefixCls}-secondary ${secondary ? "" : "hidden"}`;
     this.tertiaryCls = `${prefixCls}-tertiary ${tertiary ? "" : "hidden"}`;
-    this.primary = primary;
-    this.secondary = secondary;
-    this.tertiary = tertiary;
-    this.focusClass = focusClass;
     this.className = className || "";
     this.divRef = createRef();
   }
@@ -28,7 +24,7 @@ class TextListItem extends Component {
 
   render() {
     const focusedCls = this.props.isFocused
-      ? `${prefixCls}-focused ${this.focusClass || "defaultFocusCls"}`
+      ? `${prefixCls}-focused ${this.props.focusClass || "defaultFocusCls"}`
       : "";
     return (
       <div
@@ -42,13 +38,13 @@ class TextListItem extends Component {
         $HasNonKeyedChildren
       >
         <span className={classNames(primaryCls, this.className)} $HasVNodeChildren>
-          {createTextVNode(this.primary)}
+          {createTextVNode(this.props.primary)}
         </span>
         <label className={this.secondaryCls} $HasVNodeChildren>
-          {createTextVNode(this.secondary)}
+          {createTextVNode(this.props.secondary)}
         </label>
         <label className={this.tertiaryCls} $HasVNodeChildren>
-          {createTextVNode(this.tertiary)}
+          {createTextVNode(this.props.tertiary)}
         </label>
       </div>
     );
