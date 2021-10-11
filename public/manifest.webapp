@@ -10,6 +10,7 @@
   "type": "certified",
   "permissions": {
     "audio-capture": "Used for voice calls",
+    "video-capture": "Used for video calls as well as logging in with QR",
     "desktop-notification": "",
     "systemXHR": "",
     "audio-channel-telephony": "Used for voice calls",
