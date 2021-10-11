@@ -14,9 +14,9 @@ class Matrix extends Component {
   onTabChange = (index) => {
     this.setState({ currentTab: index });
   };
-  
+
   softLeftText = () => {
-   switch(this.tabs[this.state.currentTab]) {
+    switch (this.tabs[this.state.currentTab]) {
       case "About":
         return "";
       case "People":
@@ -30,11 +30,10 @@ class Matrix extends Component {
       default:
         return "";
     }
-
   };
 
   softRightText = () => {
-    switch(this.tabs[this.state.currentTab]) {
+    switch (this.tabs[this.state.currentTab]) {
       case "About":
         return "";
       case "People":
@@ -70,14 +69,10 @@ class Matrix extends Component {
   openRoom = () => {
     this.setState({ openRoomId: this.roomId });
   };
-  
-  softRightCb = () => {
-    
-  };
 
-  softLeftCb = () => { 
+  softRightCb = () => {};
 
-  };
+  softLeftCb = () => {};
 
   softCenterCb = () => {
     if (document.querySelector("#menu").innerHTML) return;
@@ -155,9 +150,10 @@ class Matrix extends Component {
                 this.roomId = roomId;
               }}
             />
-            <InvitesView selectedInviteCb={(invite) => {
-              this.invite = invite;
-            }}
+            <InvitesView
+              selectedInviteCb={(invite) => {
+                this.invite = invite;
+              }}
             />
             <p>{"Settings not implemented"}</p>
             <About />

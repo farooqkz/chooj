@@ -10,7 +10,7 @@ class RoomsView extends Component {
   handleKeyDown = (evt) => {};
 
   cursorChangeCb = (cursor) => {
-    if (this.rooms.length !== 0) 
+    if (this.rooms.length !== 0)
       this.props.selectedRoomCb(this.rooms[cursor].roomId);
     else this.props.selectedRoomCb(null);
     this.setState({ cursor: cursor });

@@ -19,10 +19,11 @@ class InvitesView extends Component {
 
   render() {
     console.log(this.invites[0]);
-    return (<ListView cursorChangeCb={this.cursorChangeCb} cursor={this.state.cursor}>
-                <TextListItem primary="Hello :)" focused/>
-      </ListView>);
-            
+    return (
+      <ListView cursorChangeCb={this.cursorChangeCb} cursor={this.state.cursor}>
+        <TextListItem primary="Hello :)" focused />
+      </ListView>
+    );
   }
 }
 

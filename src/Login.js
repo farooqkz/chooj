@@ -7,6 +7,7 @@ import TextInput from "./ui/TextInput";
 import SoftKey from "./ui/SoftKey";
 import Header from "./ui/Header";
 import ListView from "./ListView";
+import LoginWithQR from "./LoginWithQR";
 
 class Login extends Component {
   cursorChangeCb = (cursor) => {
@@ -16,13 +17,27 @@ class Login extends Component {
   handleKeyDown = (evt) => {
     if (evt.key === "Backspace" || evt.key === "b") {
       evt.preventDefault();
+      if (this.state.loginWithQR) {
+        this.setState({ loginWithQR: false });
+        return;
+      }
       if (this.state.stage <= 0) {
-        if (window.confirm("Quit?")) window.close();
+        if (window.confirm("Quit?")) {
+          window.close();
+        } else {
+          this.setState({ stage: 0 });
+        }
+        return;
       }
       this.setState((prevState) => {
         prevState.cursor = 0;
         prevState.stage--;
       });
+    }
+    if (evt.key === "c" || evt.key === "Call") {
+      if (this.state.stage !== 0) return;
+      if (this.state.cursor !== 3) return;
+      this.setState({ loginWithQR: true });
     }
   };
 
@@ -31,7 +46,7 @@ class Login extends Component {
       case "m.login.password":
         window.mClient
           .loginWithPassword(
-            `@${this.username}:${this.homeserverUrl.replace("https://", "")}`,
+            `@${this.username}:${this.homeserverName}`,
             this.password
           )
           .then((result) => {
@@ -109,23 +124,45 @@ class Login extends Component {
     this.homeserverUrl = "";
     this.username = "";
     this.password = "";
+    this.homeserverName = "";
     this.state = {
       stage: 0,
       cursor: 0,
+      loginWithQR: false,
     };
   }
 
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleKeyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown);
+  }
+
   render() {
+    if (this.state.loginWithQR) {
+      return <LoginWithQR />;
+    }
     let listViewChildren;
     switch (this.state.stage) {
       case 0:
         listViewChildren = [
+          {
+            placeholder: "example.com",
+            onChange: (value) => {
+              this.homeserverName = value;
+            },
+            label: "Homeserver name(without https://)",
+            type: "input",
+          },
           {
             placeholder: "matrix.example.com",
             onChange: (value) => {
               this.homeserverUrl = value;
             },
             label: "Homeserver URL",
+            type: "input",
           },
           {
             placeholder: "mrpotato",
@@ -133,12 +170,19 @@ class Login extends Component {
               this.username = value;
             },
             label: "Username",
+            type: "input",
+          },
+          {
+            tertiary:
+              "Press Call button and scan a QR in the following format to login with QR code instead of typing all these(PASS = password authentication): PASS server_name server_url username password",
+            type: "text",
           },
         ].map((attrs, index) => {
+          const C = attrs.type === "input" ? TextInput : TextListItem;
           if (index === this.state.cursor) {
-            return <TextInput {...attrs} isFocused />;
+            return <C {...attrs} isFocused />;
           } else {
-            return <TextInput {...attrs} />;
+            return <C {...attrs} />;
           }
         });
         break;

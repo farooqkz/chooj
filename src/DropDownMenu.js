@@ -16,7 +16,7 @@ class DropDownMenu extends Component {
       <div
         style={{
           "min-height": `calc(100vh - ${
-            (this.props.children.length * 6) - (window.isFullScreen? 0:2)
+            this.props.children.length * 6 - (window.isFullScreen ? 0 : 2)
           }rem - 1.6rem)`,
           position: "absolute",
           left: 0,
