@@ -37,7 +37,10 @@ class TextListItem extends Component {
         }`}
         $HasNonKeyedChildren
       >
-        <span className={classNames(primaryCls, this.className)} $HasVNodeChildren>
+        <span
+          className={classNames(primaryCls, this.className)}
+          $HasVNodeChildren
+        >
           {createTextVNode(this.props.primary)}
         </span>
         <label className={this.secondaryCls} $HasVNodeChildren>
