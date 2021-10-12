@@ -16,7 +16,9 @@ class LoginWithQR extends Component {
     canvas.width = videoWidth;
     context2D.drawImage(this.video, 0, 0, videoWidth, videoHeight);
     let data = context2D.getImageData(0, 0, videoWidth, videoHeight).data;
-    let decoded = jsQR(data, videoWidth, videoHeight, { inversionAttempts: "dontInvert" });
+    let decoded = jsQR(data, videoWidth, videoHeight, {
+      inversionAttempts: "dontInvert",
+    });
     if (decoded === null) {
       window.alert("Scanned nothing... Please retry!");
       return;
@@ -29,11 +31,20 @@ class LoginWithQR extends Component {
     const server_url = data[2];
     const username = data[3];
     let password = null;
-    if (window.confirm(`Do you confirm? Flow: ${flow} | Server_name: ${server_name} | Server URL: ${server_url} | Username: ${username}`)) {
-    const start = flow.length + server_name.length + server_url.length + username.length + 3;
+    if (
+      window.confirm(
+        `Do you confirm? Flow: ${flow} | Server_name: ${server_name} | Server URL: ${server_url} | Username: ${username}`
+      )
+    ) {
+      const start =
+        flow.length +
+        server_name.length +
+        server_url.length +
+        username.length +
+        3;
       password = decoded.substring(start + 1);
       window.mClient = matrixcs.createClient({
-        baseUrl: server_url
+        baseUrl: server_url,
       });
       window.mClient.loginFlows().then((result) => {
         let gotPasswordLogin = false;
@@ -44,14 +55,17 @@ class LoginWithQR extends Component {
           }
         }
         if (gotPasswordLogin) {
-          window.mClient.loginWithPassword(`@${username}:${server_name}`, password).then((result) => {
-            localforage.setItem("login", result).then(() => {
-              window.alert("Logged in as " + username);
-              // eslint-disable-next-line no-self-assign
-              window.location = window.location;
+          window.mClient
+            .loginWithPassword(`@${username}:${server_name}`, password)
+            .then((result) => {
+              localforage.setItem("login", result).then(() => {
+                window.alert("Logged in as " + username);
+                // eslint-disable-next-line no-self-assign
+                window.location = window.location;
+              });
             })
-          }).catch((err) => {
-              switch(err.errcode) {
+            .catch((err) => {
+              switch (err.errcode) {
                 case "M_FORBIDDEN":
                   alert("Incorrect login credentials");
                   break;
@@ -69,10 +83,10 @@ class LoginWithQR extends Component {
               // eslint-disable-next-line no-self-assign
               window.location = window.location;
             });
-
-
         } else {
-          window.alert("This homeserver does not support authentication with password");
+          window.alert(
+            "This homeserver does not support authentication with password"
+          );
         }
       });
     }
