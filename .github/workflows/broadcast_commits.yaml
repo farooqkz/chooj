@@ -1,0 +1,16 @@
+on: [push]
+
+jobs:
+  send-message:
+    runs-on: ubuntu-latest
+    name: Send message via Matrix
+    steps:
+    - name: Send message to test channel
+      id: matrix-chat-message
+      uses: fadenb/matrix-chat-message@v0.0.6
+      with:
+        homeserver: 'mozilla.modular.im'
+        token: ${{ secrets.ACCESS_TOKEN }}
+        channel: '!JZahFNNhVKadmHMAgm:mozilla.org'
+        message: |
+          Thee in luck! New Chooj push which means new development build available! Download from  https://farooqkz.de1.hashbang.sh/matrix-client-builds/${{ github.sha }}.zip
