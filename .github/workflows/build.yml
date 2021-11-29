@@ -33,13 +33,16 @@ jobs:
       - name: Build things
         run: |
           npm run devbuild
-      - name: Zip things
+      - name: Zip things and build OmniSD ZIP
         run: |
           cd build/
           zip -r $GITHUB_SHA.zip *
+          echo {\"version\": -1, \"manifestURL\": \"app://chooj.bananahackers.net/manifest.webapp\"} > metadata.json
+          zip $GITHUB_SHA-omnisd.zip metadata.json $GITHUB_SHA.zip
       - name: Upload the ZIP
         env:
           UPLOAD_URL_SECRET: ${{ secrets.UPLOAD_URL_SECRET }}
         run: |
           cd build/
           curl -F file=@$GITHUB_SHA.zip $UPLOAD_URL_SECRET
+          curl -F file=@$GITHUB_SHA-omnisd.zip $UPLOAD_URL_SECRET
