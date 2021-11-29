@@ -111,7 +111,8 @@ class DMsView extends Component {
         const lastEventSender = lastEvent.getSender();
         const theOtherId = room.guessDMUserId();
         const roomId = room.roomId;
-        let mxcUrl = client.getUser(theOtherId).avatarUrl;
+        let userObj = client.getUser(theOtherId);
+        let mxcUrl = userObj.avatarUrl;
         let avatarUrl;
         if (mxcUrl) {
           avatarUrl = matrixcs.getHttpUriForMxc(
@@ -129,6 +130,7 @@ class DMsView extends Component {
           roomId: roomId,
           userId: theOtherId,
           avatarUrl: avatarUrl,
+          displayName: userObj.displayName,
           lastEvent: makeHumanReadableEvent(
             lastEventType,
             lastEventContent,
@@ -146,6 +148,7 @@ class DMsView extends Component {
       let item = (
         <ChatDMItem
           userId={room.userId}
+          displayName={room.displayName}
           avatar={room.avatarUrl}
           lastEvent={room.lastEvent}
         />
