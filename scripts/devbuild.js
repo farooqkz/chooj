@@ -118,6 +118,18 @@ checkBrowsers(paths.appPath, isInteractive)
       console.log(err.message);
     }
     process.exit(1);
+  }).then(() => {
+    let jsFile = paths.appBuild + '/static/js/0.chunk.js';
+    fs.readFile(jsFile).then(buf => {
+      let s = buf.toString();
+      s = s.replace('new XHR()', 'new XHR({mozSystem:true})');
+      s = s.replace('new global.XMLHttpRequest()', 'new global.XMLHttpRequest({mozSystem:true})');
+      fs.writeFile(jsFile, s).catch(err => {
+        if (err && err.message) {
+          console.log(err.message);
+        }
+      });
+    });
   });
 
 // Create the production build and print the deployment instructions.
