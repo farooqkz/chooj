@@ -5,7 +5,6 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
 window.isFullScreen = false;
-Object.defineProperty(XMLHttpRequest.prototype, "mozSystem", { value: true });
 
 render(<App />, document.getElementById("root"));
 

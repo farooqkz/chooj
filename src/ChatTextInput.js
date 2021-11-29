@@ -17,7 +17,6 @@ class ChatTextInput extends Component {
 
   componentDidUpdate(lastProps) {
     if (!this.textInput) return;
-    console.log("HELLO", this.props.isFocused);
     if (this.props.isFocused) {
       this.textInput.focus();
     } else {
