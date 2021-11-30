@@ -1,4 +1,3 @@
-import { Component } from "inferno";
 import colors from "KaiUI/src/theme/colors.scss";
 import "KaiUI/src/components/Tab/Tab.scss";
 
