@@ -1,4 +1,4 @@
-import { Component, createTextVNode, createRef } from "inferno";
+import { Component, createRef } from "inferno";
 import classNames from "classnames";
 import "KaiUI/src/components/IconListItem/IconListItem.scss";
 import morecolor from "../morecolor.scss";
@@ -60,7 +60,7 @@ class IconListItem extends Component {
           disabledCls,
           this.props.className,
           focusedCls
-        )}
+        }
         onClick={this.props.onClick}
         key={this.props.isFocused}
         ref={this.divRef}
@@ -70,13 +70,13 @@ class IconListItem extends Component {
             : "",
         }}
       >
-        <div className={iconCls}>{renderedIcon}</div>
+        <div className={iconCls} $HasVNodeChildren>{renderedIcon}</div>
         <div className={lineCls}>
-          <label className={secondaryCls} $HasVNodeChildren>
-            {createTextVNode(this.props.secondary)}
+          <label className={secondaryCls} $HasTextChildren>
+            {createTextText(this.props.secondary}
           </label>
-          <span className={primaryCls} $HasVNodeChildren>
-            {createTextVNode(this.props.primary)}
+          <span className={primaryCls} $HasTextChildren>
+            {this.props.primary}
           </span>
         </div>
       </div>

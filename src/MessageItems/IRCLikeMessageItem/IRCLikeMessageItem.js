@@ -1,4 +1,3 @@
-import { createTextVNode } from "inferno";
 import "./IRCLikeMessageItem.css";
 
 function IRCLikeMessageItemText(props) {
@@ -8,7 +7,7 @@ function IRCLikeMessageItemText(props) {
       tabIndex={0}
     >
       <p>
-        <b $HasVNodeChildren>{createTextVNode(`<${props.sender}>`)}</b>
+        <b $HasTextChildren>`<${props.sender}>`</b>
         {" " + props.text}
       </p>
     </div>
@@ -23,7 +22,7 @@ function IRCLikeMessageItemNotice(props) {
     >
       <p>
         <i>
-          <b $HasVNodeChildren>{createTextVNode(`<${props.sender}>`)}</b>
+          <b $HasTextChildren>{`<${props.sender}>`}</b>
           {" " + props.text}
         </i>
       </p>

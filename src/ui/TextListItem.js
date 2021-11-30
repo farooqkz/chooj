@@ -1,6 +1,6 @@
 import "KaiUI/src/components/TextListItem/TextListItem.scss";
 import morecolor from "./morecolor.scss";
-import { Component, createRef, createTextVNode } from "inferno";
+import { Component, createRef, } from "inferno";
 import classNames from "classnames";
 
 const prefixCls = "kai-tl";
@@ -23,31 +23,32 @@ class TextListItem extends Component {
   }
 
   render() {
-    const focusedCls = this.props.isFocused
+    const { isFocused, primary, secondary, tertiary } = this.props;
+    const focusedCls = isFocused
       ? `${prefixCls}-focused ${this.props.focusClass || "defaultFocusCls"}`
       : "";
     return (
       <div
         tabIndex={0}
         className={classNames(itemCls, this.className, focusedCls)}
-        key={this.props.isFocused}
+        key={isFocused}
         ref={this.divRef}
         style={`background-color: ${
-          this.props.isFocused ? morecolor.item_bg_focus_color : ""
+          isFocused ? morecolor.item_bg_focus_color : ""
         }`}
         $HasNonKeyedChildren
       >
         <span
           className={classNames(primaryCls, this.className)}
-          $HasVNodeChildren
+          $HasTextChildren
         >
-          {createTextVNode(this.props.primary)}
+          {primary}
         </span>
-        <label className={this.secondaryCls} $HasVNodeChildren>
-          {createTextVNode(this.props.secondary)}
+        <label className={this.secondaryCls} $HasTextChildren>
+          {secondary}
         </label>
-        <label className={this.tertiaryCls} $HasVNodeChildren>
-          {createTextVNode(this.props.tertiary)}
+        <label className={this.tertiaryCls} $HasTextChildren>
+          {tertiary}
         </label>
       </div>
     );

@@ -1,4 +1,4 @@
-import { Component, createTextVNode } from "inferno";
+import { Component, } from "inferno";
 import colors from "KaiUI/src/theme/colors.scss";
 import "KaiUI/src/components/Tab/Tab.scss";
 
@@ -26,8 +26,8 @@ class Tab extends Component {
         style={this.style}
         key={this.props.isActive}
       >
-        <div className={`${actPrefixCls}-label`} $HasVNodeChildren>
-          {createTextVNode(this.props.label)}
+        <div className={`${actPrefixCls}-label`} $HasTextChildren>
+          {this.props.label}
         </div>
       </div>
     );

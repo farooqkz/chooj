@@ -1,4 +1,4 @@
-import { Component, createTextVNode } from "inferno";
+import { Component, } from "inferno";
 import classnames from "classnames";
 import "KaiUI/src/components/TextInput/TextInput.scss";
 import morecolor from "./morecolor.scss";
@@ -41,8 +41,8 @@ class TextInput extends Component {
         }`}
         key={this.props.isFocused}
       >
-        <label className={labelCls} $HasVNodeChildren>
-          {createTextVNode(this.props.label)}
+        <label className={labelCls} $HasTextChildren>
+          {this.props.label}
         </label>
         <input
           onKeyDown={this.onChange}

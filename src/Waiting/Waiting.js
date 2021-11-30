@@ -1,4 +1,3 @@
-import { createTextVNode } from "inferno";
 import "./Waiting.css";
 import cow from "./cowsay-pleasewait.png";
 
@@ -16,8 +15,8 @@ function Waiting(props) {
   return (
     <>
       <img className="waiting" src={cow} alt="" />
-      <p className="waiting" $HasVNodeChildren>
-        {createTextVNode(randomTip())}
+      <p className="waiting" $HasTextChildren>
+        {randomTip()}
       </p>
     </>
   );
