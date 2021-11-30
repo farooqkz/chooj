@@ -1,5 +1,5 @@
 import { Component } from "inferno";
-import Avatar from "./Avatar";
+import Avatar from "./Avatar/Avatar";
 import IconListItem from "./ui/IconListItem";
 
 class ChatRoomItem extends Component {

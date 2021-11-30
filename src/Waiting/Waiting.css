@@ -1,0 +1,12 @@
+img.waiting {
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 105px;
+  height: 110px;
+  width: 192px;
+}
+
+p.waiting {
+  margin-top: 2px;
+  text-align: center;
+}

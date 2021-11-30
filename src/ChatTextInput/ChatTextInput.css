@@ -1,0 +1,21 @@
+.chattextinput {
+  display: flex;
+  justify-content: center;
+  flex-direction: center;
+  background-color: yellow;
+}
+
+.chattextinput > input {
+  width: 96%;
+}
+
+.chattextinput--focused {
+  display: flex;
+  justify-content: center;
+  flex-direction: center;
+  background-color: rgb(0, 255, 20);
+}
+
+.chattextinput--focused > input {
+  width: 96%;
+}
