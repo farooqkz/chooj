@@ -13,4 +13,6 @@ jobs:
         token: ${{ secrets.ACCESS_TOKEN }}
         channel: '!JZahFNNhVKadmHMAgm:mozilla.org'
         message: |
-          Thee in luck! New Chooj push which means new development build available! Download from  https://farooqkz.de1.hashbang.sh/matrix-client-builds/${{ github.sha }}.zip
+          Thee in luck! New push to Chooj repository which means new development build available!
+          Download from  https://farooqkz.de1.hashbang.sh/matrix-client-builds/${{ github.sha }}.zip to sideload OR
+          Download from https://farooqkz.de1.hashbang.sh/matrix-client-builds/${{ github.sha }}-omnisd.zip to install with OmniSD.
