@@ -20,63 +20,50 @@ class IconListItem extends Component {
     }
   }
   render() {
-    const focusedCls = this.props.isFocused
+    const {
+      isFocused,
+      disabled,
+      primary,
+      secondary,
+      iconSrc,
+      iconWidth,
+      className,
+      onClick,
+    } = this.props;
+    const focusedCls = isFocused
       ? `${prefixCls}-focused ${this.focusClass || ""}`
       : "";
-    const iconCls = `${prefixCls}-icon-${
-      this.props.isFocused ? "focused" : "unfocused"
-    }`;
-    const secondaryCls = `${prefixCls}-secondary ${
-      this.props.secondary ? "" : "hidden"
-    }`;
-    const disabledCls = this.props.disabled ? `${prefixCls}-disabled` : "";
+    const iconCls = `${prefixCls}-icon-${isFocused ? "focused" : "unfocused"}`;
+    const secondaryCls = `${prefixCls}-secondary ${secondary ? "" : "hidden"}`;
+    const disabledCls = disabled ? `${prefixCls}-disabled` : "";
     let renderedIcon;
-    if (this.props.iconSrc)
-      renderedIcon = (
-        <img
-          src={this.props.iconSrc}
-          alt=""
-          width={this.props.iconWidth || 50}
-        />
-      );
-    else if (
-      this.props.icon instanceof String &&
-      this.props.icon.startsWith("kai")
-    )
-      renderedIcon = (
-        <span
-          className={this.props.icon}
-          style={{ width: this.props.iconWidth }}
-        />
-      );
+    if (iconSrc)
+      renderedIcon = <img src={iconSrc} alt="" width={iconWidth || 50} />;
+    else if (icon instanceof String && icon.startsWith("kai"))
+      renderedIcon = <span className={icon} style={{ width: iconWidth }} />;
     // Then we assume it is a valid element TODO: check for this
-    else renderedIcon = <span>{this.props.icon}</span>;
+    else renderedIcon = <span>{icon}</span>;
 
     return (
       <div
-        tabIndex={this.props.disabled ? undefined : 1}
-        className={classNames(
-          itemCls,
-          disabledCls,
-          this.props.className,
-          focusedCls
-        }
-        onClick={this.props.onClick}
-        key={this.props.isFocused}
+        tabIndex={disabled ? undefined : 1}
+        className={classNames(itemCls, disabledCls, className, focusedCls)}
+        onClick={onClick}
+        key={isFocused}
         ref={this.divRef}
         style={{
-          "background-color": this.props.isFocused
-            ? morecolor.item_bg_focus_color
-            : "",
+          "background-color": isFocused ? morecolor.item_bg_focus_color : "",
         }}
       >
-        <div className={iconCls} $HasVNodeChildren>{renderedIcon}</div>
+        <div className={iconCls} $HasVNodeChildren>
+          {renderedIcon}
+        </div>
         <div className={lineCls}>
           <label className={secondaryCls} $HasTextChildren>
-            {createTextText(this.props.secondary}
+            {secondary}
           </label>
           <span className={primaryCls} $HasTextChildren>
-            {this.props.primary}
+            {primary}
           </span>
         </div>
       </div>

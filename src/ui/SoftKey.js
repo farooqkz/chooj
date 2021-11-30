@@ -2,40 +2,39 @@ import { Component } from "inferno";
 import "KaiUI/src/components/SoftKey/SoftKey.scss";
 
 const prefixCls = "kai-softkey";
-
-class Button extends Component {
-  render() {
-    let renderedIcon;
-    const icon = this.props.icon;
-    if (icon && icon.toString.indexOf("kai-") === -1) {
-      renderedIcon = <img src={icon} width={20} height={20} alt="" />;
-    } else {
-      renderedIcon = <span className={icon} />;
-    }
-    return (
-      <button
-        id={this.props.id}
-        className={`${prefixCls}-btn`}
-        onClick={this.props.handleClick}
-        data-icon={renderedIcon ? "true" : undefined}
-      >
-        {renderedIcon} {this.props.text}
-      </button>
-    );
+function Button(props) {
+  const { id, handleClick, icon, text } = props;
+  let renderedIcon;
+  if (icon && icon.toString.indexOf("kai-") === -1) {
+    renderedIcon = <img src={icon} width={20} height={20} alt="" />;
+  } else {
+    renderedIcon = <span className={icon} />;
   }
+  return (
+    <button
+      id={id}
+      className={`${prefixCls}-btn`}
+      onClick={handleClick}
+      data-icon={renderedIcon ? "true" : undefined}
+      $HasNonKeyedChildren
+    >
+      {renderedIcon} {text}
+    </button>
+  );
 }
 
 class SoftKey extends Component {
   handleKeyDown = (evt) => {
+    const { centerCb, rightCb, leftCb } = this.props;
     switch (evt.key) {
       case "Enter":
-        if (this.props.centerCb) this.props.centerCb();
+        if (centerCb) centerCb();
         break;
       case "SoftLeft":
-        if (this.props.leftCb) this.props.leftCb();
+        if (leftCb) leftCb();
         break;
       case "SoftRight":
-        if (this.props.rightCb) this.props.rightCb();
+        if (rightCb) rightCb();
         break;
       default:
         break;
@@ -50,23 +49,25 @@ class SoftKey extends Component {
   }
 
   render() {
+    const { leftText, leftIcon, rightText, rightIcon, centerText, centerIcon } =
+      this.props;
     let softKeyAttrs = [
       {
         id: "leftSoftKey",
-        text: this.props.leftText,
-        icon: this.props.leftIcon,
+        text: leftText,
+        icon: leftIcon,
         handleClick: () => this.handleKeyDown({ key: "SoftLeft" }),
       },
       {
         id: "centerSoftKey",
-        text: this.props.centerText,
-        icon: this.props.centerIcon,
+        text: centerText,
+        icon: centerIcon,
         handleClick: () => this.handleKeyDown({ key: "Enter" }),
       },
       {
         id: "rightSoftKey",
-        text: this.props.rightText,
-        icon: this.props.rightIcon,
+        text: rightText,
+        icon: rightIcon,
         handleClick: () => this.handleKeyDown({ key: "SoftRight" }),
       },
     ];

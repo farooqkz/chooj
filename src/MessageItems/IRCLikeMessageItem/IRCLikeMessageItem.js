@@ -1,29 +1,25 @@
 import "./IRCLikeMessageItem.css";
 
 function IRCLikeMessageItemText(props) {
+  const { text, sender, isFocused } = props;
   return (
-    <div
-      className={"ircmsg" + (props.isFocused ? "--focused" : "")}
-      tabIndex={0}
-    >
+    <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
-        <b $HasTextChildren>`<${props.sender}>`</b>
-        {" " + props.text}
+        <b $HasTextChildren>{`<${sender}>`}</b>
+        {" " + text}
       </p>
     </div>
   );
 }
 
 function IRCLikeMessageItemNotice(props) {
+  const { isFocused, text, sender } = props;
   return (
-    <div
-      className={"ircmsg" + (props.isFocused ? "--focused" : "")}
-      tabIndex={0}
-    >
+    <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
         <i>
-          <b $HasTextChildren>{`<${props.sender}>`}</b>
-          {" " + props.text}
+          <b $HasTextChildren>{`<${sender}>`}</b>
+          {" " + text}
         </i>
       </p>
     </div>
@@ -31,12 +27,10 @@ function IRCLikeMessageItemNotice(props) {
 }
 
 function IRCLikeMessageItemUnknown(props) {
+  const { isFocused, sender } = props;
   return (
-    <div
-      className={"ircmsg" + (props.isFocused ? "--focused" : "")}
-      tabIndex={0}
-    >
-      <p>Unsupported message type was sent from {props.sender}</p>
+    <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
+      <p>Unsupported message type was sent from {sender}</p>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Component, } from "inferno";
+import { Component } from "inferno";
 import classnames from "classnames";
 import "KaiUI/src/components/TextInput/TextInput.scss";
 import morecolor from "./morecolor.scss";
