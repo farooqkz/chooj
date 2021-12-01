@@ -135,7 +135,7 @@ class RoomView extends Component {
             unFocusIt={() => this.setState({ textInputFocus: false })}
           />
         </div>
-        <footer $HasVNodeChildren>
+        <footer>
           <SoftKey centerText={this.getCenterText()} centerCb={this.centerCb} />
         </footer>
       </>
