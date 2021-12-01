@@ -6,7 +6,7 @@ function Header({ backgroundColor, text }) {
     <header
       className="kai-header"
       style={{ background: backgroundColor || colors.headerBlue }}
-      $HasTextChildren
+      $HasVNodeChildren
     >
       <h1 className="h1" $HasTextChildren>
         {text}
