@@ -5,38 +5,38 @@ import { findDOMNode } from "inferno-extras";
 class ListView extends Component {
   handleKeyDown = (evt) => {
     let cursor = this.state.cursor;
-    const props = this.props;
+    const { children, cursorChangeCb } = this.props;
     if (evt.key === "ArrowUp") {
       cursor--;
-      if (cursor === -1) cursor = this.props.children.length - 1;
+      if (cursor === -1) cursor = children.length - 1;
       if (props.children[cursor] && props.children[cursor].props.unFocusable)
         cursor--;
-      if (cursor === -1) cursor = this.props.children.length - 1;
+      if (cursor === -1) cursor = children.length - 1;
       // TODO: summarize all of these three "if"s
     } else if (evt.key === "ArrowDown") {
       cursor++;
-      if (cursor >= this.props.children.length) cursor = 0;
-      if (props.children[cursor] && props.children[cursor].props.unFocusable)
+      if (cursor >= children.length) cursor = 0;
+      if (children[cursor] && children[cursor].props.unFocusable)
         cursor++;
-      if (cursor >= this.props.children.length) cursor = 0;
+      if (cursor >= children.length) cursor = 0;
       // TODO: same as above! ME LAZY Farooq
     }
-    if (props.children && props.children[cursor])
-      findDOMNode(props.children[cursor]).scrollIntoView();
+    if (children && children[cursor])
+      findDOMNode(children[cursor]).scrollIntoView();
     this.setState({
       cursor: cursor,
     });
-    props.cursorChangeCb && props.cursorChangeCb(cursor);
+    cursorChangeCb && cursorChangeCb(cursor);
   };
 
   constructor(props) {
     super(props);
-    const { cursor, cursorChangeCb } = props;
+    const { children, cursor, cursorChangeCb } = props;
     console.log(`[ListView] Constructor was called: cursor=${cursor}`);
-    if (cursor - 1 > this.props.children.length || cursor < 0) {
+    if (cursor - 1 > children.length || cursor < 0) {
       console.error(
         `[ListView] cursor should be from 0 to ${
-          this.props.children.length - 1
+          children.length - 1
         } but is ${cursor}`
       );
       throw new Error("cursor is negative or bigger than length of list");
@@ -48,7 +48,8 @@ class ListView extends Component {
   }
 
   componentDidUpdate() {
-    findDOMNode(this.props.children[this.props.cursor]).scrollIntoView();
+    const { cursor, children } = this.props;
+    findDOMNode(children[cursor]).scrollIntoView();
   }
 
   componentDidMount() {
@@ -60,15 +61,15 @@ class ListView extends Component {
   }
 
   render() {
+    const { height, children } = this.props;
     return (
       <div
         className={"kai-list-view"}
         style={{
-          position: "fixed",
-          height: this.props.height || "calc(100vh - 60px)",
+          height: height || "calc(100vh - 60px)",
         }}
       >
-        {this.props.children}
+        {children}
       </div>
     );
   }
