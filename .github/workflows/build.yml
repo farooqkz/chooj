@@ -37,7 +37,7 @@ jobs:
         run: |
           cd build/
           zip -r $GITHUB_SHA.zip *
-          echo {\"version\": 0, \"manifestURL\": \"app://chooj.bananahackers.net/manifest.webapp\"} > metadata.json
+          echo {\"version\": 1, \"manifestURL\": \"app://chooj.bananahackers.net/manifest.webapp\"} > metadata.json
           zip $GITHUB_SHA-omnisd.zip metadata.json $GITHUB_SHA.zip
       - name: Upload the ZIP
         env:
