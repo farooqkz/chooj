@@ -31,6 +31,7 @@ class DropDownMenu extends Component {
         <ListView
           cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}
           cursor={this.state.cursor}
+          $HasKeyedChildren
         >
           {this.props.children.map((item, index) => {
             item.props.isFocused = index === this.state.cursor;

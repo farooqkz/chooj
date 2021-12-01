@@ -36,7 +36,6 @@ class TextListItem extends Component {
         style={`background-color: ${
           isFocused ? morecolor.item_bg_focus_color : ""
         }`}
-        $HasNonKeyedChildren
       >
         <span
           className={classNames(primaryCls, this.className)}
