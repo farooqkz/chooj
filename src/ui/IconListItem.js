@@ -29,7 +29,7 @@ class IconListItem extends Component {
       iconWidth,
       className,
       onClick,
-      icon
+      icon,
     } = this.props;
     const focusedCls = isFocused
       ? `${prefixCls}-focused ${this.focusClass || ""}`

@@ -13,7 +13,9 @@ class Separator extends Component {
   render() {
     return (
       <div className={prefixCls}>
-        <span className={textCls} $HasTextChildren>{this.props.text}</span>
+        <span className={textCls} $HasTextChildren>
+          {this.props.text}
+        </span>
       </div>
     );
   }

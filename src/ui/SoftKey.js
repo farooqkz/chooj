@@ -70,7 +70,7 @@ class SoftKey extends Component {
         handleClick: () => this.handleKeyDown({ key: "SoftRight" }),
       },
     ];
-    
+
     return (
       <div className={`${prefixCls} visible`}>
         {softKeyAttrs.map((attrs) => (
