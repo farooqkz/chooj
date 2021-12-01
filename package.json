@@ -110,5 +110,8 @@
     "presets": [
       "inferno-app"
     ]
+  },
+  "devDependencies": {
+    "babel-plugin-transform-replace-expressions": "^0.2.0"
   }
 }
