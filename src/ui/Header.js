@@ -1,15 +1,15 @@
 import "KaiUI/src/components/Header/Header.scss";
 import colors from "KaiUI/src/theme/colors.scss";
 
-function Header(props) {
+function Header({ backgroundColor, text }) {
   return (
     <header
       className="kai-header"
-      style={{ background: props.backgroundColor || colors.headerBlue }}
+      style={{ background: backgroundColor || colors.headerBlue }}
       $HasTextChildren
     >
-      <h1 className="h1" $HasVNodeChildren>
-        {props.text}
+      <h1 className="h1" $HasTextChildren>
+        {text}
       </h1>
     </header>
   );
