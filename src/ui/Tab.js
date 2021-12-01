@@ -3,8 +3,7 @@ import "KaiUI/src/components/Tab/Tab.scss";
 
 const prefixCls = "kai-tab";
 
-function Tab(props) {
-  const { focusColor, isActive, onTabChange, label } = props;
+function Tab({ focusColor, isActive, onTabChange, label }) {
   const actPrefixCls = `${prefixCls}${isActive ? "-active" : "-inactive"}`;
   return (
     <div

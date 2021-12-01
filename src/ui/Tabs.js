@@ -7,13 +7,14 @@ const prefixCls = "kai-tabs";
 class Tabs extends Component {
   handleKeyDown = (evt) => {
     if (!["ArrowLeft", "ArrowRight"].includes(evt.key)) return;
+    const { children, onChangeIndex } = this.props;
     let index = this.state.activeChild;
     console.log("[Tabs] Old activeChild:", index);
-    this.props.children[index].props.isActive = false;
+    children[index].props.isActive = false;
     switch (evt.key) {
       case "ArrowLeft":
         index--;
-        index += this.props.children.length;
+        index += children.length;
         break;
       case "ArrowRight":
         index++;
@@ -21,15 +22,15 @@ class Tabs extends Component {
       default:
         break;
     }
-    index %= this.props.children.length;
-    this.props.children[index].props.isActive = true;
-    findDOMNode(this.props.children[index]).scrollIntoView({
+    index %= children.length;
+    children[index].props.isActive = true;
+    findDOMNode(children[index]).scrollIntoView({
       behavior: "auto",
       block: "start",
       inline: "center",
     });
     this.setState({ activeChild: index });
-    this.props.onChangeIndex && this.props.onChangeIndex(index);
+    onChangeIndex && onChangeIndex(index);
   };
 
   constructor(props) {

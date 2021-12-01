@@ -1,9 +1,8 @@
-import { Component } from "inferno";
+import { Component, createTextVNode } from "inferno";
 import "KaiUI/src/components/SoftKey/SoftKey.scss";
 
 const prefixCls = "kai-softkey";
-function Button(props) {
-  const { id, handleClick, icon, text } = props;
+function Button({ id, handleClick, icon, text }) {
   let renderedIcon;
   if (icon && icon.toString.indexOf("kai-") === -1) {
     renderedIcon = <img src={icon} width={20} height={20} alt="" />;
@@ -18,7 +17,7 @@ function Button(props) {
       data-icon={renderedIcon ? "true" : undefined}
       $HasNonKeyedChildren
     >
-      {renderedIcon} {text}
+      {renderedIcon} {createTextVNode(text)}
     </button>
   );
 }
@@ -71,7 +70,7 @@ class SoftKey extends Component {
         handleClick: () => this.handleKeyDown({ key: "SoftRight" }),
       },
     ];
-
+    
     return (
       <div className={`${prefixCls} visible`}>
         {softKeyAttrs.map((attrs) => (

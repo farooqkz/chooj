@@ -7,10 +7,10 @@ import ChatTextInput from "../ChatTextInput";
 import "./UnsupportedEventItem.css";
 import "./RoomView.css";
 
-function UnsupportedEventItem(props) {
+function UnsupportedEventItem({ isFocused, senderId }) {
   return (
-    <div className={"unsupportedevent" + (props.isFocused ? "--focused" : "")}>
-      <p>Unsupported Event from {props.senderId}</p>
+    <div className={"unsupportedevent" + (isFocused ? "--focused" : "")}>
+      <p>Unsupported Event from {senderId}</p>
     </div>
   );
 }

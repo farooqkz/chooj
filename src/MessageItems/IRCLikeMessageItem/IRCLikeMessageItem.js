@@ -1,7 +1,6 @@
 import "./IRCLikeMessageItem.css";
 
-function IRCLikeMessageItemText(props) {
-  const { text, sender, isFocused } = props;
+function IRCLikeMessageItemText({ text, sender, isFocused }) {
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
@@ -12,8 +11,7 @@ function IRCLikeMessageItemText(props) {
   );
 }
 
-function IRCLikeMessageItemNotice(props) {
-  const { isFocused, text, sender } = props;
+function IRCLikeMessageItemNotice({ isFocused, text, sender }) {
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
@@ -26,8 +24,7 @@ function IRCLikeMessageItemNotice(props) {
   );
 }
 
-function IRCLikeMessageItemUnknown(props) {
-  const { isFocused, sender } = props;
+function IRCLikeMessageItemUnknown({ isFocused, sender }) {
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>Unsupported message type was sent from {sender}</p>
@@ -35,8 +32,7 @@ function IRCLikeMessageItemUnknown(props) {
   );
 }
 
-function IRCLikeMessageItem(props) {
-  const { sender, content, isFocused } = props;
+function IRCLikeMessageItem({ sender, content, isFocused }) {
   const userId = sender.userId;
   let displayName = window.mClient.getUser(userId).displayName || userId;
   switch (content.msgtype) {

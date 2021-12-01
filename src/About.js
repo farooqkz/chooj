@@ -8,11 +8,11 @@ import AdrianAvatar from "./AdrianAvatar.png";
 import DropDownMenu from "./DropDownMenu";
 import { startDM } from "./utils"; // eslint-disable-line no-unused-vars
 
-function ContactSelectionMenu(props) {
+function ContactSelectionMenu({ selectCb }) {
   return (
     <DropDownMenu
       title="Contact Farooq"
-      selectCb={(cursor) => props.selectCb(["email", "matrix"][cursor])}
+      selectCb={(cursor) => selectCb(["email", "matrix"][cursor])}
     >
       <TextListItem primary="Email" />
       <TextListItem primary="Matrix" />

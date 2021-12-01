@@ -11,7 +11,7 @@ function randomTip() {
   return tips[parseInt(Math.random() * tips.length)];
 }
 
-function Waiting(props) {
+function Waiting() {
   return (
     <>
       <img className="waiting" src={cow} alt="" />

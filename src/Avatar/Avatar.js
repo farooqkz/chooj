@@ -6,14 +6,14 @@ const presenceColor = {
   unavailable: "orange",
 };
 
-function Avatar(props) {
+function Avatar({ avatar, online }) {
   return (
     <div className="avatar">
-      <img className="avatar-img" alt="" src={props.avatar} />
-      {props.online ? (
+      <img className="avatar-img" alt="" src={avatar} />
+      {online ? (
         <div
           className="avatar-presence"
-          style={{ "background-color": presenceColor[props.online] }}
+          style={{ "background-color": presenceColor[online] }}
         ></div>
       ) : null}
     </div>

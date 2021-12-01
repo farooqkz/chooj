@@ -12,11 +12,11 @@ import { makeHumanReadableEvent } from "./utils";
 const AVATAR_WIDTH = 36;
 const AVATAR_HEIGHT = 36;
 
-function CallSelectionMenu(props) {
+function CallSelectionMenu({ selectCb }) {
   return (
     <DropDownMenu
       title="Start call"
-      selectCb={(cursor) => props.selectCb(["voice", "video"][cursor])}
+      selectCb={(cursor) => selectCb(["voice", "video"][cursor])}
     >
       <TextListItem primary="Voice call" />
       <TextListItem primary="Video call" />

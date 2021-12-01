@@ -48,7 +48,7 @@ class ListView extends Component {
   }
 
   componentDidUpdate() {
-    //findDOMNode(this.props.children[this.props.cursor]).scrollIntoView();
+    findDOMNode(this.props.children[this.props.cursor]).scrollIntoView();
   }
 
   componentDidMount() {
