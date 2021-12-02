@@ -113,7 +113,6 @@ class RoomView extends Component {
   render() {
     const MessageItem = IRCLikeMessageItem;
     const { cursor, message, textInputFocus } = this.state;
-    const lastEventIndex = this.room.getLiveTimeline().getEvents().length - 1;
     console.log(this.state);
     return (
       <>
