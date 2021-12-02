@@ -1,6 +1,9 @@
 .callscreendiv {
+  display: block;
   height: 100%;
   width: 100%;
+  top: 0;
+  left: 0;
   background-color: rgba(183, 82, 100, 0.75);
   display: flex;
   justify-content: center;
