@@ -12,11 +12,13 @@ class DropDownMenu extends Component {
   }
 
   render() {
+    const { title, selectCb, children } = this.props;
+    const listViewHeight = children.length * 6 + 1.2 + (window.isFullScreen? 0 : 2);
     return (
       <div
         style={{
           "min-height": `calc(100vh - ${
-            this.props.children.length * 6 - (window.isFullScreen ? 0 : 2)
+            children.length * 6 - (window.isFullScreen ? 0 : 2)
           }rem - 1.6rem)`,
           position: "absolute",
           left: 0,
@@ -27,20 +29,20 @@ class DropDownMenu extends Component {
           width: "100%",
         }}
       >
-        <Header text={this.props.title} />
+        <Header text={title} />
         <ListView
           cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}
           cursor={this.state.cursor}
-          $HasKeyedChildren
+          height={listViewHeight.toString() + "rem"}
         >
-          {this.props.children.map((item, index) => {
+          {children.map((item, index) => {
             item.props.isFocused = index === this.state.cursor;
             return item;
           })}
         </ListView>
         <SoftKey
           centerText="Select"
-          centerCb={() => this.props.selectCb(this.state.cursor)}
+          centerCb={() => selectCb(this.state.cursor)}
         />
       </div>
     );
