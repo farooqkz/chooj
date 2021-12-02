@@ -136,7 +136,6 @@ class Matrix extends Component {
         </>
       );
     } else if (this.state.openRoomId === "") {
-      console.log("SALAAAAM");
       return (
         <>
           <TabView tabLabels={this.tabs} onChangeIndex={this.onTabChange}>

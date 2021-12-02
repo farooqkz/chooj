@@ -9,15 +9,13 @@ class ListView extends Component {
     if (evt.key === "ArrowUp") {
       cursor--;
       if (cursor === -1) cursor = children.length - 1;
-      if (children[cursor] && children[cursor].props.unFocusable)
-        cursor--;
+      if (children[cursor] && children[cursor].props.unFocusable) cursor--;
       if (cursor === -1) cursor = children.length - 1;
       // TODO: summarize all of these three "if"s
     } else if (evt.key === "ArrowDown") {
       cursor++;
       if (cursor >= children.length) cursor = 0;
-      if (children[cursor] && children[cursor].props.unFocusable)
-        cursor++;
+      if (children[cursor] && children[cursor].props.unFocusable) cursor++;
       if (cursor >= children.length) cursor = 0;
       // TODO: same as above! ME LAZY Farooq
     }
