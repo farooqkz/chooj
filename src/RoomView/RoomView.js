@@ -1,5 +1,4 @@
 import { Component } from "inferno";
-import ListView from "../ListView";
 import Header from "../ui/Header";
 import SoftKey from "../ui/SoftKey";
 import { IRCLikeMessageItem } from "../MessageItems";
@@ -16,32 +15,46 @@ function UnsupportedEventItem({ isFocused, senderId }) {
 }
 
 class RoomView extends Component {
-  cursorChangeCb = (cursor) => {
-    this.setState((prevState) => {
-      const lastEventIndex = this.room.getLiveTimeline().getEvents().length - 1;
-      if (prevState.cursor === lastEventIndex && cursor === 0) {
-        prevState.textInputFocus = true;
-      } else {
-        prevState.cursor = cursor;
-      }
-      return prevState;
-    });
-  };
-
   messageChangeCb = (message) => {
     this.setState({ message: message });
   };
 
-  handleKeyDown = (event) => {
-    if (event.key !== "b" && event.key !== "Backspace") {
+  handleKeyDown = (evt) => {
+    const VALID_KEYS = ["b", "Backspace", "ArrowDown", "ArrowUp"];
+    // Backspace is used on an actual device
+    // b is used for testing in desktop browser
+    if (!VALID_KEYS.includes(evt.key)) {
       return;
     }
-    if (this.state.textInputFocus && this.state.message) return;
-    event.preventDefault();
-    this.props.closeRoomView();
+    const { cursor, textInputFocus, message } = this.state;
+    const { closeRoomView } = this.props;
+    const lastEventIndex = this.room.getLiveTimeline().getEvents().length - 1;
+    if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
+      if (textInputFocus && message) return;
+      evt.preventDefault();
+      closeRoomView();
+    } else if (evt.key === "ArrowDown") {
+      if (textInputFocus) {
+        this.setState({ textInputFocus: false, cursor: 0 });
+      } else if (cursor === lastEventIndex) {
+        this.setState({ textInputFocus: true });
+      } else {
+        this.setState({ cursor: cursor + 1 });
+      }
+    } else if (evt.key === "ArrowUp") {
+      if (textInputFocus) {
+        this.setState({ textInputFocus: false, cursor: lastEventIndex });
+      } else if (cursor === 0) {
+          this.setState({ textInputFocus: true });
+      } else {
+          this.setState({ cursor: cursor - 1 });
+      }
+    }
   };
 
   centerCb = () => {
+    const { message, cursor } = this.state;
+    const { roomId } = this.props;
     switch (this.getCenterText()) {
       case "Select":
         // TODO: start call or something
@@ -50,14 +63,12 @@ class RoomView extends Component {
         alert("Message Info not implemented yet");
         break;
       case "Send":
-        if (this.state.message === "") {
+        if (message === "") {
           alert("Not sending empty message!");
           break;
         }
-        window.mClient.sendTextMessage(this.props.roomId, this.state.message);
-        this.setState((prevState) => {
-          return { message: "", cursor: prevState.cursor + 1 };
-        });
+        window.mClient.sendTextMessage(roomId, message);
+        this.setState({ message: "", cursor: cursor + 1 });
         break;
       default:
         break;
@@ -65,9 +76,10 @@ class RoomView extends Component {
   };
 
   getCenterText = () => {
-    if (this.state.showMenu) {
+    const { showMenu, textInputFocus } = this.state;
+    if (showMenu) {
       return "Select";
-    } else if (this.state.textInputFocus) {
+    } else if (textInputFocus) {
       return "Send";
     } else {
       return "Info";
@@ -100,14 +112,16 @@ class RoomView extends Component {
   }
   render() {
     const MessageItem = IRCLikeMessageItem;
+    const { cursor, message, textInputFocus } = this.state;
+    const lastEventIndex = this.room.getLiveTimeline().getEvents().length - 1;
+    console.log(this.state);
     return (
       <>
         <Header text={this.room.calculateRoomName()} />
         <div className="eventsandtextinput">
-          <ListView
-            cursor={this.state.cursor}
-            cursorChangeCb={this.cursorChangeCb}
-            height="calc(100vh - 2.8rem - 40px - 32px)"
+          <div
+            className={"kai-list-view"}
+            style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
           >
             {this.room
               .getLiveTimeline()
@@ -124,15 +138,15 @@ class RoomView extends Component {
                 } else {
                   item = <UnsupportedEventItem senderId={evt.getSender()} />;
                 }
-                if (item) item.props.isFocused = index === this.state.cursor;
+                if (item && !textInputFocus)
+                  item.props.isFocused = index === cursor;
                 return item;
               })}
-          </ListView>
+          </div>
           <ChatTextInput
-            message={this.state.message}
+            message={message}
             onChangeCb={this.messageChangeCb}
-            isFocused={this.state.textInputFocus}
-            unFocusIt={() => this.setState({ textInputFocus: false })}
+            isFocused={textInputFocus}
           />
         </div>
         <footer>

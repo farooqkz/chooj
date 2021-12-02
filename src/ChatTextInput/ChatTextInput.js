@@ -1,51 +1,28 @@
-import { Component } from "inferno";
 import "./ChatTextInput.css";
 
-class ChatTextInput extends Component {
-  constructor(props) {
-    super(props);
-    this.onChange = (event_) => {
-      if (event_.key === "ArrowUp" || event_.key === "ArrowDown")
-        this.props.unFocusIt();
-      this.setState({ value: event_.target.value });
-      this.props.onChangeCb && this.props.onChangeCb(event_.target.value);
-    };
-    this.state = {
-      value: props.message || "",
-    };
-  }
+function ChatTextInput({ isFocused, message, onChangeCb }) {
+  const onChange = (evt) => {
+    console.log("HI", evt, evt.target.value);
+    onChangeCb && onChangeCb(evt.target.value);
+  };
 
-  componentDidUpdate(lastProps) {
-    if (!this.textInput) return;
-    if (this.props.isFocused) {
-      this.textInput.focus();
-    } else {
-      this.textInput.blur();
-    }
-  }
-
-  render() {
-    return (
-      <div
-        className={"chattextinput" + (this.props.isFocused ? "--focused" : "")}
-      >
-        <input
-          onKeyDown={this.onChange}
-          onChange={this.onChange}
-          onPaste={this.onChange}
-          onKeyUp={this.onChange}
-          onKeyPress={this.onChange}
-          onInput={this.onChange}
-          defaultValue={this.state.value || ""}
-          placeholder="Say Salam!"
-          style={`color: ${this.props.isFocused ? "var(--text-color)" : ""}`}
-          ref={(input) => {
-            this.textInput = input;
-          }}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className={"chattextinput" + (isFocused ? "--focused" : "")}>
+      <input
+        onChange={onChange}
+        onPaste={onChange}
+        onInput={onChange}
+        defaultValue={message || ""}
+        placeholder="Say Salam!"
+        style={`color: ${isFocused ? "var(--text-color)" : ""}`}
+        ref={(input) => {
+          if (!input) return;
+          if (isFocused) input.focus();
+          else input.blur();
+        }}
+      />
+    </div>
+  );
 }
 
 export default ChatTextInput;
