@@ -56,10 +56,18 @@ class DMsView extends Component {
     }
     const cursor = this.state.cursor;
     const roomId = this.rooms[cursor].roomId;
-    this.call = matrixcs.createNewMatrixCall(window.mClient, roomId);
-    let audio = new Audio();
-    audio.mozAudioChannelType = "telephony";
-    this.call.placeVoiceCall();
+    this.call = window.mClient.createCall(roomId);
+    this.call.placeVoiceCall().then(() => {
+      // eslint-disable-next-line array-callback-return
+      console.log("HELL", this.call.getRemoteFeeds());
+      this.call.getRemoteFeeds().map((feed) => {
+        console.log("FEED", feed);
+        let audio = new Audio();
+        audio.mozAudioChannelType = "telephony";
+        audio.srcObject = feed.stream;
+        audio.play();
+      });
+    });
     this.setState({
       inCall: this.rooms[cursor].userId,
       showCallSelection: false,
