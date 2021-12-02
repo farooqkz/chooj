@@ -124,6 +124,13 @@ checkBrowsers(paths.appPath, isInteractive)
       let s = buf.toString();
       s = s.replace('new XHR()', 'new XHR({mozSystem:true})');
       s = s.replace('new global.XMLHttpRequest()', 'new global.XMLHttpRequest({mozSystem:true})');
+      // These two "replace"s are necessary to make WebRTC fully work on KaiOS pre-3.0
+      s = s.replace(/setRemoteDescription\(([a-zA-Z0-9\.]+)\)/g, (match, p1) => {
+        return `setRemoteDescription(new RTCSessionDescription(${p1}))`;
+      });
+      s = s.replace(/addIceCandidate\(([a-zA-Z0-9\.]+)\)/g, (match, p1) => {
+        return `addIceCandidate(new RTCIceCandidate(${p1}))`;
+      });
       fs.writeFile(jsFile, s).catch(err => {
         if (err && err.message) {
           console.log(err.message);

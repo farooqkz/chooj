@@ -14,7 +14,6 @@ function Tab({ focusColor, isActive, onTabChange, label }) {
       style={{
         "--tab-underline-color": focusColor || colors.defaultFocusColor,
       }}
-      key={isActive}
     >
       <div className={`${actPrefixCls}-label`} $HasTextChildren>
         {label}

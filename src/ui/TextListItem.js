@@ -31,7 +31,6 @@ class TextListItem extends Component {
       <div
         tabIndex={0}
         className={classNames(itemCls, this.className, focusedCls)}
-        key={isFocused}
         ref={this.divRef}
         style={`background-color: ${
           isFocused ? morecolor.item_bg_focus_color : ""

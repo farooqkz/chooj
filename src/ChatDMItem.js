@@ -12,18 +12,19 @@ class ChatDMItem extends Component {
   };
 
   updateLastEvent = (event, room, ts) => {
-    if (!ts) console.log(event, room);
+    //if (!ts) console.log(this.props.userId, event, room);
   };
 
   constructor(props) {
     super(props);
+    const { userId, lastEvent } = props;
     this.lastEventTime = -1;
     this.state = {
-      lastEvent: props.lastEvent,
+      lastEvent: lastEvent,
       online: null,
       displayName: "",
     };
-    window.mClient.getPresence(props.userId).then((result) => {
+    window.mClient.getPresence(userId).then((result) => {
       this.setState({ online: result.presence });
     });
   }

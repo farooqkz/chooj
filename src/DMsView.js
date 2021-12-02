@@ -26,6 +26,7 @@ function CallSelectionMenu({ selectCb }) {
 
 class DMsView extends Component {
   handleKeyDown = (evt) => {
+    const { showCallSelection, inCall } = this.state;
     if (evt.key === "Call" || evt.key === "c") {
       if (this.rooms.length === 0) {
         window.alert("You're lonely(no DM)... there is no one to call!");
@@ -35,31 +36,32 @@ class DMsView extends Component {
     }
 
     if (evt.key === "b" || evt.key === "Backspace") {
-      if (this.state.showCallSelection) {
+      if (showCallSelection) {
         this.setState({ showCallSelection: false });
+        evt.preventDefault();
       }
-      if (this.state.inCall !== "") {
+      if (inCall !== "") {
         // TODO: this.call.reject()
         this.setState({ inCall: "" });
+        evt.preventDefault();
       }
     }
   };
 
   startCall = (type) => {
+    this.setState({ showCallSelection: false });
     if (type !== "voice") {
       alert("Not implemented");
-      this.setState({
-        showCallSelection: false,
-      });
       return;
     }
-    const roomId = this.rooms[this.state.cursor].roomId;
+    const cursor = this.state.cursor;
+    const roomId = this.rooms[cursor].roomId;
     this.call = matrixcs.createNewMatrixCall(window.mClient, roomId);
     let audio = new Audio();
     audio.mozAudioChannelType = "telephony";
     this.call.placeVoiceCall();
     this.setState({
-      inCall: this.rooms[this.state.cursor].userId,
+      inCall: this.rooms[cursor].userId,
       showCallSelection: false,
     });
   };
@@ -99,6 +101,7 @@ class DMsView extends Component {
 
   render() {
     const client = window.mClient;
+    const { cursor, inCall, showCallSelection } = this.state;
     this.rooms = client
       .getVisibleRooms()
       .filter(this.getDMs)
@@ -153,18 +156,18 @@ class DMsView extends Component {
           lastEvent={room.lastEvent}
         />
       );
-      item.props.isFocused = index === this.state.cursor;
+      item.props.isFocused = index === cursor;
       return item;
     });
 
     if (renderedRooms.length === 0) {
       renderedRooms.push(<TextListItem primary="No DM :(" isFocused />);
     }
-    if (this.state.showCallSelection)
+    if (showCallSelection)
       return (
         <>
           <ListView
-            cursor={this.state.cursor}
+            cursor={cursor}
             cursorChangeCb={this.cursorChangeCb}
           >
             {renderedRooms}
@@ -175,24 +178,24 @@ class DMsView extends Component {
           )}
         </>
       );
-    if (this.state.inCall) {
+    if (inCall) {
       return (
         <>
           <ListView
-            cursor={this.state.cursor}
+            cursor={cursor}
             cursorChangeCb={this.cursorChangeCb}
           >
             {renderedRooms}
           </ListView>
           {createPortal(
-            <CallScreen userId={this.state.inCall} callState="Hmm?" />,
+            <CallScreen userId={inCall} callState="Hmm?" />,
             document.getElementById("callscreen")
           )}
         </>
       );
     }
     return (
-      <ListView cursor={this.state.cursor} cursorChangeCb={this.cursorChangeCb}>
+      <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb}>
         {renderedRooms}
       </ListView>
     );

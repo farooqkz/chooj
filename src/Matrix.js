@@ -88,7 +88,7 @@ class Matrix extends Component {
         break;
     }
   };
-
+  
   constructor(props) {
     super(props);
     window.mClient = matrixcs.createClient({

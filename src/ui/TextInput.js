@@ -39,7 +39,6 @@ class TextInput extends Component {
         style={`background-color: ${
           this.props.isFocused ? morecolor.item_bg_focus_color : ""
         }`}
-        key={this.props.isFocused}
       >
         <label className={labelCls} $HasTextChildren>
           {this.props.label}
