@@ -9,12 +9,19 @@
   bottom: 0;
   z-index: 9999;
   background-color: rgba(183, 82, 100, 0.75);
-  display: flex;
-  justify-content: center;
 }
 
-.callscreendiv > img {
+.callscreendiv > div > img {
   height: 64px;
   width: 64px;
   border-radius: 25%;
+}
+
+.callscreen-content {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  height: 70vh;
 }

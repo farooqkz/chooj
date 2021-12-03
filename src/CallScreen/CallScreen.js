@@ -5,9 +5,11 @@ import SoftKey from "../ui/SoftKey";
 function CallScreen({ avatar, call, userId }) {
   return (
     <div className="callscreendiv">
-      <img src={avatar || personIcon} alt="" />
-      <h3 $HasTextChildren>{userId}</h3>
-      <h4 $HasTextChildren>{"callState "}</h4>
+      <div className="callscreen-content">
+        <img src={avatar || personIcon} alt="" />
+        <p style={{ "font-size": "6vh" }} $HasTextChildren>{userId}</p>
+        <p style={{ "font-size": "4vh" }} $HasTextChildren>{"callState here"}</p>
+      </div>
       <SoftKey
         centerCb={() => {
           call.setMicrophoneMuted(
