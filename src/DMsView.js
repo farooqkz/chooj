@@ -41,9 +41,8 @@ class DMsView extends Component {
         evt.preventDefault();
       }
       if (inCall !== "") {
-        // TODO: this.call.reject()
-        this.setState({ inCall: "" });
         evt.preventDefault();
+        this.call.hangup();
       }
     }
   };
@@ -57,17 +56,23 @@ class DMsView extends Component {
     const cursor = this.state.cursor;
     const roomId = this.rooms[cursor].roomId;
     this.call = window.mClient.createCall(roomId);
-    this.call.placeVoiceCall().then(() => {
-      console.log("HELL", this.call.getRemoteFeeds());
-      // eslint-disable-next-line array-callback-return
-      this.call.getRemoteFeeds().map((feed) => {
-        console.log("FEED", feed);
+    this.call.on("feeds_changed", (feeds) => {
+      window.callAudios = feeds.filter((feed) => !feed.isLocal()).map((feed) => {
         let audio = new Audio();
-        audio.mozAudioChannelType = "telephony";
         audio.srcObject = feed.stream;
         audio.play();
+        return audio;
       });
     });
+    this.call.on("error", (error) => {
+      console.error("CALL ERROR", error);
+      this.call.hangup();
+    });
+    this.call.on("hangup", () => {
+      window.callAudios = null;
+      this.setState({ inCall: "" });
+    });
+    this.call.placeVoiceCall();
     this.setState({
       inCall: this.rooms[cursor].userId,
       showCallSelection: false,
@@ -196,7 +201,7 @@ class DMsView extends Component {
             {renderedRooms}
           </ListView>
           {createPortal(
-            <CallScreen userId={inCall} callState="Hmm?" />,
+            <CallScreen userId={inCall} call={this.call} />,
             document.getElementById("callscreen")
           )}
         </>
