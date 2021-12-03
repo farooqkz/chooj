@@ -24,8 +24,9 @@ Check related BananaHackers blog posts for more information.
 
 ### What does work so far?
 
- - Login process with password works **more or less*.
- - Chat in all room types(group rooms and DMs) works but you will see only a last handful of events.
+ - Login process with password works(manually or by scanning a QR code)
+ - Chatting works in all rooms. Partially, however.
+ - Voice call partially works.
  - The Cow says "Please wait" to you kindly :))
 
 ### How to help?
@@ -34,20 +35,24 @@ Check related BananaHackers blog posts for more information.
  - Open a Pull Request and implement some wanted feature or fix some bug
  - Donate to me with cryptocurrency or hardware(Contact me for any of those)
  - Tell others about Chooj
- - Idle in Chooj's Matrix room and help others if they need help
- - Create Chooj a logo
+ - Idle in Chooj's Matrix room and help others when necessary
+ - Solve one of the [issues](https://github.com/farooqkz/chooj/issues) especially creating Chooj a logo
  - Get Farooq something in his [wish list](https://github.com/farooqkz/my-wish-list/blob/main/README.md)
  - ...
 
-### Matrix room
+### Matrix chatroom for Chooj
 
 This project has got a Matrix room. See badges.
 
 ### Nightly builds
 
-You can download and sideload ZIP for each time I push stuff from [here](https://farooqkz.de1.hashbang.sh/matrix-client-builds/). Thanks to hashbang which let's me host stuff there. Old ZIPs will be deleted after a short time. Please allow a few minutes after each commit and the file will show up there.
+ - You can download and sideload ZIP for each time I push stuff from [here](https://farooqkz.de1.hashbang.sh/matrix-client-builds/).
+ - **NEW!** OmniSD builds are available there, too!
+ - Thanks to hashbang which let's me host stuff there.
+ - Old ZIPs will be deleted after a some time.
+ - Please allow a few minutes after each commit and the file will show up there.
 
-**NOTE: While I try to test stuff before pushing but you might find some broken builds there. There is no automated test yet.**
+*NOTE: While I try to test stuff before pushing but you might find some broken builds there. There is no automated test yet.*
 
 ### Device compatiblity
 
@@ -55,13 +60,16 @@ This app should work on all KaiOS versions. However it has been also tested on t
 
  - Nokia 8110 4G(aka The BananaPhone)
  - Nokia 800 Tough
+ - `[Add your own device here]`
 
 ### How to build?
 
+The production build is currently broken and you may only use development builds.
+
  - Install Node v12.x if you haven't
- - `npm install` in project's directory
- - `npm run build` to build for KaiOS(production)
- - or run `npm run devbuild` to create a development build(faster build at the cost of heavier bundle)
+ - Install yarn if you haven't
+ - `yarn install` in project's directory
+ - `yarn run devbuild` to create a development build(faster build at the cost of heavier bundle)
  - Now you can sideload the application in `build/` to your device.
 
 You can check guides on how to prepare your device for sideloading stuff
