@@ -6,10 +6,12 @@ import ChatTextInput from "../ChatTextInput";
 import "./UnsupportedEventItem.css";
 import "./RoomView.css";
 
-function UnsupportedEventItem({ isFocused, senderId }) {
+function IRCLikeUnsupportedEventItem({ isFocused, senderId }) {
   return (
-    <div className={"unsupportedevent" + (isFocused ? "--focused" : "")}>
-      <p>Unsupported Event from {senderId}</p>
+    <div
+      className={"unsupportedevent" + (isFocused ? "--focused" : "")}
+    >
+      <p $HasTextChildren>Unsupported Event from {senderId}</p>
     </div>
   );
 }
@@ -110,10 +112,12 @@ class RoomView extends Component {
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
   }
+
   render() {
     const MessageItem = IRCLikeMessageItem;
+    const UnsupportedEventItem = IRCLikeUnsupportedEventItem;
     const { cursor, message, textInputFocus } = this.state;
-    console.log(this.state);
+
     return (
       <>
         <Header text={this.room.calculateRoomName()} />
@@ -137,8 +141,9 @@ class RoomView extends Component {
                 } else {
                   item = <UnsupportedEventItem senderId={evt.getSender()} />;
                 }
-                if (item && !textInputFocus)
+                if (item && !textInputFocus) {
                   item.props.isFocused = index === cursor;
+                }
                 return item;
               })}
           </div>
