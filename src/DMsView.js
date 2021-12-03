@@ -58,8 +58,8 @@ class DMsView extends Component {
     const roomId = this.rooms[cursor].roomId;
     this.call = window.mClient.createCall(roomId);
     this.call.placeVoiceCall().then(() => {
-      // eslint-disable-next-line array-callback-return
       console.log("HELL", this.call.getRemoteFeeds());
+      // eslint-disable-next-line array-callback-return
       this.call.getRemoteFeeds().map((feed) => {
         console.log("FEED", feed);
         let audio = new Audio();
