@@ -46,7 +46,6 @@ class ChatDMItem extends Component {
         icon=<Avatar avatar={avatar} online={this.state.online} />
         secondary={this.state.displayName || displayName || userId}
         primary={this.state.lastEvent}
-        key={isFocused}
         isFocused={isFocused}
       />
     );

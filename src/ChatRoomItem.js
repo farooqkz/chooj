@@ -31,7 +31,6 @@ class ChatRoomItem extends Component {
         icon=<Avatar avatar={this.props.avatar} />
         secondary={this.state.displayName}
         primary={this.state.lastEvent}
-        key={this.props.isFocused}
         isFocused={this.props.isFocused}
       />
     );
