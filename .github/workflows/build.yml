@@ -38,7 +38,8 @@ jobs:
           cd build/
           zip -r $GITHUB_SHA.zip *
           echo {\"version\": 1, \"manifestURL\": \"app://chooj.bananahackers.net/manifest.webapp\"} > metadata.json
-          zip $GITHUB_SHA-omnisd.zip metadata.json $GITHUB_SHA.zip
+          cp $GITHUB_SHA.zip application.zip
+          zip $GITHUB_SHA-omnisd.zip metadata.json application.zip
       - name: Upload the ZIP
         env:
           UPLOAD_URL_SECRET: ${{ secrets.UPLOAD_URL_SECRET }}
