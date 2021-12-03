@@ -72,7 +72,7 @@ class SoftKey extends Component {
     ];
 
     return (
-      <div className={`${prefixCls} visible`}>
+      <div className={`${prefixCls} visible`} $HasNonKeyedChildren>
         {softKeyAttrs.map((attrs) => (
           <Button {...attrs} />
         ))}

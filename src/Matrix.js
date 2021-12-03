@@ -158,7 +158,7 @@ class Matrix extends Component {
             <p>{"Settings not implemented"}</p>
             <About />
           </TabView>
-          <footer $HasVNodeChildren>
+          <footer>
             <SoftKey
               leftText={this.softLeftText()}
               leftCb={this.softLeftCb}

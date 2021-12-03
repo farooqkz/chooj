@@ -226,7 +226,7 @@ class Login extends Component {
         >
           {listViewChildren}
         </ListView>
-        <footer $HasVNodeChildren>
+        <footer>
           <SoftKey
             leftText="Quit"
             leftCb={() => window.close()}
