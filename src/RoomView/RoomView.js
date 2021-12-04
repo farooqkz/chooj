@@ -88,7 +88,7 @@ class RoomView extends Component {
       return "Info";
     }
   };
-
+  
   constructor(props) {
     super(props);
     this.room = window.mClient.getRoom(props.roomId);
@@ -113,7 +113,7 @@ class RoomView extends Component {
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
   }
-
+  
   render() {
     const MessageItem = IRCLikeMessageItem;
     const UnsupportedEventItem = IRCLikeUnsupportedEventItem;
@@ -122,7 +122,7 @@ class RoomView extends Component {
     return (
       <>
         <Header text={this.room.calculateRoomName()} />
-        <div className="eventsandtextinput">
+        <div className="eventsandtextinput" ref={(ref) => { this.eventsDiv = ref; }}>
           <div
             className={"kai-list-view"}
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
@@ -143,7 +143,7 @@ class RoomView extends Component {
                 } else {
                   item = <UnsupportedEventItem senderId={senderId} />;
                 }
-                if (!textInputFocus && index === cursor) {
+                if (index === cursor) {
                   item = (
                     <ScrollIntoView>
                       {item}
