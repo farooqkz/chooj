@@ -92,13 +92,13 @@ class Matrix extends Component {
   
   constructor(props) {
     super(props);
+    console.log("LOGIN DATA", props.data);
     window.mClient = matrixcs.createClient({
       userId: props.data.user_id,
       accessToken: props.data.access_token,
       deviceId: props.data.device_id,
       baseUrl: props.data.well_known["m.homeserver"].base_url,
       identityServer:
-        props.data.well_known &&
         props.data.well_known["m.identity_server"] &&
         props.data.well_known["m.identity_server"].base_url,
     });
