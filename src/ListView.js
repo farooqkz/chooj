@@ -30,7 +30,6 @@ class ListView extends Component {
   constructor(props) {
     super(props);
     const { children, cursor, cursorChangeCb } = props;
-    console.log(`[ListView] Constructor was called: cursor=${cursor}`);
     if (cursor - 1 > children.length || cursor < 0) {
       console.error(
         `[ListView] cursor should be from 0 to ${
