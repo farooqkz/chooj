@@ -23,15 +23,16 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.state === null) {
+    const { state } = this.state;
+    if (state === null) {
       return <Waiting />;
     }
 
-    if (this.state.state === "login") {
+    if (state === "login") {
       return <Login />;
     }
 
-    if (this.state.state === "matrix") {
+    if (state === "matrix") {
       return <Matrix data={this.loginData} />;
     }
   }
