@@ -2,7 +2,6 @@ import "./ChatTextInput.css";
 
 function ChatTextInput({ isFocused, message, onChangeCb }) {
   const onChange = (evt) => {
-    console.log("HI", evt, evt.target.value);
     onChangeCb && onChangeCb(evt.target.value);
   };
 
