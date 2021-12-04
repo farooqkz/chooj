@@ -76,6 +76,7 @@ class Matrix extends Component {
 
   softCenterCb = () => {
     if (document.querySelector("#menu").innerHTML) return;
+    if (document.querySelector("#callscreen").innerHTML) return;
     switch (this.tabs[this.state.currentTab]) {
       case "About":
         window.open("https://github.com/farooqkz/chooj", "_blank");
@@ -97,6 +98,7 @@ class Matrix extends Component {
       deviceId: props.data.device_id,
       baseUrl: props.data.well_known["m.homeserver"].base_url,
       identityServer:
+        props.data.well_known &&
         props.data.well_known["m.identity_server"] &&
         props.data.well_known["m.identity_server"].base_url,
     });
