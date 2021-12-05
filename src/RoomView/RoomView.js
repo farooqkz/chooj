@@ -46,7 +46,7 @@ class RoomView extends Component {
       if (textInputFocus) {
         this.setState({ textInputFocus: false, cursor: lastEventIndex });
       } else if (cursor === 0) {
-        this.setState({ textInputFocus: true });
+        this.setState({ textInputFocus: true, cursor: lastEventIndex });
       } else {
         this.setState({ cursor: cursor - 1 });
       }
