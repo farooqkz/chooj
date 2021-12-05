@@ -49,7 +49,7 @@ class RoomsView extends Component {
         const lastEventSender = lastEvent.getSender();
         const roomId = room.roomId;
         let avatarUrl;
-        avatarUrl = hashIcon;
+        avatarUrl = room.getAvatarUrl(client.baseUrl, 36, 36, "scale") || hashIcon;
         return {
           roomId: roomId,
           avatarUrl: avatarUrl,
