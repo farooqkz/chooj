@@ -66,7 +66,7 @@ class RoomView extends Component {
   }
 
   centerCb = () => {
-    const { message, cursor } = this.state;
+    const { message } = this.state;
     const { roomId } = this.props;
     switch (this.getCenterText()) {
       case "Select":
