@@ -53,6 +53,16 @@ class RoomView extends Component {
     }
   };
 
+  handleTimelineUpdate = (event, room, ts) => {
+    if(room.roomId === this.room.roomId){
+      const lastEventIndex = room.getLiveTimeline().getEvents().length - 1;
+      const { cursor, textInputFocus } = this.state;
+      this.setState({
+        cursor: textInputFocus ? lastEventIndex : cursor,
+      });
+    }
+  }
+
   centerCb = () => {
     const { message, cursor } = this.state;
     const { roomId } = this.props;
@@ -69,7 +79,7 @@ class RoomView extends Component {
           break;
         }
         window.mClient.sendTextMessage(roomId, message);
-        this.setState({ message: "", cursor: cursor + 1 });
+        this.setState({ message: "" });
         break;
       default:
         break;
@@ -106,10 +116,12 @@ class RoomView extends Component {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown);
+    window.mClient.addListener("Room.timeline", this.handleTimelineUpdate);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
+    window.mClient.removeListener("Room.timeline", this.handleTimelineUpdate);
   }
 
   render() {
