@@ -48,7 +48,7 @@ function IRCLikeMessageItem({ sender, content, isFocused }) {
       return (
         <IRCLikeMessageItemNotice
           sender={displayName}
-          notice={content.body}
+          text={content.body}
           isFocused={isFocused}
         />
       );
