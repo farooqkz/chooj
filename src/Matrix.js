@@ -140,7 +140,8 @@ class Matrix extends Component {
   }
 
   render() {
-    const { call, syncDone, openRoomId } = this.state;
+    const { currentTab, call, syncDone, openRoomId } = this.state;
+    console.log(this.state);
     if (!syncDone) {
       return (
         <>
@@ -163,7 +164,7 @@ class Matrix extends Component {
     if (openRoomId === "") {
       return (
         <>
-          <TabView tabLabels={this.tabs} onChangeIndex={this.onTabChange}>
+          <TabView tabLabels={this.tabs} onChangeIndex={this.onTabChange} defaultActiveTab={currentTab}>
             <DMsView
               startCall={this.startCall}
               selectedRoomCb={(roomId) => {

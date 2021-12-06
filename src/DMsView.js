@@ -75,7 +75,7 @@ class DMsView extends Component {
   constructor(props) {
     super(props);
     this.rooms = [];
-    this.state = {
+    this.state = window.stateStores.get("DMsView") || {
       cursor: 0,
       showCallSelection: false,
     };
@@ -87,6 +87,7 @@ class DMsView extends Component {
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
+    window.stateStores.set("DMsView", this.state);
   }
 
   render() {

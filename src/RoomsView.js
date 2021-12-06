@@ -22,7 +22,7 @@ class RoomsView extends Component {
   constructor(props) {
     super(props);
     this.rooms = [];
-    this.state = {
+    this.state = window.stateStores.get("RoomsView") || {
       cursor: 0,
     };
   }
@@ -33,6 +33,7 @@ class RoomsView extends Component {
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
+    window.stateStores.set("RoomsView", this.state);
   }
 
   render() {

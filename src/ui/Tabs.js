@@ -35,7 +35,8 @@ class Tabs extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { activeChild: 0 };
+    const { defaultActiveChild } = props;
+    this.state = { activeChild: defaultActiveChild || 0 };
   }
 
   componentWillUnmount() {
