@@ -5,7 +5,6 @@ import ListView from "./ListView";
 import personIcon from "./person_icon.png";
 import ChatDMItem from "./ChatDMItem";
 import TextListItem from "./ui/TextListItem";
-import CallScreen from "./CallScreen";
 import DropDownMenu from "./DropDownMenu";
 import { makeHumanReadableEvent } from "./utils";
 
@@ -55,28 +54,8 @@ class DMsView extends Component {
     }
     const cursor = this.state.cursor;
     const roomId = this.rooms[cursor].roomId;
-    this.call = window.mClient.createCall(roomId);
-    this.call.on("feeds_changed", (feeds) => {
-      window.callAudios = feeds.filter((feed) => !feed.isLocal()).map((feed) => {
-        let audio = new Audio();
-        audio.srcObject = feed.stream;
-        audio.play();
-        return audio;
-      });
-    });
-    this.call.on("error", (error) => {
-      console.error("CALL ERROR", error);
-      this.call.hangup();
-    });
-    this.call.on("hangup", () => {
-      window.callAudios = null;
-      this.setState({ inCall: "" });
-    });
-    this.call.placeVoiceCall();
-    this.setState({
-      inCall: this.rooms[cursor].userId,
-      showCallSelection: false,
-    });
+    const userId = this.rooms[cursor].userId;
+    this.props.startCall(roomId, type, userId);
   };
 
   cursorChangeCb = (cursor) => {
@@ -96,11 +75,9 @@ class DMsView extends Component {
   constructor(props) {
     super(props);
     this.rooms = [];
-    this.call = null;
     this.state = {
       cursor: 0,
       showCallSelection: false,
-      inCall: "",
     };
   }
 
@@ -114,7 +91,7 @@ class DMsView extends Component {
 
   render() {
     const client = window.mClient;
-    const { cursor, inCall, showCallSelection } = this.state;
+    const { cursor, showCallSelection } = this.state;
     this.rooms = client
       .getVisibleRooms()
       .filter(this.getDMs)
@@ -179,10 +156,7 @@ class DMsView extends Component {
     if (showCallSelection)
       return (
         <>
-          <ListView
-            cursor={cursor}
-            cursorChangeCb={this.cursorChangeCb}
-          >
+          <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb}>
             {renderedRooms}
           </ListView>
           {createPortal(
@@ -191,22 +165,6 @@ class DMsView extends Component {
           )}
         </>
       );
-    if (inCall) {
-      return (
-        <>
-          <ListView
-            cursor={cursor}
-            cursorChangeCb={this.cursorChangeCb}
-          >
-            {renderedRooms}
-          </ListView>
-          {createPortal(
-            <CallScreen userId={inCall} call={this.call} />,
-            document.getElementById("callscreen")
-          )}
-        </>
-      );
-    }
     return (
       <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb}>
         {renderedRooms}

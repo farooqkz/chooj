@@ -9,6 +9,7 @@ import About from "./About";
 import Waiting from "./Waiting";
 import RoomView from "./RoomView";
 import InvitesView from "./InvitesView";
+import CallScreen from "./CallScreen";
 
 class Matrix extends Component {
   onTabChange = (index) => {
@@ -70,13 +71,18 @@ class Matrix extends Component {
     this.setState({ openRoomId: this.roomId });
   };
 
+  startCall = (roomId, type, userId) => {
+    this.setState({
+      call: { type: type, roomId: roomId, displayName: userId },
+    });
+  };
+
   softRightCb = () => {};
 
   softLeftCb = () => {};
 
   softCenterCb = () => {
     if (document.querySelector("#menu").innerHTML) return;
-    if (document.querySelector("#callscreen").innerHTML) return;
     switch (this.tabs[this.state.currentTab]) {
       case "About":
         window.open("https://github.com/farooqkz/chooj", "_blank");
@@ -89,7 +95,7 @@ class Matrix extends Component {
         break;
     }
   };
-  
+
   constructor(props) {
     super(props);
     console.log("LOGIN DATA", props.data);
@@ -104,16 +110,18 @@ class Matrix extends Component {
     });
     const client = window.mClient;
     client.on("Call.incoming", (call) => {
-      call.once("state", (state) => {
-        if (this.state.isCall) {
-          // reject this call if there's already
-          // a call going
-          call.reject();
-        } else {
-          this.call = call;
-          this.setState({ isCall: true });
-        }
-      });
+      if (this.state.call) {
+        call.once("state", (state) => {
+          if (state === "ringing") {
+            call.reject();
+          }
+        });
+      } else {
+        this.call = call;
+        this.setState({
+          call: { type: "incoming" }
+        });
+      }
     });
     client.once("sync", (state, prevState, res) => {
       this.setState({ syncDone: true });
@@ -122,27 +130,42 @@ class Matrix extends Component {
     this.tabs = ["People", "Rooms", "Invites", "Settings", "About"];
     this.roomId = "";
     this.invite = null;
+    this.call = null;
     this.state = {
       currentTab: 0,
-      isCall: false,
+      call: null,
       syncDone: false,
       openRoomId: "",
     };
   }
 
   render() {
-    if (!this.state.syncDone) {
+    const { call, syncDone, openRoomId } = this.state;
+    if (!syncDone) {
       return (
         <>
           <Waiting />
         </>
       );
-    } else if (this.state.openRoomId === "") {
+    }
+    if (call) {
+      return (
+        <CallScreen
+          {...call}
+          endOfCallCb={() => {
+            this.call = null;
+            this.setState({ call: null })
+          }}
+          call={this.call}
+        />
+      );
+    }
+    if (openRoomId === "") {
       return (
         <>
           <TabView tabLabels={this.tabs} onChangeIndex={this.onTabChange}>
             <DMsView
-              setCall={(isCall) => this.setState({ isCall: isCall })}
+              startCall={this.startCall}
               selectedRoomCb={(roomId) => {
                 this.roomId = roomId;
               }}
@@ -172,14 +195,13 @@ class Matrix extends Component {
           </footer>
         </>
       );
-    } else {
-      return (
-        <RoomView
-          roomId={this.state.openRoomId}
-          closeRoomView={() => this.setState({ openRoomId: "" })}
-        />
-      );
     }
+    return (
+      <RoomView
+        roomId={openRoomId}
+        closeRoomView={() => this.setState({ openRoomId: "" })}
+      />
+    );
   }
 }
 

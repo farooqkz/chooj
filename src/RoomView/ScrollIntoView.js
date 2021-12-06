@@ -4,9 +4,11 @@ function ScrollIntoView({ children }) {
   }
   children.props.isFocused = true;
   return (
-    <div ref={(div) => {
-      if (div) div.scrollIntoView();
-    }}>
+    <div
+      ref={(div) => {
+        if (div) div.scrollIntoView();
+      }}
+    >
       {children}
     </div>
   );

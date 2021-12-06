@@ -98,3 +98,6 @@ See [this post](https://blog.bananahackers.net/farooqkz/the-development-of-the-m
 ### License
 
 This project is free software under GNU GPLv3 and comes without any warranty from author(s) of the project.
+
+These files however are under different license(s):
+ - `waiting.ogg`: Downloaded from [here](https://freesound.org/people/vollkornbrot/sounds/394328/) under CC0

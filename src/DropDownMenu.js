@@ -13,7 +13,8 @@ class DropDownMenu extends Component {
 
   render() {
     const { title, selectCb, children } = this.props;
-    const listViewHeight = children.length * 6 + 1 + (window.isFullScreen? 0 : 2);
+    const listViewHeight =
+      children.length * 6 + 1 + (window.isFullScreen ? 0 : 2);
     return (
       <div
         style={{

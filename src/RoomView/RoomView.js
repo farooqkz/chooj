@@ -9,9 +9,7 @@ import "./RoomView.css";
 
 function IRCLikeUnsupportedEventItem({ isFocused, senderId }) {
   return (
-    <div
-      className={"unsupportedevent" + (isFocused ? "--focused" : "")}
-    >
+    <div className={"unsupportedevent" + (isFocused ? "--focused" : "")}>
       <p $HasTextChildren>Unsupported Event from {senderId}</p>
     </div>
   );
@@ -48,9 +46,9 @@ class RoomView extends Component {
       if (textInputFocus) {
         this.setState({ textInputFocus: false, cursor: lastEventIndex });
       } else if (cursor === 0) {
-          this.setState({ textInputFocus: true });
+        this.setState({ textInputFocus: true });
       } else {
-          this.setState({ cursor: cursor - 1 });
+        this.setState({ cursor: cursor - 1 });
       }
     }
   };
@@ -88,7 +86,7 @@ class RoomView extends Component {
       return "Info";
     }
   };
-  
+
   constructor(props) {
     super(props);
     this.room = window.mClient.getRoom(props.roomId);
@@ -113,7 +111,7 @@ class RoomView extends Component {
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
   }
-  
+
   render() {
     const MessageItem = IRCLikeMessageItem;
     const UnsupportedEventItem = IRCLikeUnsupportedEventItem;
@@ -122,7 +120,12 @@ class RoomView extends Component {
     return (
       <>
         <Header text={this.room.calculateRoomName()} />
-        <div className="eventsandtextinput" ref={(ref) => { this.eventsDiv = ref; }}>
+        <div
+          className="eventsandtextinput"
+          ref={(ref) => {
+            this.eventsDiv = ref;
+          }}
+        >
           <div
             className={"kai-list-view"}
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
@@ -144,11 +147,7 @@ class RoomView extends Component {
                   item = <UnsupportedEventItem senderId={senderId} />;
                 }
                 if (index === cursor) {
-                  item = (
-                    <ScrollIntoView>
-                      {item}
-                    </ScrollIntoView>
-                  );
+                  item = <ScrollIntoView>{item}</ScrollIntoView>;
                 }
                 return item;
               })}
