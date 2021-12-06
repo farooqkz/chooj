@@ -131,6 +131,7 @@ checkBrowsers(paths.appPath, isInteractive)
       s = s.replace(/addIceCandidate\(([a-zA-Z0-9\.]+)\)/g, (match, p1) => {
         return `addIceCandidate(new RTCIceCandidate(${p1}))`;
       });
+      s = s.replace("!(!remoteStream", "(!remoteStream");
       fs.writeFile(jsFile, s).catch(err => {
         if (err && err.message) {
           console.log(err.message);
