@@ -40,6 +40,7 @@ class TabView extends Component {
           <Tabs
             defaultActiveChild={this.state.activeTab}
             onChangeIndex={this.handleChangeIndex}
+            $HasNonKeyedChildren
           >
             {this.tabs}
           </Tabs>
