@@ -175,12 +175,8 @@ class Matrix extends Component {
                 this.roomId = roomId;
               }}
             />
-            <InvitesView
-              selectedInviteCb={(invite) => {
-                this.invite = invite;
-              }}
-            />
-            <p>{"Settings not implemented"}</p>
+            <p>Invites are not implemented</p>
+            <p>Settings not implemented</p>
             <About />
           </TabView>
           <footer>
