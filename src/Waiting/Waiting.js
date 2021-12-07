@@ -12,12 +12,12 @@ function randomTip() {
   return tips[parseInt(Math.random() * tips.length)];
 }
 
-function Waiting() {
+function Waiting({ noTip }) {
   return (
     <>
       <img className="waiting" src={cow} alt="" />
       <p className="waiting" $HasTextChildren>
-        {randomTip()}
+        {noTip? "" : randomTip()}
       </p>
     </>
   );

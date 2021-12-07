@@ -25,7 +25,7 @@ class App extends Component {
   render() {
     const { state } = this.state;
     if (state === null) {
-      return <Waiting />;
+      return <Waiting noTip />;
     }
 
     if (state === "login") {
