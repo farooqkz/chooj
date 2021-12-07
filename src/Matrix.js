@@ -8,7 +8,6 @@ import RoomsView from "./RoomsView";
 import About from "./About";
 import Waiting from "./Waiting";
 import RoomView from "./RoomView";
-import InvitesView from "./InvitesView";
 import CallScreen from "./CallScreen";
 
 class Matrix extends Component {
