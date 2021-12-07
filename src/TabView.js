@@ -26,7 +26,6 @@ class TabView extends Component {
       activeTab: defaultActiveTab || 0,
     };
     this.tabs[this.state.activeTab].props.isActive = true;
-    console.log("constructor called");
   }
   
   componentWillUnmount() {
