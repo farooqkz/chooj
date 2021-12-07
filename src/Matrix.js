@@ -141,7 +141,6 @@ class Matrix extends Component {
 
   render() {
     const { currentTab, call, syncDone, openRoomId } = this.state;
-    console.log(this.state);
     if (!syncDone) {
       return (
         <>
