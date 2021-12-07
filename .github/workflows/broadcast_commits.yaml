@@ -11,7 +11,7 @@ jobs:
       with:
         homeserver: 'mozilla.modular.im'
         token: ${{ secrets.ACCESS_TOKEN }}
-        channel: '!JZahFNNhVKadmHMAgm:mozilla.org'
+        channel: '!OQyTyXWouXhUmgvaQW:mozilla.org'
         message: |
           Thee in luck! New push to Chooj repository which means new development build available!
 
