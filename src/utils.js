@@ -1,3 +1,31 @@
+import { getHttpUriForMxc } from "matrix-js-sdk";
+
+const defaultAvatarSize = 36;
+
+function isDM(room) {
+  return room.getJoinedMemberCount() === 2 && room.getMyMembership() === "join";
+}
+
+function isRoom(room) {
+  return room.getJoinedMemberCount() > 2 && room.getMyMembership() === "join";
+}
+
+function getAvatarOrDefault(mxcUrl, defaultUrl, size) {
+  size = size || defaultAvatarSize;
+  if (mxcUrl) {
+    return getHttpUriForMxc(
+      window.mClient.baseUrl,
+      mxcUrl,
+      size,
+      size,
+      "scale",
+      true
+    )
+  } else {
+    return defaultUrl;
+  }
+}
+
 function startDM(client, userId) {
   // TODO
 }
@@ -40,4 +68,4 @@ function makeHumanReadableEvent(type, content, sender, myself, dm) {
   }
 }
 
-export { startDM, makeHumanReadableEvent };
+export { isRoom, isDM, getAvatarOrDefault, startDM, makeHumanReadableEvent };

@@ -1,83 +1,127 @@
 import { Component } from "inferno";
 
 import ListView from "./ListView";
-import hashIcon from "./hash_icon.png";
 import ChatRoomItem from "./ChatRoomItem";
 import TextListItem from "./ui/TextListItem";
-import { makeHumanReadableEvent } from "./utils";
+import { isRoom, makeHumanReadableEvent } from "./utils";
+
+import hashIcon from "./hash_icon.png";
+
+
+const AVATAR_SIZE = 36;
 
 class RoomsView extends Component {
-  handleKeyDown = (evt) => {};
-
   cursorChangeCb = (cursor) => {
-    if (this.rooms.length !== 0)
-      this.props.selectedRoomCb(this.rooms[cursor].roomId);
+    const rooms = this.state.rooms;
+    if (rooms.length !== 0)
+      this.props.selectedRoomCb(rooms[cursor].roomId);
     else this.props.selectedRoomCb(null);
     this.setState({ cursor: cursor });
   };
 
-  getRooms = (room) =>
-    room.getJoinedMemberCount() > 2 && room.getMyMembership() === "join";
+  handleTimelineUpdate = (evt, room, toStartOfTimeline, removed, data) => {
+    if (!room || toStartOfTimeline || !data.liveEvent) {
+      return;
+    }
+    if (!isRoom(room)) {
+      return;
+    }
+    this.setState((state) => {
+      let isAlreadyOurRoom = false;
+      // ^ is <room> a room we already have in this.state.rooms?
+      state.rooms = state.rooms.map((ourRoom) => {
+        if (room.roomId === ourRoom.roomId) {
+          isAlreadyOurRoom = true;
+          const lastEvent = room.timeline[room.timeline.length - 1];
+          ourRoom.lastEventTime = lastEvent.getTs();
+          ourRoom.lastEvent = makeHumanReadableEvent(
+            lastEvent.getType(),
+            lastEvent.getContent(),
+            lastEvent.getSender(),
+            window.mClient.getUserId(),
+            false
+          );
+        }
+        return ourRoom;
+      });
+      if (!isAlreadyOurRoom) {
+        let lastEvent = room.timeline[room.timeline.length - 1];
+
+        state.rooms.push({
+          avatarUrl: room.getAvatarUrl(window.client.baseUrl, AVATAR_SIZE, AVATAR_SIZE, "scale"),
+          displayName: room.calculateRoomName(),
+          roomId: room.roomId,
+          lastEvent: makeHumanReadableEvent(
+            lastEvent.getType(),
+            lastEvent.getContent(),
+            lastEvent.getSender(),
+            window.mClient.getUserId(),
+            true
+          ),
+          lastEventTime: lastEvent.getTs(),
+        });
+      }
+      return state;
+    });
+  };
 
   constructor(props) {
     super(props);
-    this.rooms = [];
+    const client = window.mClient;
     this.state = window.stateStores.get("RoomsView") || {
       cursor: 0,
+      rooms: [],
     };
+    if (this.state.rooms.length !== 0) {
+      return;
+    }
+    this.state.rooms = client.getVisibleRooms().filter(isRoom).map((room) => {
+      let roomEvents = room.getLiveTimeline().getEvents();
+      let lastEvent = roomEvents[roomEvents.length - 1];
+      const lastEventTime = lastEvent.getTs();
+      const lastEventContent = lastEvent.getContent();
+      const lastEventType = lastEvent.getType();
+      const lastEventSender = lastEvent.getSender();
+      const avatarUrl = room.getAvatarUrl(client.baseUrl, AVATAR_SIZE, AVATAR_SIZE, "scale") || hashIcon;
+      return {
+        avatarUrl: avatarUrl,
+        displayName: room.calculateRoomName(),
+        roomId: room.roomId,
+        lastEvent: makeHumanReadableEvent(
+          lastEventType,
+          lastEventContent,
+          lastEventSender,
+          client.getUserId(),
+          true
+        ),
+        lastEventTime: lastEventTime,
+      }
+    });
   }
 
   componentWillMount() {
     document.addEventListener("keydown", this.handleKeyDown);
+    window.mClient.addListener("Room.timeline", this.handleTimelineUpdate);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
+    window.mClient.removeListener("Room.timeline", this.handleTimelineUpdate);
     window.stateStores.set("RoomsView", this.state);
   }
 
   render() {
-    const client = window.mClient;
-    this.rooms = client
-      .getVisibleRooms()
-      .filter(this.getRooms)
-      .map((room) => {
-        let roomEvents = room.getLiveTimeline().getEvents();
-        let lastEvent = roomEvents[roomEvents.length - 1];
-        const lastEventTime = lastEvent.getTs();
-        const lastEventContent = lastEvent.getContent();
-        const lastEventType = lastEvent.getType();
-        const lastEventSender = lastEvent.getSender();
-        const roomId = room.roomId;
-        let avatarUrl;
-        avatarUrl =
-          room.getAvatarUrl(client.baseUrl, 36, 36, "scale") || hashIcon;
-        return {
-          roomId: roomId,
-          avatarUrl: avatarUrl,
-          lastEvent: makeHumanReadableEvent(
-            lastEventType,
-            lastEventContent,
-            lastEventSender,
-            client.getUserId(),
-            true
-          ),
-          lastEventTime: lastEventTime,
-        };
-      })
-      .sort((first, second) => {
-        return first.userId > second.userId;
-      });
-    let renderedRooms = this.rooms.map((room, index) => {
-      let item = (
+    const { cursor, rooms } = this.state;
+    let renderedRooms = rooms.map((room, index) => {
+      return (
         <ChatRoomItem
           roomId={room.roomId}
+          displayName={room.displayName}
           avatar={room.avatarUrl}
           lastEvent={room.lastEvent}
+          isFocused={index === cursor}
         />
       );
-      item.props.isFocused = index === this.state.cursor;
-      return item;
     });
 
     if (renderedRooms.length === 0) {

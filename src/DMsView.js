@@ -1,15 +1,11 @@
 import { Component, createPortal } from "inferno";
-import * as matrixcs from "matrix-js-sdk";
 
 import ListView from "./ListView";
 import personIcon from "./person_icon.png";
 import ChatDMItem from "./ChatDMItem";
 import TextListItem from "./ui/TextListItem";
 import DropDownMenu from "./DropDownMenu";
-import { makeHumanReadableEvent } from "./utils";
-
-const AVATAR_WIDTH = 36;
-const AVATAR_HEIGHT = 36;
+import { getAvatarOrDefault, isDM, makeHumanReadableEvent } from "./utils";
 
 function CallSelectionMenu({ selectCb }) {
   return (
@@ -25,9 +21,9 @@ function CallSelectionMenu({ selectCb }) {
 
 class DMsView extends Component {
   handleKeyDown = (evt) => {
-    const { showCallSelection, inCall } = this.state;
+    const { showCallSelection, rooms } = this.state;
     if (evt.key === "Call" || evt.key === "c") {
-      if (this.rooms.length === 0) {
+      if (rooms.length === 0) {
         window.alert("You're lonely(no DM)... there is no one to call!");
         return;
       }
@@ -39,10 +35,6 @@ class DMsView extends Component {
         this.setState({ showCallSelection: false });
         evt.preventDefault();
       }
-      if (inCall !== "") {
-        evt.preventDefault();
-        this.call.hangup();
-      }
     }
   };
 
@@ -52,103 +44,134 @@ class DMsView extends Component {
       alert("Not implemented");
       return;
     }
-    const cursor = this.state.cursor;
-    const roomId = this.rooms[cursor].roomId;
-    const userId = this.rooms[cursor].userId;
+    const { cursor, rooms } = this.state;
+    const roomId = rooms[cursor].roomId;
+    const userId = rooms[cursor].userId;
     this.props.startCall(roomId, type, userId);
   };
 
   cursorChangeCb = (cursor) => {
     if (!this.state.showCallSelection) {
-      if (this.rooms.length !== 0) {
-        this.props.selectedRoomCb(this.rooms[cursor].roomId);
+      const rooms = this.state.rooms;
+      if (rooms.length !== 0) {
+        this.props.selectedRoomCb(rooms[cursor].roomId);
       } else {
         this.props.selectedRoomCb(null);
       }
       this.setState({ cursor: cursor });
     }
   };
+  
+  handleTimelineUpdate = (evt, room, toStartOfTimeline, removed, data) => {
+    if (!room || toStartOfTimeline || !data.liveEvent) {
+      return;
+    }
+    if (!isDM(room)) {
+      return;
+    }
+    this.setState((state) => {
+      let isAlreadyOurRoom = false;
+      // ^ is <room> a room we already have in this.state.rooms?
+      state.rooms = state.rooms.map((ourRoom) => {
+        if (room.roomId === ourRoom.roomId) {
+          isAlreadyOurRoom = true;
+          const lastEvent = room.timeline[room.timeline.length - 1];
+          ourRoom.lastEventTime = lastEvent.getTs();
+          ourRoom.lastEvent = makeHumanReadableEvent(
+            lastEvent.getType(),
+            lastEvent.getContent(),
+            lastEvent.getSender(),
+            window.mClient.getUserId(),
+            true
+          );
+        }
+        return ourRoom;
+      });
+      if (!isAlreadyOurRoom) {
+        let lastEvent = room.timeline[room.timeline.length - 1];
+        let userId = room.guessDMUserId();
+        let userObj = window.mClient.getUser(userId);
 
-  getDMs = (room) =>
-    room.getJoinedMemberCount() === 2 && room.getMyMembership() === "join";
+        state.rooms.push({
+          avatarUrl: getAvatarOrDefault(userObj.avatarUrl, personIcon),
+          displayName: userObj.displayName || userId,
+          userId: userId,
+          roomId: room.roomId,
+          lastEvent: makeHumanReadableEvent(
+            lastEvent.getType(),
+            lastEvent.getContent(),
+            lastEvent.getSender(),
+            window.mClient.getUserId(),
+            true
+          ),
+          lastEventTime: lastEvent.getTs(),
+        });
+      }
+      return state;
+    });
+  };
 
   constructor(props) {
     super(props);
-    this.rooms = [];
+    const client = window.mClient;
     this.state = window.stateStores.get("DMsView") || {
       cursor: 0,
       showCallSelection: false,
+      rooms: [],
     };
+    if (this.state.rooms.length !== 0) {
+      return;
+    }
+    this.state.rooms = client.getVisibleRooms().filter(isDM).map((room) => {
+      let roomEvents = room.getLiveTimeline().getEvents();
+      let lastEvent = roomEvents[roomEvents.length - 1];
+      const lastEventTime = lastEvent.getTs();
+      const lastEventContent = lastEvent.getContent();
+      const lastEventType = lastEvent.getType();
+      const lastEventSender = lastEvent.getSender();
+      const theOtherId = room.guessDMUserId();
+      let userObj = client.getUser(theOtherId);
+      const avatarUrl = getAvatarOrDefault(userObj.avatarUrl, personIcon);
+      return {
+        avatarUrl: avatarUrl,
+        displayName: userObj.displayName || theOtherId,
+        userId: theOtherId,
+        roomId: room.roomId,
+        lastEvent: makeHumanReadableEvent(
+          lastEventType,
+          lastEventContent,
+          lastEventSender,
+          client.getUserId(),
+          true
+        ),
+        lastEventTime: lastEventTime,
+      }
+    });
   }
 
   componentWillMount() {
     document.addEventListener("keydown", this.handleKeyDown);
+    window.mClient.addListener("Room.timeline", this.handleTimelineUpdate);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
+    window.mClient.removeListener("Room.timeline", this.handleTimelineUpdate);
     window.stateStores.set("DMsView", this.state);
   }
 
   render() {
-    const client = window.mClient;
-    const { cursor, showCallSelection } = this.state;
-    this.rooms = client
-      .getVisibleRooms()
-      .filter(this.getDMs)
-      .map((room) => {
-        let roomEvents = room.getLiveTimeline().getEvents();
-        let lastEvent = roomEvents[roomEvents.length - 1];
-        const lastEventTime = lastEvent.getTs();
-        const lastEventContent = lastEvent.getContent();
-        const lastEventType = lastEvent.getType();
-        const lastEventSender = lastEvent.getSender();
-        const theOtherId = room.guessDMUserId();
-        const roomId = room.roomId;
-        let userObj = client.getUser(theOtherId);
-        let mxcUrl = userObj.avatarUrl;
-        let avatarUrl;
-        if (mxcUrl) {
-          avatarUrl = matrixcs.getHttpUriForMxc(
-            client.getHomeserverUrl(),
-            mxcUrl,
-            AVATAR_WIDTH,
-            AVATAR_HEIGHT,
-            "scale",
-            true
-          );
-        } else {
-          avatarUrl = personIcon;
-        }
-        return {
-          roomId: roomId,
-          userId: theOtherId,
-          avatarUrl: avatarUrl,
-          displayName: userObj.displayName,
-          lastEvent: makeHumanReadableEvent(
-            lastEventType,
-            lastEventContent,
-            lastEventSender,
-            client.getUserId(),
-            true
-          ),
-          lastEventTime: lastEventTime,
-        };
-      })
-      .sort((first, second) => {
-        return first.userId > second.userId;
-      });
-    let renderedRooms = this.rooms.map((room, index) => {
-      let item = (
+    const { cursor, rooms, showCallSelection } = this.state;
+
+    let renderedRooms = rooms.map((room, index) => {
+      return (
         <ChatDMItem
-          userId={room.userId}
           displayName={room.displayName}
           avatar={room.avatarUrl}
           lastEvent={room.lastEvent}
+          isFocused={index === cursor}
         />
       );
-      item.props.isFocused = index === cursor;
-      return item;
     });
 
     if (renderedRooms.length === 0) {
