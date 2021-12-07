@@ -9,7 +9,6 @@ class Tabs extends Component {
     if (!["ArrowLeft", "ArrowRight"].includes(evt.key)) return;
     const { children, onChangeIndex } = this.props;
     let index = this.state.activeChild;
-    console.log("[Tabs] Old activeChild:", index);
     children[index].props.isActive = false;
     switch (evt.key) {
       case "ArrowLeft":
