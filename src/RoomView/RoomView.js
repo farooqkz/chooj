@@ -158,10 +158,15 @@ class RoomView extends Component {
                 } else {
                   item = <UnsupportedEventItem senderId={senderId} />;
                 }
-                if (index === cursor) {
-                  item = <ScrollIntoView>{item}</ScrollIntoView>;
-                }
-                return item;
+
+                if(index === cursor && !textInputFocus)
+                  item.props.isFocused = true;
+
+                return (
+                  <ScrollIntoView shouldScroll={index === cursor}>
+                    {item}
+                  </ScrollIntoView>
+                );
               })}
           </div>
           <ChatTextInput
