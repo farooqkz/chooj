@@ -45,15 +45,15 @@ class TabView extends Component {
             {this.tabs}
           </Tabs>
         </div>
-        <div className={tabViewContent}>
+        <div className={tabViewContent} $HasVNodeChildren>
           {this.props.children.map(
             (content, index) =>
               index === this.state.activeTab ? content : null,
             this
-          )}
+          ).filter((content) => Boolean(content))[0]}
         </div>
       </div>
-    ); // XXX maybe use filter()?
+    );
   }
 }
 
