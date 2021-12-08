@@ -107,8 +107,10 @@ class DMsView extends Component {
 
   render() {
     const { cursor, rooms, showCallSelection } = this.state;
-
-    let renderedRooms = rooms.map((room, index) => {
+    const sortedRooms = rooms.sort(
+      (first, second) => first.lastEventTime < second.lastEventTime
+    );
+    let renderedRooms = sortedRooms.map((room, index) => {
       return (
         <ChatDMItem
           displayName={room.displayName}
