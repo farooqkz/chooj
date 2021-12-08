@@ -130,12 +130,12 @@ class RoomView extends Component {
   constructor(props) {
     super(props);
     this.room = window.mClient.getRoom(props.roomId);
-    this.dm = isDM(this.room);
     if (this.room === null) {
       alert("Cannot retrieve room information");
       props.closeRoomView();
       return;
     }
+    this.dm = isDM(this.room);
     const lastEventIndex = this.room.getLiveTimeline().getEvents().length - 1;
     this.state = {
       showMenu: false,
@@ -195,7 +195,7 @@ class RoomView extends Component {
                 if (index === cursor && !textInputFocus)
                   item.props.isFocused = true;
 
-                if (Math.abs(index, cursor) <= 2) {
+                if (Math.abs(index - cursor) <= 2) {
                   window.mClient.setRoomReadMarkers(this.room.roomId, evt.getId());
                 }
 
