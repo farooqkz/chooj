@@ -58,7 +58,10 @@ class RoomsView extends Component {
 
   render() {
     const { cursor, rooms } = this.state;
-    let renderedRooms = rooms.map((room, index) => {
+    const sortedRooms = rooms.sort(
+      (first, second) => first.lastEventTime < second.lastEventTime
+    );
+    let renderedRooms = sortedRooms.map((room, index) => {
       return (
         <ChatRoomItem
           roomId={room.roomId}
