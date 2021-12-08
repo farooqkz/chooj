@@ -11,6 +11,34 @@ import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
 
 class Matrix extends Component {
+  pushNotification = (device_id) => {
+    if (!window.navigator.serviceWorker)
+      return;
+    if (!window.PushManager)
+      return;
+    window.navigator.serviceWorker.register("/sw.js").then((swReg) => {
+      swReg.pushManager.getSubscription().then((sub) => {
+        if (!sub) {
+          return swReg.pushManager.subscribe();
+        } else {
+          return Promise.resolve(sub);
+        }
+      }).then((sub) => {
+        window.mClient.setPusher({
+          app_display_name: "Chooj",
+          app_id: "net.bananahackers.chooj",
+          pushkey: sub.endpoint,
+          kind: "http",
+          lang: "en",
+          device_display_name: "KaiOS " + device_id,
+          data: {
+            "url": "https://farooqkz.de1.hashbang.sh/_matrix/push/v1/notify",
+          }
+        });
+      });
+    });
+  };
+
   onTabChange = (index) => {
     this.setState({ currentTab: index });
   };
@@ -60,7 +88,7 @@ class Matrix extends Component {
       case "Invites":
         return "";
       case "Settings":
-        return "";
+        return "Push";
       default:
         return "";
     }
@@ -89,6 +117,10 @@ class Matrix extends Component {
       case "People":
       case "Rooms":
         this.openRoom();
+        break;
+      case "Settings":
+        if (window.confirm("Are you sure? cannot be undone"))
+          this.pushNotification(this.props.data.device_id);
         break;
       default:
         break;
