@@ -19,6 +19,18 @@ function IRCLikeUnsupportedEventItem({ isFocused, senderId }) {
 class RoomView extends Component {
   messageChangeCb = (message) => {
     this.setState({ message: message });
+    window.mClient.sendTyping(this.room.roomId, true, 75);
+  };
+  
+  handleTyping = (evt, member) => {
+    if (member.roomId !== this.room.roomId) {
+      return;
+    }
+    if (this.room.getJoinedMembers() !== 2) {
+      // currently there is no typing notif for non DM rooms
+      return;
+    }
+    this.setState({ typing: member.typing });
   };
 
   handleKeyDown = (evt) => {
@@ -135,21 +147,23 @@ class RoomView extends Component {
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown);
     window.mClient.addListener("Room.timeline", this.handleTimelineUpdate);
+    window.mClient.addListener("RoomMember.typing", this.handleTyping);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
     window.mClient.removeListener("Room.timeline", this.handleTimelineUpdate);
+    window.mClient.removeListener("RoomMember.typing", this.handleTyping);
   }
 
   render() {
     const MessageItem = IRCLikeMessageItem;
     const UnsupportedEventItem = IRCLikeUnsupportedEventItem;
-    const { cursor, message, textInputFocus } = this.state;
+    const { cursor, message, textInputFocus, typing } = this.state;
 
     return (
       <>
-        <Header text={this.room.calculateRoomName()} />
+        <Header text={typing ? "Typing..." : this.room.name} />
         <div
           className="eventsandtextinput"
           ref={(ref) => {
