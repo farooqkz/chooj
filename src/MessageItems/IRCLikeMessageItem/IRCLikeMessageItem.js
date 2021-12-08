@@ -1,3 +1,4 @@
+import { createTextVNode } from "inferno";
 import "./IRCLikeMessageItem.css";
 
 function IRCLikeMessageItemText({ text, sender, isFocused }) {
@@ -5,7 +6,7 @@ function IRCLikeMessageItemText({ text, sender, isFocused }) {
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
         <b $HasTextChildren>{`<${sender}>`}</b>
-        {" " + text}
+        {createTextVNode(" " + text)}
       </p>
     </div>
   );
@@ -17,7 +18,7 @@ function IRCLikeMessageItemNotice({ isFocused, text, sender }) {
       <p>
         <i>
           <b $HasTextChildren>{`<${sender}>`}</b>
-          {" " + text}
+          {createTextVNode(" " + text)}
         </i>
       </p>
     </div>
@@ -27,7 +28,7 @@ function IRCLikeMessageItemNotice({ isFocused, text, sender }) {
 function IRCLikeMessageItemUnknown({ isFocused, sender }) {
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
-      <p>Unsupported message type was sent from {sender}</p>
+      <p $HasTextChildren>Unsupported message type was sent from {sender}</p>
     </div>
   );
 }
