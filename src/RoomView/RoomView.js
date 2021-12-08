@@ -26,7 +26,7 @@ class RoomView extends Component {
     if (member.roomId !== this.room.roomId) {
       return;
     }
-    if (this.room.getJoinedMembers() !== 2) {
+    if (!this.dm) {
       // currently there is no typing notif for non DM rooms
       return;
     }
@@ -130,6 +130,7 @@ class RoomView extends Component {
   constructor(props) {
     super(props);
     this.room = window.mClient.getRoom(props.roomId);
+    this.dm = isDM(this.room);
     if (this.room === null) {
       alert("Cannot retrieve room information");
       props.closeRoomView();
