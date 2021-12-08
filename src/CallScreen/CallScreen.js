@@ -1,9 +1,10 @@
 import { Component } from "inferno";
 import "./CallScreen.css";
-import personIcon from "../person_icon.png";
 import SoftKey from "../ui/SoftKey";
 import waitingRing from "./waiting.ogg";
 import incomingRing from "./incoming.ogg";
+
+const personIcon = "/person_icon.png";
 
 function readableDuration(duration) {
   if (!duration) return "--";
@@ -20,7 +21,7 @@ class CallScreen extends Component {
       this.call.answer();
     }
   };
-  
+
   constructor(props) {
     super(props);
     console.log("CS", props);
@@ -38,7 +39,9 @@ class CallScreen extends Component {
       this.call.placeVoiceCall();
     } else if (type === "incoming") {
       this.props.displayName = this.call.getOpponentMember().name;
-      this.props.avatar = this.call.getOpponentMember().getAvatarUrl(baseUrl, AVATAR_D, "scale");
+      this.props.avatar = this.call
+        .getOpponentMember()
+        .getAvatarUrl(baseUrl, AVATAR_D, "scale");
     } else {
       throw new Error("Invalid call type");
     }
@@ -78,13 +81,13 @@ class CallScreen extends Component {
         }
       }
       if (newCallState === "connected") {
-           this.timer = window.setInterval(() => {
-            this.setState((prevState) => {
-              prevState.duration++;
-              return prevState;
-            });
-          }, 1000);
-          this.setState({ hasStarted: true });
+        this.timer = window.setInterval(() => {
+          this.setState((prevState) => {
+            prevState.duration++;
+            return prevState;
+          });
+        }, 1000);
+        this.setState({ hasStarted: true });
       }
       if (this.props.type === "incoming") {
         console.log("CS", newCallState);
@@ -142,7 +145,9 @@ class CallScreen extends Component {
               this.call.answer(true); // answer with only audio enabled
             }
           }}
-          centerText={hasStarted? (isAudioMuted ? "Unmute" : "Mute") : "Answer"}
+          centerText={
+            hasStarted ? (isAudioMuted ? "Unmute" : "Mute") : "Answer"
+          }
         />
       </div>
     );

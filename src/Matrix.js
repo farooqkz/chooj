@@ -118,7 +118,7 @@ class Matrix extends Component {
       } else {
         this.call = call;
         this.setState({
-          call: { type: "incoming" }
+          call: { type: "incoming" },
         });
       }
     });
@@ -153,7 +153,7 @@ class Matrix extends Component {
           {...call}
           endOfCallCb={() => {
             this.call = null;
-            this.setState({ call: null })
+            this.setState({ call: null });
           }}
           call={this.call}
         />
@@ -162,7 +162,11 @@ class Matrix extends Component {
     if (openRoomId === "") {
       return (
         <>
-          <TabView tabLabels={this.tabs} onChangeIndex={this.onTabChange} defaultActiveTab={currentTab}>
+          <TabView
+            tabLabels={this.tabs}
+            onChangeIndex={this.onTabChange}
+            defaultActiveTab={currentTab}
+          >
             <DMsView
               startCall={this.startCall}
               selectedRoomCb={(roomId) => {

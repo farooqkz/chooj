@@ -2,6 +2,7 @@ import { Component } from "inferno";
 import Header from "../ui/Header";
 import SoftKey from "../ui/SoftKey";
 import { IRCLikeMessageItem } from "../MessageItems";
+import { isDM, isRoom, updateState } from "../utils";
 import ChatTextInput from "../ChatTextInput";
 import ScrollIntoView from "./ScrollIntoView";
 import "./UnsupportedEventItem.css";
@@ -53,15 +54,25 @@ class RoomView extends Component {
     }
   };
 
-  handleTimelineUpdate = (event, room, ts) => {
-    if(room.roomId === this.room.roomId){
+  handleTimelineUpdate = (evt, room, ts) => {
+    if (isRoom(room)) {
+      let roomsViewState = window.stateStores.get("RoomsView");
+      roomsViewState = updateState(room, roomsViewState, false);
+      window.stateStores.set("RoomsView", roomsViewState);
+    }
+    if (isDM(room)) {
+      let roomsViewState = window.stateStores.get("DMsView");
+      roomsViewState = updateState(room, roomsViewState, true);
+      window.stateStores.set("DMsView", roomsViewState);
+    }
+    if (room.roomId === this.room.roomId) {
       const lastEventIndex = room.getLiveTimeline().getEvents().length - 1;
       const { cursor, textInputFocus } = this.state;
       this.setState({
         cursor: textInputFocus ? lastEventIndex : cursor,
       });
     }
-  }
+  };
 
   centerCb = () => {
     const { message } = this.state;
@@ -159,7 +170,7 @@ class RoomView extends Component {
                   item = <UnsupportedEventItem senderId={senderId} />;
                 }
 
-                if(index === cursor && !textInputFocus)
+                if (index === cursor && !textInputFocus)
                   item.props.isFocused = true;
 
                 return (

@@ -27,7 +27,7 @@ class TabView extends Component {
     };
     this.tabs[this.state.activeTab].props.isActive = true;
   }
-  
+
   componentWillUnmount() {
     //window.stateStores.set("TabView", this.state);
   }
@@ -45,11 +45,15 @@ class TabView extends Component {
           </Tabs>
         </div>
         <div className={tabViewContent} $HasVNodeChildren>
-          {this.props.children.map(
-            (content, index) =>
-              index === this.state.activeTab ? content : null,
-            this
-          ).filter((content) => Boolean(content))[0]}
+          {
+            this.props.children
+              .map(
+                (content, index) =>
+                  index === this.state.activeTab ? content : null,
+                this
+              )
+              .filter((content) => Boolean(content))[0]
+          }
         </div>
       </div>
     );

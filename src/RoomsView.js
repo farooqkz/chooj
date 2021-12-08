@@ -3,18 +3,12 @@ import { Component } from "inferno";
 import ListView from "./ListView";
 import ChatRoomItem from "./ChatRoomItem";
 import TextListItem from "./ui/TextListItem";
-import { isRoom, makeHumanReadableEvent } from "./utils";
-
-import hashIcon from "./hash_icon.png";
-
-
-const AVATAR_SIZE = 36;
+import { newRoomInState, updateState, isRoom, isDM } from "./utils";
 
 class RoomsView extends Component {
   cursorChangeCb = (cursor) => {
     const rooms = this.state.rooms;
-    if (rooms.length !== 0)
-      this.props.selectedRoomCb(rooms[cursor].roomId);
+    if (rooms.length !== 0) this.props.selectedRoomCb(rooms[cursor].roomId);
     else this.props.selectedRoomCb(null);
     this.setState({ cursor: cursor });
   };
@@ -24,45 +18,15 @@ class RoomsView extends Component {
       return;
     }
     if (!isRoom(room)) {
+      if (isDM(room)) {
+        // update DMsView saved state
+        let state = window.stateStores.get("DMsView");
+        state = updateState(room, state, true);
+        window.stateStores.set("DMsView", state);
+      }
       return;
     }
-    this.setState((state) => {
-      let isAlreadyOurRoom = false;
-      // ^ is <room> a room we already have in this.state.rooms?
-      state.rooms = state.rooms.map((ourRoom) => {
-        if (room.roomId === ourRoom.roomId) {
-          isAlreadyOurRoom = true;
-          const lastEvent = room.timeline[room.timeline.length - 1];
-          ourRoom.lastEventTime = lastEvent.getTs();
-          ourRoom.lastEvent = makeHumanReadableEvent(
-            lastEvent.getType(),
-            lastEvent.getContent(),
-            lastEvent.getSender(),
-            window.mClient.getUserId(),
-            false
-          );
-        }
-        return ourRoom;
-      });
-      if (!isAlreadyOurRoom) {
-        let lastEvent = room.timeline[room.timeline.length - 1];
-
-        state.rooms.push({
-          avatarUrl: room.getAvatarUrl(window.client.baseUrl, AVATAR_SIZE, AVATAR_SIZE, "scale"),
-          displayName: room.calculateRoomName(),
-          roomId: room.roomId,
-          lastEvent: makeHumanReadableEvent(
-            lastEvent.getType(),
-            lastEvent.getContent(),
-            lastEvent.getSender(),
-            window.mClient.getUserId(),
-            true
-          ),
-          lastEventTime: lastEvent.getTs(),
-        });
-      }
-      return state;
-    });
+    this.setState((state) => updateState(room, state, false));
   };
 
   constructor(props) {
@@ -75,28 +39,10 @@ class RoomsView extends Component {
     if (this.state.rooms.length !== 0) {
       return;
     }
-    this.state.rooms = client.getVisibleRooms().filter(isRoom).map((room) => {
-      let roomEvents = room.getLiveTimeline().getEvents();
-      let lastEvent = roomEvents[roomEvents.length - 1];
-      const lastEventTime = lastEvent.getTs();
-      const lastEventContent = lastEvent.getContent();
-      const lastEventType = lastEvent.getType();
-      const lastEventSender = lastEvent.getSender();
-      const avatarUrl = room.getAvatarUrl(client.baseUrl, AVATAR_SIZE, AVATAR_SIZE, "scale") || hashIcon;
-      return {
-        avatarUrl: avatarUrl,
-        displayName: room.calculateRoomName(),
-        roomId: room.roomId,
-        lastEvent: makeHumanReadableEvent(
-          lastEventType,
-          lastEventContent,
-          lastEventSender,
-          client.getUserId(),
-          true
-        ),
-        lastEventTime: lastEventTime,
-      }
-    });
+    this.state.rooms = client
+      .getVisibleRooms()
+      .filter(isRoom)
+      .map((room) => newRoomInState(room, false));
   }
 
   componentWillMount() {

@@ -17,7 +17,7 @@ function Waiting({ noTip }) {
     <>
       <img className="waiting" src={cow} alt="" />
       <p className="waiting" $HasTextChildren>
-        {noTip? "" : randomTip()}
+        {noTip ? "" : randomTip()}
       </p>
     </>
   );

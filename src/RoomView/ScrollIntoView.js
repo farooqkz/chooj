@@ -4,9 +4,13 @@ function ScrollIntoView({ children, shouldScroll }) {
   }
   return (
     <div
-      ref={shouldScroll ? ((div) => {
-        if (div) div.scrollIntoView();
-      }) : null}
+      ref={
+        shouldScroll
+          ? (div) => {
+              if (div) div.scrollIntoView();
+            }
+          : null
+      }
     >
       {children}
     </div>

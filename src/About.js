@@ -75,10 +75,7 @@ class About extends Component {
         primary="Farooq Karimi Zadeh"
         secondary="App Developer"
       />,
-      <TextListItem
-        primary="Affe Null"
-        secondary="Contributor"
-      />,
+      <TextListItem primary="Affe Null" secondary="Contributor" />,
       <Separator text="Libraries and modules" />,
       <IconListItem
         iconSrc={AdrianAvatar}
