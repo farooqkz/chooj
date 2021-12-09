@@ -22,7 +22,6 @@ self.onpush = (evt) => {
   const content = data.content;
   const senderDisplayName = data.sender_display_name;
   if (content && content.body && content.msgtype === "m.text") {
-    console.log("Showing notification type #1");
     evt.waitUntil(
       self.registration.showNotification(data.room_name || "New message!", {
         body: content.body,
@@ -30,7 +29,6 @@ self.onpush = (evt) => {
       })
     );
   } else if (data.type === "m.room.message" && senderDisplayName) {
-    console.log("Showing notification type #2");
     evt.waitUntil(
       self.registration.showNotification(senderDisplayName, {
         body: `${data.counts.unread} new message(s)`,
