@@ -81,11 +81,8 @@ class RoomView extends Component {
       let events = room.getLiveTimeline().getEvents();
       const lastEventIndex = events.length - 1;
       const { cursor, textInputFocus } = this.state;
-      if (textInputFocus) { // partial support for read markers
-        window.mClient.setRoomReadMarkers(
-          room.roomId,
-          events[lastEventIndex].getId()
-        );
+      if (textInputFocus) { // partial support
+        window.mClient.sendReadReceipt(evt);
       }
       this.setState({
         cursor: textInputFocus ? lastEventIndex : cursor,
@@ -194,10 +191,6 @@ class RoomView extends Component {
 
                 if (index === cursor && !textInputFocus)
                   item.props.isFocused = true;
-
-                if (Math.abs(index - cursor) <= 2) {
-                  window.mClient.setRoomReadMarkers(this.room.roomId, evt.getId());
-                }
 
                 return (
                   <ScrollIntoView shouldScroll={index === cursor}>
