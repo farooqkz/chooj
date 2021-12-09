@@ -27,6 +27,7 @@ Check related BananaHackers blog posts for more information.
  - Login process with password works(manually or by scanning a QR code)
  - Chatting works in all rooms. Partially, however.
  - Voice call partially works.
+ - Very experimental and unreliable push notification support which you can enable it in Settings
  - The Cow says "Please wait" to you kindly :))
 
 ### How to help?

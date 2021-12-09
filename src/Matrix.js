@@ -9,6 +9,10 @@ import About from "./About";
 import Waiting from "./Waiting";
 import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
+import Settings from "./Settings";
+import { urlBase64ToUint8Array } from "./utils";
+
+const vapidPublicKey = "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
 
 class Matrix extends Component {
   pushNotification = (device_id) => {
@@ -19,15 +23,19 @@ class Matrix extends Component {
     window.navigator.serviceWorker.register("/sw.js").then((swReg) => {
       swReg.pushManager.getSubscription().then((sub) => {
         if (!sub) {
-          return swReg.pushManager.subscribe();
+          return swReg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+          });
         } else {
           return Promise.resolve(sub);
         }
       }).then((sub) => {
+        let pushkey = JSON.stringify(sub.toJSON());
         window.mClient.setPusher({
           app_display_name: "Chooj",
           app_id: "net.bananahackers.chooj",
-          pushkey: sub.endpoint,
+          pushkey: pushkey,
           kind: "http",
           lang: "en",
           device_display_name: "KaiOS " + device_id,
@@ -35,6 +43,7 @@ class Matrix extends Component {
             "url": "https://farooqkz.de1.hashbang.sh/_matrix/push/v1/notify",
           }
         });
+        console.log("Pusher set");
       });
     });
   };
@@ -52,7 +61,7 @@ class Matrix extends Component {
       case "Rooms":
         return "";
       case "Invites":
-        return "Accept";
+        return "";
       case "Settings":
         return "";
       default:
@@ -69,7 +78,7 @@ class Matrix extends Component {
       case "Rooms":
         return "";
       case "Invites":
-        return "Decline";
+        return "";
       case "Settings":
         return "";
       default:
@@ -211,7 +220,7 @@ class Matrix extends Component {
               }}
             />
             <p>Invites are not implemented</p>
-            <p>Settings not implemented</p>
+            <Settings />
             <About />
           </TabView>
           <footer>
