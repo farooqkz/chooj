@@ -61,6 +61,8 @@ This app should work on all KaiOS versions. However it has been also tested on t
 
  - Nokia 8110 4G(aka The BananaPhone)
  - Nokia 800 Tough
+ - Nokia 8000 4g
+ - Alcatel Go Flip 3
  - `[Add your own device here]`
 
 ### How to build?
