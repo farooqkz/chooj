@@ -6,7 +6,7 @@
 }
 
 .ircmsg > p {
-  font-size: 12px !important;
+  font-size: 14px !important;
 }
 
 .ircmsg--focused {
@@ -14,11 +14,11 @@
   padding-bottom: 2px;
   height: auto;
   width: 100%;
-  font-size: 12px !important;
+  font-size: 15px !important;
   background-color: black;
   color: white;
 }
 
 .ircmsg--focused > p {
-  font-size: 12px !important;
+  font-size: 15px !important;
 }
