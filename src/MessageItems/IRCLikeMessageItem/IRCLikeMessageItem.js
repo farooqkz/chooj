@@ -25,6 +25,35 @@ function IRCLikeMessageItemNotice({ isFocused, text, sender }) {
   );
 }
 
+function IRCLikeMessageItemImage({
+  sender,
+  text,
+  width,
+  height,
+  size,
+  url,
+  isFocused
+}) {
+  while (height > (192 * 2/3)) {
+    height *= 0.75;
+    width *= 0.75;
+  }
+  while (width > (238 * 2/3)) {
+    height *= 0.75;
+    width *= 0.75;
+  }
+  url = window.mClient.mxcUrlToHttp(url, width, height, "scale", true);
+  return (
+    <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
+      <p>
+        <b $HasTextChildren>{`<${sender}>`}</b>
+        {createTextVNode(text)}
+        <img width={width} height={height} src={url} alt={text} />
+      </p>
+    </div>
+  );
+}
+
 function IRCLikeMessageItemUnknown({ isFocused, sender }) {
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
@@ -53,8 +82,19 @@ function IRCLikeMessageItem({ sender, content, isFocused }) {
           isFocused={isFocused}
         />
       );
-    case "m.emote":
     case "m.image":
+      return (
+        <IRCLikeMessageItemImage
+          sender={displayName}
+          text={content.body}
+          width={content.info.w}
+          height={content.info.h}
+          size={content.info.size}
+          url={content.url}
+          isFocused={isFocused}
+        />
+      );
+    case "m.emote":
     case "m.video":
     case "m.audio":
     case "m.location":
