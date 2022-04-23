@@ -30,6 +30,9 @@ class RoomView extends Component {
       // currently there is no typing notif for non DM rooms
       return;
     }
+    if (window.mClient.getUserId() === member.userId) {
+      return;
+    }
     this.setState({ typing: member.typing });
   };
 
