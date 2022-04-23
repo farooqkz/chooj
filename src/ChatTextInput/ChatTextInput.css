@@ -2,20 +2,22 @@
   display: flex;
   justify-content: center;
   flex-direction: center;
-  background-color: yellow;
+  background-color: #2196f3;
 }
 
 .chattextinput > input {
   width: 96%;
+  font-size: 15px;
 }
 
 .chattextinput--focused {
   display: flex;
   justify-content: center;
   flex-direction: center;
-  background-color: rgb(0, 255, 20);
+  background-color: #1b5e20;
 }
 
 .chattextinput--focused > input {
   width: 96%;
+  font-size: 15px;
 }
