@@ -2,9 +2,11 @@ import { createTextVNode } from "inferno";
 import "./IRCLikeMessageItem.css";
 
 function IRCLikeMessageItemText({ date, text, sender, isFocused }) {
+  
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
+        <b $HasTextChildren>{date}</b>
         <b $HasTextChildren>{`<${sender}>`}</b>
         {createTextVNode(" " + text)}
       </p>
@@ -17,6 +19,7 @@ function IRCLikeMessageItemNotice({ date, isFocused, text, sender }) {
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
         <i>
+          <b $HasTextChildren>{date}</b>
           <b $HasTextChildren>{`<${sender}>`}</b>
           {createTextVNode(" " + text)}
         </i>
@@ -47,6 +50,7 @@ function IRCLikeMessageItemImage({
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
+        <b $HasTextChildren>{date}</b>
         <b $HasTextChildren>{`<${sender}>`}</b>
         {createTextVNode(text)}
         <img width={width} height={height} src={url} alt={text} />
@@ -58,6 +62,7 @@ function IRCLikeMessageItemImage({
 function IRCLikeMessageItemUnknown({ date, isFocused, sender }) {
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
+      <b $HasTextChildren>{date}</b>
       <p $HasTextChildren>Unsupported message type was sent from {sender}</p>
     </div>
   );
@@ -66,10 +71,20 @@ function IRCLikeMessageItemUnknown({ date, isFocused, sender }) {
 function IRCLikeMessageItem({ date, sender, content, isFocused }) {
   const userId = sender.userId;
   let displayName = window.mClient.getUser(userId).displayName || userId;
+  let h = date.getHours().toString();
+  let m = date.getMinutes().toString();
+  if (h.length == 1) {
+    h = "0" + h;
+  }
+  if (m.length == 1) {
+    m = "0" + m;
+  }
+  let d = `[${h}:${m}] `;
   switch (content.msgtype) {
     case "m.text":
       return (
         <IRCLikeMessageItemText
+          date={d}
           sender={displayName}
           text={content.body}
           isFocused={isFocused}
@@ -78,6 +93,7 @@ function IRCLikeMessageItem({ date, sender, content, isFocused }) {
     case "m.notice":
       return (
         <IRCLikeMessageItemNotice
+          date={d}
           sender={displayName}
           text={content.body}
           isFocused={isFocused}
@@ -86,6 +102,7 @@ function IRCLikeMessageItem({ date, sender, content, isFocused }) {
     case "m.image":
       return (
         <IRCLikeMessageItemImage
+          date={d}
           sender={displayName}
           text={content.body}
           width={content.info.w}
@@ -103,6 +120,7 @@ function IRCLikeMessageItem({ date, sender, content, isFocused }) {
     default:
       return (
         <IRCLikeMessageItemUnknown
+          date={d}
           sender={sender.userId}
           isFocsued={isFocused}
         />
