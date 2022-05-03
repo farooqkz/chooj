@@ -73,10 +73,10 @@ function IRCLikeMessageItem({ date, sender, content, isFocused }) {
   let displayName = window.mClient.getUser(userId).displayName || userId;
   let h = date.getHours().toString();
   let m = date.getMinutes().toString();
-  if (h.length == 1) {
+  if (h.length === 1) {
     h = "0" + h;
   }
-  if (m.length == 1) {
+  if (m.length === 1) {
     m = "0" + m;
   }
   let d = `[${h}:${m}] `;
