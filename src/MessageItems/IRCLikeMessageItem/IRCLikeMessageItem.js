@@ -1,7 +1,7 @@
 import { createTextVNode } from "inferno";
 import "./IRCLikeMessageItem.css";
 
-function IRCLikeMessageItemText({ text, sender, isFocused }) {
+function IRCLikeMessageItemText({ date, text, sender, isFocused }) {
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
@@ -12,7 +12,7 @@ function IRCLikeMessageItemText({ text, sender, isFocused }) {
   );
 }
 
-function IRCLikeMessageItemNotice({ isFocused, text, sender }) {
+function IRCLikeMessageItemNotice({ date, isFocused, text, sender }) {
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
@@ -26,6 +26,7 @@ function IRCLikeMessageItemNotice({ isFocused, text, sender }) {
 }
 
 function IRCLikeMessageItemImage({
+  date,
   sender,
   text,
   width,
@@ -54,7 +55,7 @@ function IRCLikeMessageItemImage({
   );
 }
 
-function IRCLikeMessageItemUnknown({ isFocused, sender }) {
+function IRCLikeMessageItemUnknown({ date, isFocused, sender }) {
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p $HasTextChildren>Unsupported message type was sent from {sender}</p>
@@ -62,7 +63,7 @@ function IRCLikeMessageItemUnknown({ isFocused, sender }) {
   );
 }
 
-function IRCLikeMessageItem({ sender, content, isFocused }) {
+function IRCLikeMessageItem({ date, sender, content, isFocused }) {
   const userId = sender.userId;
   let displayName = window.mClient.getUser(userId).displayName || userId;
   switch (content.msgtype) {

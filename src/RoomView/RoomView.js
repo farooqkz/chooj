@@ -101,7 +101,8 @@ class RoomView extends Component {
         // TODO: start call or something
         break;
       case "Info":
-        alert("Message Info not implemented yet");
+        const date = this.currentEvent.getDate().toString();
+        alert(`Event was sent in ${date}`);
         break;
       case "Send":
         if (message === "") {
@@ -136,7 +137,8 @@ class RoomView extends Component {
       return;
     }
     this.dm = isDM(this.room);
-    const lastEventIndex = this.room.getLiveTimeline().getEvents().length - 1;
+    const lastEventIndex = this.room.getLiveTimeline().getEvents().lastIndex;
+    this.currentEvent = null;
     this.state = {
       showMenu: false,
       cursor: lastEventIndex,
@@ -184,6 +186,7 @@ class RoomView extends Component {
                 if (evt.getType() === "m.room.message") {
                   item = (
                     <MessageItem
+                      date={evt.getDate()}
                       sender={{ userId: senderId }}
                       content={evt.getContent()}
                     />
@@ -192,8 +195,10 @@ class RoomView extends Component {
                   item = <UnsupportedEventItem senderId={senderId} />;
                 }
 
-                if (index === cursor && !textInputFocus)
+                if (index === cursor && !textInputFocus) {
                   item.props.isFocused = true;
+                  this.currentEvent = evt;
+                }
 
                 return (
                   <ScrollIntoView shouldScroll={index === cursor}>
