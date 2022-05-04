@@ -51,9 +51,7 @@ class RoomView extends Component {
       evt.preventDefault();
       closeRoomView();
     } else if (evt.key === "ArrowDown") {
-      if (textInputFocus) {
-        this.setState({ textInputFocus: false, cursor: 0 });
-      } else if (cursor === lastEventIndex) {
+      if (cursor === lastEventIndex) {
         this.setState({ textInputFocus: true });
       } else {
         this.setState({ cursor: cursor + 1 });
@@ -62,7 +60,18 @@ class RoomView extends Component {
       if (textInputFocus) {
         this.setState({ textInputFocus: false, cursor: lastEventIndex });
       } else if (cursor === 0) {
-        this.setState({ textInputFocus: true, cursor: lastEventIndex });
+        let prev = this.timeline.getEvents().lastIndex;
+        window.mClient.paginateEventTimeline(
+          this.timeline,
+          { backwards: true, limit: 10}
+        ).then((notReachedEnd) => {
+          if (notReachedEnd) {
+            const current = this.timeline.getEvents().lastIndex;
+            this.setState({
+              cursor: current - prev
+            });
+          }
+        }); 
       } else {
         this.setState({ cursor: cursor - 1 });
       }
@@ -81,7 +90,7 @@ class RoomView extends Component {
       window.stateStores.set("DMsView", roomsViewState);
     }
     if (room.roomId === this.room.roomId) {
-      let events = room.getLiveTimeline().getEvents();
+      let events = this.timeline.getEvents();
       const lastEventIndex = events.lastIndex;
       const { cursor, textInputFocus } = this.state;
       if (textInputFocus) { // partial support
@@ -137,8 +146,9 @@ class RoomView extends Component {
       return;
     }
     this.dm = isDM(this.room);
-    const lastEventIndex = this.room.getLiveTimeline().getEvents().lastIndex;
     this.currentEvent = null;
+    this.timeline = this.room.getLiveTimeline();
+    const lastEventIndex = this.timeline.getEvents().lastIndex;
     this.state = {
       showMenu: false,
       cursor: lastEventIndex,
@@ -177,10 +187,9 @@ class RoomView extends Component {
             className={"kai-list-view"}
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
           >
-            {this.room
-              .getLiveTimeline()
+            {this.timeline
               .getEvents()
-              .map((evt, index, ary) => {
+              .map((evt, index) => {
                 let item = null;
                 const senderId = evt.getSender();
                 if (evt.getType() === "m.room.message") {
