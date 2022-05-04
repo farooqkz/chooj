@@ -45,7 +45,7 @@ class RoomView extends Component {
     }
     const { cursor, textInputFocus, message } = this.state;
     const { closeRoomView } = this.props;
-    const lastEventIndex = this.room.getLiveTimeline().getEvents().length - 1;
+    const lastEventIndex = this.room.getLiveTimeline().getEvents().lastIndex;
     if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
       if (textInputFocus && message) return;
       evt.preventDefault();
