@@ -82,7 +82,7 @@ class RoomView extends Component {
     }
     if (room.roomId === this.room.roomId) {
       let events = room.getLiveTimeline().getEvents();
-      const lastEventIndex = events.length - 1;
+      const lastEventIndex = events.lastIndex;
       const { cursor, textInputFocus } = this.state;
       if (textInputFocus) { // partial support
         window.mClient.sendReadReceipt(evt);
