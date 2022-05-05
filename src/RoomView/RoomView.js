@@ -101,6 +101,24 @@ class RoomView extends Component {
       });
     }
   };
+  
+  getLeftText = () => {
+    if (this.state.textInputFocus) 
+      return "+";
+    if (this.currentEvent && this.currentEvent.getType() === "m.room.message") {
+      if (this.currentEvent.getContent().msgtype === "m.audio") {
+        return "Listen";
+      }
+    }
+    return "";
+  };
+
+  leftCb = () => {
+    if (this.getLeftText() === "Listen") {
+      let audio = document.querySelector(".ircmsg--focused > p > audio");
+      audio.play();
+    }
+  };
 
   centerCb = () => {
     const { message } = this.state;
@@ -223,7 +241,12 @@ class RoomView extends Component {
           />
         </div>
         <footer>
-          <SoftKey centerText={this.getCenterText()} centerCb={this.centerCb} />
+          <SoftKey
+            centerText={this.getCenterText()}
+            centerCb={this.centerCb}
+            leftText={this.getLeftText()}
+            leftCb={this.leftCb}
+          />
         </footer>
       </>
     );

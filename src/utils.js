@@ -147,6 +147,32 @@ function makeHumanReadableEvent(type, content, sender, myself, dm) {
   }
 }
 
+function bytesToHigherScale(b) {
+  let units = ["B", "KiB", "MiB", "GiB"];
+  let unit = 0;
+  while (b >= 512 && unit < 3) {
+    b /= 1024;
+    unit++;
+  }
+  return `${b}${units[unit]}`;
+}
+
+function msToHigherScale(ms) {
+  let units = ["s", "m", "h"];
+  let unit = 0;
+  ms /= 1000;
+  while (ms >= 60) {
+    ms /= 60;
+    unit++;
+  }
+  return `${ms}${units[unit]}`;
+}
+
+function mxcMediaToHttp(hsUrl, mxcUrl) {
+  let [serverName, mediaId] = mxcUrl.split("/").slice(2,4);
+  return `${hsUrl}/_matrix/media/v3/download/${serverName}/${mediaId}`;
+}
+
 export {
   updateState,
   newRoomInState,
@@ -156,4 +182,7 @@ export {
   startDM,
   makeHumanReadableEvent,
   urlBase64ToUint8Array,
+  bytesToHigherScale,
+  msToHigherScale,
+  mxcMediaToHttp
 };

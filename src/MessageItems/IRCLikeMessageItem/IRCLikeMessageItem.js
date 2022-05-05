@@ -1,5 +1,6 @@
 import { createTextVNode } from "inferno";
 import "./IRCLikeMessageItem.css";
+import { mxcMediaToHttp, bytesToHigherScale, msToHigherScale } from "../../utils";
 
 function IRCLikeMessageItemText({ date, text, sender, isFocused }) {
   
@@ -59,6 +60,34 @@ function IRCLikeMessageItemImage({
   );
 }
 
+function IRCLikeMessageItemAudio({
+  date,
+  isFocused,
+  sender,
+  size,
+  duration,
+  url,
+  text
+}) {
+  const hsUrl = window.mClient.getHomeserverUrl();
+  url = mxcMediaToHttp(hsUrl, url);
+  return (
+    <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
+      <p>
+        <b $HasTextChildren>{date}</b>
+        <b $HasTextChildren>{`${sender} has sent an audio clip.`}</b>
+        <br />
+        Title: {createTextVNode(text)}
+        <br />
+        Duration: {createTextVNode(msToHigherScale(duration))}
+        <br />
+        Size: {createTextVNode(bytesToHigherScale(size))}
+        <audio src={url} autoplay={false} />
+      </p>
+    </div>
+  )
+}
+
 function IRCLikeMessageItemUnknown({ date, isFocused, sender }) {
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
@@ -112,9 +141,20 @@ function IRCLikeMessageItem({ date, sender, content, isFocused }) {
           isFocused={isFocused}
         />
       );
+    case "m.audio":
+      return (
+        <IRCLikeMessageItemAudio
+          date={d}
+          sender={displayName}
+          text={content.body}
+          duration={content.info.duration}
+          size={content.info.size}
+          url={content.url}
+          isFocused={isFocused}
+        />
+      );
     case "m.emote":
     case "m.video":
-    case "m.audio":
     case "m.location":
     case "m.file":
     default:
