@@ -154,6 +154,7 @@ function bytesToHigherScale(b) {
     b /= 1024;
     unit++;
   }
+  b = b.toFixed(2);
   return `${b}${units[unit]}`;
 }
 
@@ -165,6 +166,7 @@ function msToHigherScale(ms) {
     ms /= 60;
     unit++;
   }
+  ms = ms.toFixed(2);
   return `${ms}${units[unit]}`;
 }
 
