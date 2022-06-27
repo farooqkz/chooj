@@ -227,7 +227,7 @@ class RoomView extends Component {
       this.recorder.onstop = () => {
         let blob = new Blob(this.recording);
         let size = blob.size;
-        let duration = this.state.recordingSeconds * 1000;
+        let duration = parseInt(this.state.recordingSeconds * 1000);
         let mimetype = blob.type;
         window.mClient
           .uploadContent(blob, {
