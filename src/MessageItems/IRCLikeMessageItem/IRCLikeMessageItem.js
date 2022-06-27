@@ -102,7 +102,9 @@ function IRCLikeMessageItemUnknown({ date, isFocused, sender }) {
 
 function IRCLikeMessageItem({ date, sender, content, isFocused }) {
   const userId = sender.userId;
-  let displayName = window.mClient.getUser(userId).displayName || userId;
+  let userObj = window.mClient.getUser(userId);
+  let displayName = (userObj && userObj.displayName) || userId;
+  // In matrix-js-sdk 15.1.1 sometimes getUser(...) returns null. This is a temporary workaround.
   let h = date.getHours().toString();
   let m = date.getMinutes().toString();
   if (h.length === 1) {
