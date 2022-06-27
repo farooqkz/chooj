@@ -4,9 +4,11 @@ import SoftKey from "../ui/SoftKey";
 import { IRCLikeMessageItem } from "../MessageItems";
 import { isDM, isRoom, updateState } from "../utils";
 import ChatTextInput from "../ChatTextInput";
+import VoiceInput from "../VoiceInput";
 import ScrollIntoView from "./ScrollIntoView";
 import "./UnsupportedEventItem.css";
 import "./RoomView.css";
+import WaitingCurve from "./waiting_curve.svg";
 
 function IRCLikeUnsupportedEventItem({ isFocused, senderId }) {
   return (
@@ -16,12 +18,28 @@ function IRCLikeUnsupportedEventItem({ isFocused, senderId }) {
   );
 }
 
+function CannotSendMessage() { // eslint-disable-line no-unused-vars
+  return (
+    <div style={{ "background-color": "gray" }}>
+      <h5>Cannot send message to this room</h5>
+    </div>
+  );
+}
+
+function Waiting() {
+  return (
+    <div>
+      <img src={WaitingCurve} height="16px" width="16px" alt="" />
+    </div>
+  );
+}
+
 class RoomView extends Component {
   messageChangeCb = (message) => {
     this.setState({ message: message });
     window.mClient.sendTyping(this.room.roomId, true, 75);
   };
-  
+
   handleTyping = (evt, member) => {
     if (member.roomId !== this.room.roomId) {
       return;
@@ -43,7 +61,7 @@ class RoomView extends Component {
     if (!VALID_KEYS.includes(evt.key)) {
       return;
     }
-    const { cursor, textInputFocus, message } = this.state;
+    const { cursor, textInputFocus, message, waiting } = this.state;
     const { closeRoomView } = this.props;
     const lastEventIndex = this.room.getLiveTimeline().getEvents().lastIndex;
     if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
@@ -57,21 +75,23 @@ class RoomView extends Component {
         this.setState({ cursor: cursor + 1 });
       }
     } else if (evt.key === "ArrowUp") {
+      if (waiting) { return; }
       if (textInputFocus) {
         this.setState({ textInputFocus: false, cursor: lastEventIndex });
       } else if (cursor === 0) {
         let prev = this.timeline.getEvents().lastIndex;
-        window.mClient.paginateEventTimeline(
-          this.timeline,
-          { backwards: true, limit: 10}
-        ).then((notReachedEnd) => {
-          if (notReachedEnd) {
-            const current = this.timeline.getEvents().lastIndex;
-            this.setState({
-              cursor: current - prev
-            });
-          }
-        }); 
+        this.setState({ waiting: true });
+        window.mClient
+          .paginateEventTimeline(this.timeline, { backwards: true, limit: 10 })
+          .then((notReachedEnd) => {
+            if (notReachedEnd) {
+              const current = this.timeline.getEvents().lastIndex;
+              this.setState({
+                cursor: current - prev,
+                waiting: false,
+              });
+            }
+          });
       } else {
         this.setState({ cursor: cursor - 1 });
       }
@@ -93,7 +113,8 @@ class RoomView extends Component {
       let events = this.timeline.getEvents();
       const lastEventIndex = events.lastIndex;
       const { cursor, textInputFocus } = this.state;
-      if (textInputFocus) { // partial support
+      if (textInputFocus) {
+        // partial support
         window.mClient.sendReadReceipt(evt);
       }
       this.setState({
@@ -101,37 +122,38 @@ class RoomView extends Component {
       });
     }
   };
-  
+
   getLeftText = () => {
-    if (this.state.textInputFocus) 
-      return "+";
-    if (this.currentEvent && this.currentEvent.getType() === "m.room.message") {
-      if (this.currentEvent.getContent().msgtype === "m.audio") {
-        return "Listen";
-      }
-    }
+    if (this.state.textInputFocus) return "+";
     return "";
   };
 
   leftCb = () => {
-    if (this.getLeftText() === "Listen") {
-      let audio = document.querySelector(".ircmsg--focused > p > audio");
-      audio.play();
+    if (this.getLeftText() === "+") {
+      alert("Not implemented yet");
     }
   };
 
   centerCb = () => {
-    const { message } = this.state;
+    const { message, isRecording } = this.state;
     const { roomId } = this.props;
     switch (this.getCenterText()) {
       case "Select":
         // TODO: start call or something
         break;
-      case "Info":
-        const date = this.currentEvent.getDate().toString();
-        alert(`Event was sent in ${date}`);
+      case "Listen":
+        let audio = document.querySelector(".ircmsg--focused>p>audio");
+        audio.play();
         break;
       case "Send":
+        if (isRecording) {
+          this.recorder.stop();
+          clearInterval(this.recordingInterval);
+          this.setState({
+            isRecording: false,
+          });
+          break;
+        }
         if (message === "") {
           alert("Not sending empty message!");
           break;
@@ -139,19 +161,47 @@ class RoomView extends Component {
         window.mClient.sendTextMessage(roomId, message);
         this.setState({ message: "" });
         break;
+      case "View":
+        alert("Not implemented yet");
+        //TODO: show enlarged image
+        break;
+      case "Voice":
+        this.setState({
+          isRecording: true,
+          recordingSeconds: 0,
+        });
+        this.recorder.start();
+        this.recordingInterval = setInterval(() => {
+          this.setState((state) => {
+            state.recordingSeconds += 0.01;
+            return state;
+          });
+        }, 10);
+        break;
       default:
         break;
     }
   };
 
   getCenterText = () => {
-    const { showMenu, textInputFocus } = this.state;
+    const { isRecording, showMenu, textInputFocus, message } = this.state;
+    const currentEvt = this.currentEvent;
+    if (isRecording) {
+      return "Send";
+    }
     if (showMenu) {
       return "Select";
     } else if (textInputFocus) {
-      return "Send";
-    } else {
-      return "Info";
+      if (message === "") {
+        return "Voice";
+      } else {
+        return "Send";
+      }
+    } else if (currentEvt && currentEvt.getType() === "m.room.message") {
+      let msgtype = currentEvt.getContent().msgtype;
+      if (msgtype === "m.audio") return "Listen";
+      else if (msgtype === "m.image") return "View";
+      else return "";
     }
   };
 
@@ -166,12 +216,51 @@ class RoomView extends Component {
     this.dm = isDM(this.room);
     this.currentEvent = null;
     this.timeline = this.room.getLiveTimeline();
+    this.recorder = null;
+    this.recording = [];
+    this.recordingInterval = 0;
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      this.recorder = new MediaRecorder(stream);
+      this.recorder.ondataavailable = (evt) => {
+        this.recording.push(evt.data);
+      };
+      this.recorder.onstop = () => {
+        let blob = new Blob(this.recording);
+        let size = blob.size;
+        let duration = this.state.recordingSeconds * 1000;
+        let mimetype = blob.type;
+        window.mClient
+          .uploadContent(blob, {
+            includeFilename: false,
+          })
+          .then((response) => {
+            const mxcUrl = response;
+            const roomId = this.props.roomId;
+            window.mClient
+              .sendMessage(roomId, {
+                body: this.state.message || "Voice message",
+                info: {
+                  duration: duration,
+                  size: size,
+                  mimetype: mimetype,
+                },
+                url: mxcUrl,
+                msgtype: "m.audio",
+              })
+              .catch((err) => console.log(err));
+          })
+          .catch(() => alert("Cannot send voice"));
+      };
+    });
     const lastEventIndex = this.timeline.getEvents().lastIndex;
     this.state = {
       showMenu: false,
       cursor: lastEventIndex,
       message: "",
       textInputFocus: true,
+      isRecording: false,
+      recordingSeconds: 0,
+      waiting: false,
     };
   }
 
@@ -190,8 +279,16 @@ class RoomView extends Component {
   render() {
     const MessageItem = IRCLikeMessageItem;
     const UnsupportedEventItem = IRCLikeUnsupportedEventItem;
-    const { cursor, message, textInputFocus, typing } = this.state;
-
+    const {
+      isRecording,
+      recordingSeconds,
+      cursor,
+      message,
+      textInputFocus,
+      typing,
+      waiting,
+    } = this.state;
+    console.log(this.timeline.getEvents());
     return (
       <>
         <Header text={typing ? "Typing..." : this.room.name} />
@@ -205,40 +302,43 @@ class RoomView extends Component {
             className={"kai-list-view"}
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
           >
-            {this.timeline
-              .getEvents()
-              .map((evt, index) => {
-                let item = null;
-                const senderId = evt.getSender();
-                if (evt.getType() === "m.room.message") {
-                  item = (
-                    <MessageItem
-                      date={evt.getDate()}
-                      sender={{ userId: senderId }}
-                      content={evt.getContent()}
-                    />
-                  );
-                } else {
-                  item = <UnsupportedEventItem senderId={senderId} />;
-                }
-
-                if (index === cursor && !textInputFocus) {
-                  item.props.isFocused = true;
-                  this.currentEvent = evt;
-                }
-
-                return (
-                  <ScrollIntoView shouldScroll={index === cursor}>
-                    {item}
-                  </ScrollIntoView>
+            {waiting ? <Waiting /> : null }
+            {this.timeline.getEvents().map((evt, index) => {
+              let item = null;
+              const senderId = evt.getSender();
+              if (evt.getType() === "m.room.message") {
+                item = (
+                  <MessageItem
+                    date={evt.getDate()}
+                    sender={{ userId: senderId }}
+                    content={evt.getContent()}
+                  />
                 );
-              })}
+              } else {
+                item = <UnsupportedEventItem senderId={senderId} />;
+              }
+
+              if (index === cursor && !textInputFocus) {
+                item.props.isFocused = true;
+                this.currentEvent = evt;
+              }
+
+              return (
+                <ScrollIntoView shouldScroll={index === cursor}>
+                  {item}
+                </ScrollIntoView>
+              );
+            })}
           </div>
-          <ChatTextInput
-            message={message}
-            onChangeCb={this.messageChangeCb}
-            isFocused={textInputFocus}
-          />
+          {isRecording ? (
+            <VoiceInput seconds={recordingSeconds} title={message} />
+          ) : (
+            <ChatTextInput
+              message={message}
+              onChangeCb={this.messageChangeCb}
+              isFocused={textInputFocus}
+            />
+          )}
         </div>
         <footer>
           <SoftKey

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="15"
+   height="16"
+   viewBox="0 0 3.9687499 4.2333335"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="waiting_curve.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="22.4"
+     inkscape:cx="17.923862"
+     inkscape:cy="5.1387917"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:pagecheckerboard="true"
+     inkscape:snap-bbox="true"
+     inkscape:snap-global="false"
+     inkscape:window-width="1360"
+     inkscape:window-height="688"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/4.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:prohibits
+           rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-292.76665)">
+    <path
+       sodipodi:type="spiral"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.1418782;opacity:1"
+       id="path3737"
+       sodipodi:cx="2.138844"
+       sodipodi:cy="294.73099"
+       sodipodi:expansion="1.46"
+       sodipodi:revolution="4.0999999"
+       sodipodi:radius="1.8231473"
+       sodipodi:argument="-16.392471"
+       sodipodi:t0="0"
+       d="m 2.138844,294.73099 c -0.0123,0.01 -0.020412,-0.0166 -0.019412,-0.0238 0.00538,-0.0389 0.056597,-0.0433 0.084846,-0.0296 0.064364,0.0312 0.066556,0.11825 0.031096,0.17168 -0.061629,0.0929 -0.1943896,0.0921 -0.2765451,0.0286 -0.1245772,-0.0963 -0.1199916,-0.28227 -0.023485,-0.39627 0.1347629,-0.15918 0.3802153,-0.14996 0.5288873,-0.0162 0.1964562,0.17674 0.1819176,0.48714 0.0072,0.67308 -0.2219123,0.23617 -0.6022099,0.21572 -0.8278263,-0.003 -0.2781672,-0.27007 -0.251252,-0.7248 0.015213,-0.99234 0.3210046,-0.3223 0.8543943,-0.28844 1.1659846,0.0283 0.3684633,0.37457 0.3271841,0.99058 -0.042533,1.34822 -0.4306049,0.41655 -1.1329821,0.36743 -1.5385978,-0.0578 -0.46646509,-0.489 -0.40910697,-1.28131 0.074014,-1.73672 0.5496677,-0.51814 1.4352972,-0.45216 1.9422615,0.0911 0.5715115,0.61249 0.4965479,1.5947 -0.1091536,2.15491 -0.6773942,0.62651 -1.75932,0.54221 -2.3743875,-0.12798 -0.25487466,-0.27772 -0.41543808,-0.63529 -0.4578361,-1.00955" />
+  </g>
+</svg>
