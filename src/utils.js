@@ -2,12 +2,9 @@ import { getHttpUriForMxc } from "matrix-js-sdk";
 
 const defaultAvatarSize = 36;
 
-
 function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding)
-    .replace(/-/g, '+')
-    .replace(/_/g, '/');
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
 
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
@@ -38,12 +35,13 @@ function updateState(room, state, dm) {
 }
 
 function makeEvent(evt, dm) {
+  let user = window.mClient.getUser(evt.getSender());
   return {
     time: evt.getTs(),
     event_: makeHumanReadableEvent(
       evt.getType(),
       evt.getContent(),
-      window.mClient.getUser(evt.getSender()).displayName,
+      user && user.displayName,
       window.mClient.getUserId(),
       dm
     ),
@@ -171,7 +169,7 @@ function msToHigherScale(ms) {
 }
 
 function mxcMediaToHttp(hsUrl, mxcUrl) {
-  let [serverName, mediaId] = mxcUrl.split("/").slice(2,4);
+  let [serverName, mediaId] = mxcUrl.split("/").slice(2, 4);
   return `${hsUrl}/_matrix/media/v3/download/${serverName}/${mediaId}`;
 }
 
@@ -186,5 +184,5 @@ export {
   urlBase64ToUint8Array,
   bytesToHigherScale,
   msToHigherScale,
-  mxcMediaToHttp
+  mxcMediaToHttp,
 };
