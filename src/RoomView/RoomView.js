@@ -288,7 +288,6 @@ class RoomView extends Component {
       typing,
       waiting,
     } = this.state;
-    console.log(this.timeline.getEvents());
     return (
       <>
         <Header text={typing ? "Typing..." : this.room.name} />
