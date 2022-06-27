@@ -12,39 +12,41 @@ import CallScreen from "./CallScreen";
 import Settings from "./Settings";
 import { urlBase64ToUint8Array } from "./utils";
 
-const vapidPublicKey = "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
+const vapidPublicKey =
+  "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
 
 class Matrix extends Component {
   pushNotification = (device_id) => {
-    if (!window.navigator.serviceWorker)
-      return;
-    if (!window.PushManager)
-      return;
+    if (!window.navigator.serviceWorker) return;
+    if (!window.PushManager) return;
     window.navigator.serviceWorker.register("/sw.js").then((swReg) => {
-      swReg.pushManager.getSubscription().then((sub) => {
-        if (!sub) {
-          return swReg.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
-          });
-        } else {
-          return Promise.resolve(sub);
-        }
-      }).then((sub) => {
-        let pushkey = JSON.stringify(sub.toJSON());
-        window.mClient.setPusher({
-          app_display_name: "Chooj",
-          app_id: "net.bananahackers.chooj",
-          pushkey: pushkey,
-          kind: "http",
-          lang: "en",
-          device_display_name: "KaiOS " + device_id,
-          data: {
-            "url": "https://farooqkz.de1.hashbang.sh/_matrix/push/v1/notify",
+      swReg.pushManager
+        .getSubscription()
+        .then((sub) => {
+          if (!sub) {
+            return swReg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+            });
+          } else {
+            return Promise.resolve(sub);
           }
+        })
+        .then((sub) => {
+          let pushkey = JSON.stringify(sub.toJSON());
+          window.mClient.setPusher({
+            app_display_name: "Chooj",
+            app_id: "net.bananahackers.chooj",
+            pushkey: pushkey,
+            kind: "http",
+            lang: "en",
+            device_display_name: "KaiOS " + device_id,
+            data: {
+              url: "https://farooqkz.de1.hashbang.sh/_matrix/push/v1/notify",
+            },
+          });
+          console.log("Pusher set");
         });
-        console.log("Pusher set");
-      });
     });
   };
 
