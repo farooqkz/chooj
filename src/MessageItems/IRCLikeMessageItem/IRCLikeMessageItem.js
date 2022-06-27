@@ -1,9 +1,12 @@
 import { createTextVNode } from "inferno";
 import "./IRCLikeMessageItem.css";
-import { mxcMediaToHttp, bytesToHigherScale, msToHigherScale } from "../../utils";
+import {
+  mxcMediaToHttp,
+  bytesToHigherScale,
+  msToHigherScale,
+} from "../../utils";
 
 function IRCLikeMessageItemText({ date, text, sender, isFocused }) {
-  
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
@@ -37,13 +40,13 @@ function IRCLikeMessageItemImage({
   height,
   size,
   url,
-  isFocused
+  isFocused,
 }) {
-  while (height > (192 * 2/3)) {
+  while (height > (192 * 2) / 3) {
     height *= 0.75;
     width *= 0.75;
   }
-  while (width > (238 * 2/3)) {
+  while (width > (238 * 2) / 3) {
     height *= 0.75;
     width *= 0.75;
   }
@@ -67,7 +70,7 @@ function IRCLikeMessageItemAudio({
   size,
   duration,
   url,
-  text
+  text,
 }) {
   const hsUrl = window.mClient.getHomeserverUrl();
   url = mxcMediaToHttp(hsUrl, url);
@@ -85,7 +88,7 @@ function IRCLikeMessageItemAudio({
         <audio src={url} autoplay={false} />
       </p>
     </div>
-  )
+  );
 }
 
 function IRCLikeMessageItemUnknown({ date, isFocused, sender }) {
