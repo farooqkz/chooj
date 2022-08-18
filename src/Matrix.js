@@ -152,7 +152,7 @@ class Matrix extends Component {
         props.data.well_known["m.identity_server"].base_url,
     });
     const client = window.mClient;
-    client.setDisplayName(DeviceName.DeviceName);
+    client.setDisplayName("Chooj (KaiOS)");
     client.on("Call.incoming", (call) => {
       if (this.state.call) {
         call.once("state", (state) => {
