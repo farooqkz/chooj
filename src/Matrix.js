@@ -11,7 +11,7 @@ import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
 import Settings from "./Settings";
 import { urlBase64ToUint8Array } from "./utils";
-//import DeviceName from "./DeviceName";
+import DeviceName from "./DeviceName";
 
 const vapidPublicKey =
   "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
@@ -170,7 +170,7 @@ class Matrix extends Component {
       this.setState({ syncDone: true });
     });
     client.startClient({ lazyLoadMembers: true });
-    client.setDeviceDetails(client.getDeviceId(), { display_name: "Chooj (KaiOS)" });
+    client.setDeviceDetails(client.getDeviceId(), { display_name: DisplayName.DisplayName });
 
     this.tabs = ["People", "Rooms", "Invites", "Settings", "About"];
     this.roomId = "";
