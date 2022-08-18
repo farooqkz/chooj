@@ -30,6 +30,7 @@ before_script:
     - yarn config set electron_mirror https://registry.npmmirror.com/-/binary/electron/
     - yarn config set electron_builder_binaries_mirror https://npmmirror.com/mirrors/electron-builder-binaries/
     - yarn config set sass_binary_site https://npmmirror.com/mirrors/node-sass/
+    - sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 
 fetch:
   stage: fetch
@@ -44,6 +45,8 @@ build:
 bundle:
   stage: bundle
   script:
+    - apt update
+    - apt install zip -y
     - zip -S -r chooj-${CI_COMMIT_TAG}.zip ./build
   artifacts:
     paths:
