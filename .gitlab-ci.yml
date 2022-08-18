@@ -47,7 +47,7 @@ bundle:
   script:
     - apt update
     - apt install zip -y
-    - zip -r -y ./chooj-${CI_COMMIT_SHORT_SHA}.zip ./build
+    - zip -r -y ./chooj-${CI_COMMIT_SHORT_SHA}.zip . -i ./build
   artifacts:
     paths:
       - ./chooj-*.zip
