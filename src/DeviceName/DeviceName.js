@@ -1,4 +1,4 @@
-function DeviceID() {
+function DeviceName() {
     return (
         "Chooj (Kai OS, " +
         navigator.mozWifiManager.macAddress +
@@ -6,4 +6,4 @@ function DeviceID() {
     );
 }
 
-export default DeviceID;
+export default DeviceName;
