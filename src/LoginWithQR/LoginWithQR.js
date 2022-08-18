@@ -5,6 +5,7 @@ import * as localforage from "localforage";
 
 import "./LoginWithQR.css";
 import SoftKey from "../ui/SoftKey";
+import DeviceID from "../DeviceID";
 
 class LoginWithQR extends Component {
   takePhoto = () => {
@@ -45,6 +46,7 @@ class LoginWithQR extends Component {
       password = decoded.substring(start + 1);
       window.mClient = matrixcs.createClient({
         baseUrl: server_url,
+        device_id: DeviceID.DeviceID
       });
       window.mClient.loginFlows().then((result) => {
         let gotPasswordLogin = false;
