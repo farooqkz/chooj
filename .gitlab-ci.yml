@@ -10,7 +10,7 @@ stages:
 variables:
   http_proxy: http://10.123.120.1:8118
   https_proxy: http://10.123.120.1:8118
-  no_proxy: localhost, gitlab.xrh0905.top
+  no_proxy: localhost, 192.168.0.6
 
 # This folder is cached between builds
 # https://docs.gitlab.com/ee/ci/yaml/index.html#cache
