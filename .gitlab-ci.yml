@@ -5,7 +5,7 @@ image: node:12.22.12-bullseye
 stages:
   - fetch
   - build
-  - bundle
+#  - bundle
 
 variables:
   http_proxy: http://10.123.120.1:8118
@@ -18,7 +18,7 @@ cache:
   paths:
     - node_modules/
     - .yarn/
-    - build
+#    - build
 
 before_script:
     - npm config set registry https://registry.npmmirror.com
@@ -42,15 +42,15 @@ build:
   stage: build
   script:      
     - yarn run devbuild
-
-bundle:
-  stage: bundle
-  script:
-    - apt update
-    - apt install zip -y
-    - cd ./build
-    - zip -r -y ../chooj-${CI_COMMIT_SHORT_SHA}.zip *
   artifacts:
-    name: chooj-${CI_COMMIT_SHORT_SHA}.zip
+    name: chooj-${CI_COMMIT_SHORT_SHA}
     paths: 
-      - chooj-*.zip
+      - build/*
+
+#bundle:
+#  stage: bundle
+#  script:
+#    - apt update
+#    - apt install zip -y
+#    - cd ./build
+#    - zip -r -y ../chooj-${CI_COMMIT_SHORT_SHA}.zip *
