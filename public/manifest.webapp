@@ -21,7 +21,8 @@
     "audio-channel-ringer": "Used for ringtone for incoming voice calls",
     "attention": "Used to show attention screen for incoming voice calls",
     "push": "Used for receiving push notification",
-    "serviceworker": ""
+    "serviceworker": "",
+    "wifi-manage": "Use MAC address to identify your device",
   },
   "messages": [
     { "push": "/index.html" },
