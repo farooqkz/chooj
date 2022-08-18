@@ -169,8 +169,8 @@ class Matrix extends Component {
     client.once("sync", (state, prevState, res) => {
       this.setState({ syncDone: true });
     });
-    client.setDeviceDetails(client.getDeviceId(), "Chooj (KaiOS)");
     client.startClient({ lazyLoadMembers: true });
+    client.setDeviceDetails(client.getDeviceId(), "Chooj (KaiOS)");
 
     this.tabs = ["People", "Rooms", "Invites", "Settings", "About"];
     this.roomId = "";
