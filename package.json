@@ -40,6 +40,7 @@
     "localforage": "^1.9.0",
     "matrix-js-sdk": "^15.1.1",
     "mini-css-extract-plugin": "0.4.5",
+    "olm": "https://matrix.org/packages/npm/olm/olm-3.2.1.tgz",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.2.1",
     "postcss-flexbugs-fixes": "4.1.0",
