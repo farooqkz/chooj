@@ -11,7 +11,7 @@ import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
 import Settings from "./Settings";
 import { urlBase64ToUint8Array } from "./utils";
-import DeviceName from "./DeviceName";
+#import DeviceName from "./DeviceName";
 
 const vapidPublicKey =
   "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
