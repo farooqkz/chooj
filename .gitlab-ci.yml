@@ -49,7 +49,7 @@ bundle:
     - apt update
     - apt install zip -y
     - cd ./build
-    - zip -r -y ../chooj-${CI_COMMIT_SHORT_SHA}.zip *
+    - zip -r -y ../chooj-sideload.zip *
   artifacts:
     name: chooj-${CI_COMMIT_SHORT_SHA}.zip
     paths: 
