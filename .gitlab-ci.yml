@@ -48,7 +48,8 @@ bundle:
   script:
     - apt update
     - apt install zip -y
-    - zip -r -y ./chooj-${CI_COMMIT_SHORT_SHA}.zip ./build
+    - cd ./build
+    - zip -r -y ../chooj-sideload.zip *
   artifacts:
-    paths:
-      - ./chooj-*.zip
+    expose_as: 'Sideload ZIP'
+    paths: ['chooj-sideload.zip']
