@@ -152,7 +152,7 @@ class Matrix extends Component {
         props.data.well_known["m.identity_server"].base_url,
     });
     const client = window.mClient;
-    client.setDisplayName("Chooj (KaiOS)");
+    //client.setDisplayName("Chooj (KaiOS)");
     client.on("Call.incoming", (call) => {
       if (this.state.call) {
         call.once("state", (state) => {
@@ -171,6 +171,8 @@ class Matrix extends Component {
       this.setState({ syncDone: true });
     });
     client.startClient({ lazyLoadMembers: true });
+    client.setDisplayName("Chooj (KaiOS)");
+
     this.tabs = ["People", "Rooms", "Invites", "Settings", "About"];
     this.roomId = "";
     this.invite = null;
