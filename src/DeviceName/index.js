@@ -1,3 +1,3 @@
-let DeviceName = "Chooj (Kai OS, " + navigator.mozWifiManager.macAddress + ")";
+let DeviceName = "Chooj (Kai OS)";
 
 export default DeviceName;
