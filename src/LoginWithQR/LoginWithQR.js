@@ -5,7 +5,6 @@ import * as localforage from "localforage";
 
 import "./LoginWithQR.css";
 import SoftKey from "../ui/SoftKey";
-import DeviceID from "../DeviceID";
 
 class LoginWithQR extends Component {
   takePhoto = () => {

@@ -8,7 +8,6 @@ import SoftKey from "./ui/SoftKey";
 import Header from "./ui/Header";
 import ListView from "./ListView";
 import LoginWithQR from "./LoginWithQR";
-import DeviceID from "./DeviceID";
 
 class Login extends Component {
   cursorChangeCb = (cursor) => {
