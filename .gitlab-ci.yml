@@ -1,0 +1,50 @@
+# Official framework image. Look for the different tagged releases at:
+# https://hub.docker.com/r/library/node/tags/
+image: node:12.22.12-bullseye
+
+stages:
+  - fetch
+  - build
+  - bundle
+
+variables:
+  http_proxy: http://10.123.120.1:8118
+  https_proxy: http://10.123.120.1:8118
+  no_proxy: localhost
+
+# This folder is cached between builds
+# https://docs.gitlab.com/ee/ci/yaml/index.html#cache
+cache:
+  paths:
+    - node_modules/
+    - .yarn/
+
+before_script:
+    - npm config set registry https://registry.npmmirror.com
+    - npm config set disturl https://registry.npmmirror.com/-/binary/node
+    - npm config set electron_mirror https://registry.npmmirror.com/-/binary/electron/
+    - npm config set electron_builder_binaries_mirror https://npmmirror.com/mirrors/electron-builder-binaries/
+    - npm config set sass_binary_site https://npmmirror.com/mirrors/node-sass/
+    - yarn config set registry https://registry.npmmirror.com
+    - yarn config set disturl https://registry.npmmirror.com/-/binary/node
+    - yarn config set electron_mirror https://registry.npmmirror.com/-/binary/electron/
+    - yarn config set electron_builder_binaries_mirror https://npmmirror.com/mirrors/electron-builder-binaries/
+    - yarn config set sass_binary_site https://npmmirror.com/mirrors/node-sass/
+
+fetch:
+  stage: fetch
+  script:
+    - yarn install --cache-folder .yarn
+
+build:
+  stage: build
+  script:      
+    - yarn run devbuild
+
+bundle-job:
+  stage: bundle
+  script:
+    - zip -S -r chooj-${CI_COMMIT_TAG}.zip ./build
+  artifacts:
+    paths:
+      - ./chooj-*.zip
