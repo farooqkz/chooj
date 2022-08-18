@@ -18,6 +18,7 @@ cache:
   paths:
     - node_modules/
     - .yarn/
+    - build
 
 before_script:
     - npm config set registry https://registry.npmmirror.com
@@ -47,7 +48,7 @@ bundle:
   script:
     - apt update
     - apt install zip -y
-    - zip -r -y ./chooj-${CI_COMMIT_SHORT_SHA}.zip . -i ./build
+    - zip -r -y ./chooj-${CI_COMMIT_SHORT_SHA}.zip ./build
   artifacts:
     paths:
       - ./chooj-*.zip
