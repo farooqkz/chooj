@@ -51,6 +51,6 @@ bundle:
     - cd ./build
     - zip -r -y ../chooj-sideload.zip *
   artifacts:
-    name: chooj-${CI_COMMIT_SHORT_SHA}.zip
+    name: chooj-${CI_COMMIT_SHORT_SHA}
     paths: 
       - chooj-*.zip
