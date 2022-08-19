@@ -1,6 +1,5 @@
 import { Component } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
-import * as Olm from "Olm";
 
 import TabView from "./TabView";
 import SoftKey from "./ui/SoftKey";
