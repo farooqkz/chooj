@@ -16,10 +16,12 @@ class App extends Component {
     localforage.getItem("login").then((login) => {
       if (login) {
         this.loginData = login;
-        localforage.getItem("setup").then(() => {
-          this.setState({ state: "matrix" });
-        } else {
-          this.setState({ state: "setup" });
+        localforage.getItem("setuped").then((setuped) => {
+          if (setuped) {
+            this.setState({ state: "matrix" });
+          } else {
+            this.setState({ state: "setup" });
+          }
         }
       } else {
         this.setState({ state: "login" });
@@ -38,7 +40,7 @@ class App extends Component {
     }
 
     if (state === "setup") {
-      return <Setup />;
+      return <Setup data={this.loginData} />;
     }
 
     if (state === "matrix") {
