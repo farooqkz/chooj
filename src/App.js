@@ -3,6 +3,7 @@ import "./App.css";
 import Waiting from "./Waiting";
 import * as localforage from "localforage";
 import Matrix from "./Matrix";
+import Setup from "./Setup";
 import Login from "./Login";
 
 class App extends Component {
@@ -15,7 +16,11 @@ class App extends Component {
     localforage.getItem("login").then((login) => {
       if (login) {
         this.loginData = login;
-        this.setState({ state: "matrix" });
+        localforage.getItem("setup").then(() => {
+          this.setState({ state: "matrix" });
+        } else {
+          this.setState({ state: "setup" });
+        }
       } else {
         this.setState({ state: "login" });
       }
@@ -30,6 +35,10 @@ class App extends Component {
 
     if (state === "login") {
       return <Login />;
+    }
+
+    if (state === "setup") {
+      return <Setup />;
     }
 
     if (state === "matrix") {

@@ -7,9 +7,11 @@ import TextInput from "./ui/TextInput";
 import SoftKey from "./ui/SoftKey";
 import Header from "./ui/Header";
 import ListView from "./ListView";
-import LoginWithQR from "./LoginWithQR";
+import DeviceName from "./DeviceName";
 
-class Login extends Component {
+class Setup extends Component {
+  const client = window.mClient 
+
   cursorChangeCb = (cursor) => {
     this.setState({ cursor: cursor });
   };
@@ -52,6 +54,7 @@ class Login extends Component {
           .then((result) => {
             localforage.setItem("login", result).then(() => {
               alert("Logged in as " + this.username);
+              window.mClient.setDeviceDetails(window.mClient.getDeviceId(), { display_name: DeviceName });
               // eslint-disable-next-line no-self-assign
               window.location = window.location;
             });
@@ -141,9 +144,6 @@ class Login extends Component {
   }
 
   render() {
-    if (this.state.loginWithQR) {
-      return <LoginWithQR />;
-    }
     let listViewChildren;
     switch (this.state.stage) {
       case 0:
@@ -241,4 +241,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default Setup;
