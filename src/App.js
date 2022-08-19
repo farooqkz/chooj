@@ -22,7 +22,7 @@ class App extends Component {
           } else {
             this.setState({ state: "setup" });
           }
-        }
+        })
       } else {
         this.setState({ state: "login" });
       }
