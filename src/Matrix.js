@@ -1,6 +1,6 @@
 import { Component } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
-
+import Olm from "olm";
 import TabView from "./TabView";
 import SoftKey from "./ui/SoftKey";
 import DMsView from "./DMsView";
@@ -140,6 +140,7 @@ class Matrix extends Component {
 
   constructor(props) {
     super(props);
+    global.Olm = Olm;
     console.log("LOGIN DATA", props.data);
     window.mClient = matrixcs.createClient({
       userId: props.data.user_id,
