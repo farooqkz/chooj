@@ -1,7 +1,7 @@
 import { Component } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
 import * as localforage from "localforage";
-import * as Olm from "olm";
+import Olm from "olm";
 
 class Setup extends Component {
   constructor(props) {
