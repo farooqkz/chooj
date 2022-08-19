@@ -20,7 +20,7 @@ class Setup extends Component {
     client.once("sync", (state, prevState, res) => {
       client.startClient();
     });
-    await client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName });
+    client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName });
     localforage.setItem("setuped", true);
     // eslint-disable-next-line no-self-assign
     window.location=window.location;
