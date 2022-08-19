@@ -17,7 +17,7 @@ class Setup extends Component {
         props.data.well_known["m.identity_server"].base_url,
     });
     const client = window.mClient;
-    await client.once("sync", (state, prevState, res) => {
+    client.once("sync", (state, prevState, res) => {
       client.startClient();
     });
     await client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName });
