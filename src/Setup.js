@@ -7,6 +7,7 @@ import DeviceName from "./DeviceName";
 class Setup extends Component {
   constructor(props) {
     super(props);
+    console.log("LOGIN DATA", props.data);
     window.mClient = matrixcs.createClient({
       userId: props.data.user_id,
       accessToken: props.data.access_token,
@@ -18,9 +19,13 @@ class Setup extends Component {
     });
     const client = window.mClient;
     client.once("sync", (state, prevState, res) => {
-      client.startClient();
+      this.setState({ syncDone: true });
     });
+    client.startClient({ lazyLoadMembers: true });
     client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName });
+    client.once("sync", (state, prevState, res) => {
+      this.setState({ syncDone: true });
+    });
     localforage.setItem("setuped", true);
     // eslint-disable-next-line no-self-assign
     window.location=window.location;
