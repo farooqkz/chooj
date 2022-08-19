@@ -1,12 +1,12 @@
 import { Component } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
 import * as localforage from "localforage";
-import Olm from "olm";
+
+import DeviceName from "./DeviceName";
 
 class Setup extends Component {
   constructor(props) {
     super(props);
-    global.Olm = Olm;
     window.mClient = matrixcs.createClient({
       userId: props.data.user_id,
       accessToken: props.data.access_token,
@@ -17,7 +17,7 @@ class Setup extends Component {
         props.data.well_known["m.identity_server"].base_url,
     });
     const client = window.mClient;
-    client.initCrypto();
+    client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName });
     client.startClient({ lazyLoadMembers: true });
     localforage.setItem("setuped", true);
     // eslint-disable-next-line no-self-assign

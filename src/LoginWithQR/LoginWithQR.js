@@ -5,7 +5,6 @@ import * as localforage from "localforage";
 
 import "./LoginWithQR.css";
 import SoftKey from "../ui/SoftKey";
-import DeviceName from "../DeviceName";
 
 class LoginWithQR extends Component {
   takePhoto = () => {
@@ -61,7 +60,6 @@ class LoginWithQR extends Component {
             .then((result) => {
               localforage.setItem("login", result).then(() => {
                 window.alert("Logged in as " + username);
-                window.mClient.setDeviceDetails(window.mClient.getDeviceId(), { display_name: DeviceName });
                 // eslint-disable-next-line no-self-assign
                 window.location = window.location;
               });
