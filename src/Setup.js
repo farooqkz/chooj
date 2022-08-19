@@ -25,4 +25,4 @@ class Setup extends Component {
   }
 }
 
-export default Setup;
+export default Setup; 
