@@ -28,7 +28,30 @@ class Setup extends Component {
     });
     localforage.setItem("setuped", true);
     // eslint-disable-next-line no-self-assign
+    //window.location=window.location;
+  }
+
+  refresh() {
+    // eslint-disable-next-line no-self-assign
     window.location=window.location;
+  }
+
+  render() {
+    return (
+      <div>
+        <Header text="Setup..." />
+        <footer>
+          <SoftKey
+            leftText="Abort"
+            leftCb={() => window.close()}
+            centerCb={() => window.close()}
+            centerText={"Abort"}
+            rightText="Next"
+            rightCb={this.refresh()}
+          />
+        </footer>
+      </div>
+    );
   }
 }
 
