@@ -24,11 +24,11 @@ class Setup extends Component {
     client.once("sync", (state, prevState, res) => {
     });
     client.startClient({ lazyLoadMembers: true });
-    client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName });
-    client.once("sync", (state, prevState, res) => {
+    client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName }).then(() => {
       localforage.setItem("setuped", true);
+      self.refresh();
     });
-    self.refresh();
+    //client.once("sync", (state, prevState, res) => {});
   }
 
   refresh() {
