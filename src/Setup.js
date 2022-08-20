@@ -25,13 +25,12 @@ class Setup extends Component {
       this.setState({ syncDone: true });
     });
     client.startClient({ lazyLoadMembers: true });
-    client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName });
+    client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName })
     client.once("sync", (state, prevState, res) => {
       this.setState({ syncDone: true });
     });
-    localforage.setItem("setuped", false);
-    // eslint-disable-next-line no-self-assign
-    //window.location=window.location;
+    localforage.setItem("setuped", true);
+    self.refresh();
   }
 
   refresh() {
@@ -47,9 +46,7 @@ class Setup extends Component {
           <SoftKey
             leftText="Abort"
             leftCb={() => window.close()}
-            centerCb={() => window.close()}
-            centerText={"Abort"}
-            rightText="Next"
+            rightText="Skip"
             rightCb={() => this.refresh()}
           />
         </footer>
