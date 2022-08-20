@@ -22,14 +22,13 @@ class Setup extends Component {
     });
     const client = window.mClient;
     client.once("sync", (state, prevState, res) => {
-      client.startClient({ lazyLoadMembers: true });
     });
-    client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName }).then(() => {
-      client.once("sync", (state, prevState, res) => {
-        localforage.setItem("setuped", true);
-        Setup.refresh();
-      });
+    client.startClient({ lazyLoadMembers: true });
+    client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName });
+    client.once("sync", (state, prevState, res) => {
     });
+    localforage.setItem("setuped", true);
+    self.refresh();
   }
 
   refresh() {
