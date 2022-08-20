@@ -29,7 +29,7 @@ class Setup extends Component {
     client.once("sync", (state, prevState, res) => {
       this.setState({ syncDone: true });
     });
-    localforage.setItem("setuped", true);
+    localforage.setItem("setuped", false);
     // eslint-disable-next-line no-self-assign
     //window.location=window.location;
   }
