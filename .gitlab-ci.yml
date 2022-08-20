@@ -5,7 +5,6 @@ image: node:12.22.12-bullseye
 stages:
   - fetch
   - build
-  - bundle
 
 variables:
   http_proxy: http://10.123.120.1:8118
@@ -31,7 +30,7 @@ before_script:
     - yarn config set electron_mirror https://registry.npmmirror.com/-/binary/electron/
     - yarn config set electron_builder_binaries_mirror https://npmmirror.com/mirrors/electron-builder-binaries/
     - yarn config set sass_binary_site https://npmmirror.com/mirrors/node-sass/
-    - sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+#    - sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 
 fetch:
   stage: fetch
@@ -42,15 +41,8 @@ build:
   stage: build
   script:      
     - yarn run devbuild
-
-bundle:
-  stage: bundle
-  script:
-    - apt update
-    - apt install zip -y
-    - cd ./build
-    - zip -r -y ../chooj-sideload.zip *
+    - mv build chooj-${CI_COMMIT_SHORT_SHA}
   artifacts:
     name: chooj-${CI_COMMIT_SHORT_SHA}
     paths: 
-      - chooj-*.zip
+      - chooj-*/
