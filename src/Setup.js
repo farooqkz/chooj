@@ -30,7 +30,6 @@ class Setup extends Component {
         self.refresh();
       });
     });
-    
   }
 
   refresh() {
