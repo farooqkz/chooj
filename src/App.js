@@ -48,16 +48,16 @@ class App extends Component {
       return <Matrix data={this.loginData} />;
     }
     */
-
     switch(state) {
-      case null:
-        return <Waiting noTip />;
       case "login":
         return <Login />;
       case "setup":
         return <Setup data={this.loginData} />;
       case "matrix":
         return <Matrix data={this.loginData} />;
+      case null:
+      default:
+        return <Waiting noTip />;
     }
   }
 }
