@@ -30,8 +30,8 @@ class App extends Component {
   }
 
   render() {
-    /**
     const { state } = this.state;
+    /**
     if (state === null) {
       return <Waiting noTip />;
     }
@@ -48,7 +48,7 @@ class App extends Component {
       return <Matrix data={this.loginData} />;
     }
     */
-      
+
     switch(state) {
       case null:
         return <Waiting noTip />;
