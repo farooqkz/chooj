@@ -31,23 +31,6 @@ class App extends Component {
 
   render() {
     const { state } = this.state;
-    /**
-    if (state === null) {
-      return <Waiting noTip />;
-    }
-
-    if (state === "login") {
-      return <Login />;
-    }
-
-    if (state === "setup") {
-      return <Setup data={this.loginData} />;
-    }
-
-    if (state === "matrix") {
-      return <Matrix data={this.loginData} />;
-    }
-    */
     switch(state) {
       case "login":
         return <Login />;
