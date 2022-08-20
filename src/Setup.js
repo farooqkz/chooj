@@ -25,7 +25,7 @@ class Setup extends Component {
       this.setState({ syncDone: true });
     });
     client.startClient({ lazyLoadMembers: true });
-    client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName })
+    client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName });
     client.once("sync", (state, prevState, res) => {
       this.setState({ syncDone: true });
     });
