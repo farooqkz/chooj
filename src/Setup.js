@@ -50,7 +50,7 @@ class Setup extends Component {
             centerCb={() => window.close()}
             centerText={"Abort"}
             rightText="Next"
-            rightCb={this.refresh()}
+            rightCb={() => this.refresh()}
           />
         </footer>
       </div>
