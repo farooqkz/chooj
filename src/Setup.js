@@ -26,9 +26,9 @@ class Setup extends Component {
     client.startClient({ lazyLoadMembers: true });
     client.setDeviceDetails(client.getDeviceId(), { display_name: DeviceName });
     client.once("sync", (state, prevState, res) => {
+      localforage.setItem("setuped", true);
+      self.refresh();
     });
-    localforage.setItem("setuped", true);
-    self.refresh();
   }
 
   refresh() {
