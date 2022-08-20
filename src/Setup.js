@@ -8,37 +8,6 @@ import Header from "./ui/Header";
 
 class Setup extends Component {
 
-  cursorChangeCb = (cursor) => {
-    this.setState({ cursor: cursor });
-  };
-
-  handleKeyDown = (evt) => {
-    if (evt.key === "Backspace" || evt.key === "b") {
-      evt.preventDefault();
-      if (this.state.loginWithQR) {
-        this.setState({ loginWithQR: false });
-        return;
-      }
-      if (this.state.stage <= 0) {
-        if (window.confirm("Quit?")) {
-          window.close();
-        } else {
-          this.setState({ stage: 0 });
-        }
-        return;
-      }
-      this.setState((prevState) => {
-        prevState.cursor = 0;
-        prevState.stage--;
-      });
-    }
-    if (evt.key === "c" || evt.key === "Call") {
-      if (this.state.stage !== 0) return;
-      if (this.state.cursor !== 3) return;
-      this.setState({ loginWithQR: true });
-    }
-  };
-
   constructor(props) {
     super(props);
     console.log("LOGIN DATA", props.data);
@@ -69,15 +38,6 @@ class Setup extends Component {
     // eslint-disable-next-line no-self-assign
     window.location=window.location;
   }
-
-  componentDidMount() {
-    document.addEventListener("keydown", this.handleKeyDown);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown);
-  }
-
 
   render() {
     return (
