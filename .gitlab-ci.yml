@@ -6,11 +6,6 @@ stages:
   - fetch
   - build
 
-variables:
-  http_proxy: http://10.123.120.1:8118
-  https_proxy: http://10.123.120.1:8118
-  no_proxy: localhost, 192.168.0.6
-
 # This folder is cached between builds
 # https://docs.gitlab.com/ee/ci/yaml/index.html#cache
 cache:
@@ -39,10 +34,10 @@ fetch:
 
 build:
   stage: build
-  script:      
+  script:
     - yarn run devbuild
     - mv build chooj-${CI_COMMIT_SHORT_SHA}
   artifacts:
     name: chooj-${CI_COMMIT_SHORT_SHA}
-    paths: 
+    paths:
       - chooj-*/
