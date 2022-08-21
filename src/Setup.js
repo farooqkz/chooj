@@ -39,10 +39,10 @@ class Setup extends Component {
   render() {
     return (
       <div>
-        <Header text="Setup..." />
+        <Header text="Setup Wizard" />
         <footer>
           <SoftKey
-            leftText="Abort"
+            leftText="Quit"
             leftCb={() => window.close()}
             rightText="Skip"
             rightCb={() => this.refresh()}
