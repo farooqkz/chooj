@@ -24,4 +24,3 @@ yarn-error.log*
 
 *.orig
 package-lock.json
-.gitlab-ci.yml
