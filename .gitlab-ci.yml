@@ -48,7 +48,7 @@ omnisd:
   script:
     - apt update
     - apt install zip -y
-    - echo {\"version\": 1, \"manifestURL\": \"app://chooj.bananahackers.net/manifest.webapp\"} > metadata.json
+    - 'echo {\"version\": 1, \"manifestURL\": \"app://chooj.bananahackers.net/manifest.webapp\"} > metadata.json'
     - cd build
     - zip -r application.zip *
     - cd ..
