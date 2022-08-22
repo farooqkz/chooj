@@ -5,6 +5,7 @@ image: node:12.22.12-bullseye
 stages:
   - fetch
   - build
+  - bundle
 
 # This folder is cached between builds
 # https://docs.gitlab.com/ee/ci/yaml/index.html#cache
@@ -25,7 +26,7 @@ before_script:
     - yarn config set electron_mirror https://registry.npmmirror.com/-/binary/electron/
     - yarn config set electron_builder_binaries_mirror https://npmmirror.com/mirrors/electron-builder-binaries/
     - yarn config set sass_binary_site https://npmmirror.com/mirrors/node-sass/
-#    - sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+    - sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 
 fetch:
   stage: fetch
@@ -36,8 +37,24 @@ build:
   stage: build
   script:
     - yarn run devbuild
-    - mv build chooj-${CI_COMMIT_SHORT_SHA}
+    - cp -r build chooj-${CI_COMMIT_SHORT_SHA}
   artifacts:
     name: chooj-${CI_COMMIT_SHORT_SHA}
     paths:
       - chooj-*/
+
+omnisd:
+  stage: bundle
+  script:
+    - apt update
+    - apt install zip -y
+    - echo {\"version\": 1, \"manifestURL\": \"app://chooj.bananahackers.net/manifest.webapp\"} > metadata.json
+    - cd build
+    - zip -r application.zip *
+    - cd ..
+    - mv build/application.zip .
+  artifacts:
+    name: chooj-omnisd-${CI_COMMIT_SHORT_SHA}
+    paths:
+      - application.zip
+      - metadata.json
