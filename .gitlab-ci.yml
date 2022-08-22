@@ -2,11 +2,6 @@
 # https://hub.docker.com/r/library/node/tags/
 image: node:12.22.12-bullseye
 
-variables:
-  http_proxy: http://10.123.120.1:8118
-  https_proxy: http://10.123.120.1:8118
-  no_proxy: localhost,gitlab.xrh0905.top,192.168.0.6
-
 stages:
   - fetch
   - build
