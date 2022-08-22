@@ -13,7 +13,8 @@ cache:
   paths:
     - node_modules/
     - .yarn/
-    - build
+    - build/
+    - yarn.lock
 
 before_script:
     - npm config set registry https://registry.npmmirror.com
