@@ -35,6 +35,8 @@ fetch:
 
 build:
   stage: build
+  needs:
+    - fetch
   script:
     - yarn run devbuild
     - cp -r build chooj-${CI_COMMIT_SHORT_SHA}
@@ -45,6 +47,8 @@ build:
 
 omnisd:
   stage: bundle
+  needs:
+    - build
   script:
     - apt update
     - apt install zip -y
