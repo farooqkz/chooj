@@ -17,17 +17,17 @@ cache:
     - yarn.lock
 
 before_script:
-#    - npm config set registry https://registry.npmmirror.com
-#    - npm config set disturl https://registry.npmmirror.com/-/binary/node
-#    - npm config set electron_mirror https://registry.npmmirror.com/-/binary/electron/
-#    - npm config set electron_builder_binaries_mirror https://npmmirror.com/mirrors/electron-builder-binaries/
-#    - npm config set sass_binary_site https://npmmirror.com/mirrors/node-sass/
-#    - yarn config set registry https://registry.npmmirror.com
-#    - yarn config set disturl https://registry.npmmirror.com/-/binary/node
-#    - yarn config set electron_mirror https://registry.npmmirror.com/-/binary/electron/
-#    - yarn config set electron_builder_binaries_mirror https://npmmirror.com/mirrors/electron-builder-binaries/
-#    - yarn config set sass_binary_site https://npmmirror.com/mirrors/node-sass/
-#    - sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+    - npm config set registry https://registry.npmmirror.com
+    - npm config set disturl https://registry.npmmirror.com/-/binary/node
+    - npm config set electron_mirror https://registry.npmmirror.com/-/binary/electron/
+    - npm config set electron_builder_binaries_mirror https://npmmirror.com/mirrors/electron-builder-binaries/
+    - npm config set sass_binary_site https://npmmirror.com/mirrors/node-sass/
+    - yarn config set registry https://registry.npmmirror.com
+    - yarn config set disturl https://registry.npmmirror.com/-/binary/node
+    - yarn config set electron_mirror https://registry.npmmirror.com/-/binary/electron/
+    - yarn config set electron_builder_binaries_mirror https://npmmirror.com/mirrors/electron-builder-binaries/
+    - yarn config set sass_binary_site https://npmmirror.com/mirrors/node-sass/
+    - sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 
 fetch:
   stage: fetch
