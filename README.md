@@ -58,7 +58,7 @@ This project has got a Matrix room. See badges.
 
 ### Device compatiblity
 
-This app should work on all KaiOS versions. However it has been also tested on these devices:
+This app should work on all KaiOS versions(excluding 3.x). However it has been also tested on these devices:
 
  - Nokia 8110 4G(aka The BananaPhone)
  - Nokia 800 Tough
