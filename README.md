@@ -1,7 +1,7 @@
 # Chooj
 ## Matrix client for KaiOS with VoIP call support
 
-#### The project is inactive because I must spend my time on projects which make me real money. But if anyone is interested in sponoring, I would love to continue working on the project.
+#### The project is inactive because I must spend my time on projects which make me real money. But if anyone is interested in sponsoring, I would love to continue working on the project.
 <div style="text-align: center">
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/farooqkz/chooj/Build/master)
