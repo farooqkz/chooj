@@ -4,19 +4,12 @@
 process.env.BABEL_ENV = 'development';
 process.env.NODE_ENV = 'development';
 
-// Makes the script crash on unhandled rejections instead of silently
-// ignoring them. In the future, promise rejections that are not handled will
-// terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
-  throw err;
-});
-
 // Ensure environment variables are read.
 require('../config/env');
 
+const chalk = require('chalk');
 
 const path = require('path');
-const chalk = require('chalk');
 const fs = require('fs-extra');
 const webpack = require('webpack');
 const bfj = require('bfj');
@@ -73,7 +66,7 @@ checkBrowsers(paths.appPath, isInteractive)
         console.log(warnings.join('\n\n'));
         console.log(
           '\nSearch for the ' +
-            chalk.underline(chalk.yellow('keywords')) +
+            chalk.underline.yellow('keywords') +
             ' to learn more about each warning.'
         );
         console.log(
@@ -107,9 +100,9 @@ checkBrowsers(paths.appPath, isInteractive)
         useYarn
       );
     },
-    err => {
+   (err) => {
       console.log(chalk.red('Failed to compile.\n'));
-      printBuildError(err);
+      printBuildError(err.stack);
       process.exit(1);
     }
   )
@@ -164,9 +157,11 @@ function build(previousFileSizes) {
       if (messages.errors.length) {
         // Only keep the first error. Others are often indicative
         // of the same problem, but confuse the reader with noise.
+        /*
         if (messages.errors.length > 1) {
           messages.errors.length = 1;
         }
+        */
         return reject(new Error(messages.errors.join('\n\n')));
       }
       if (

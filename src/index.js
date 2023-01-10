@@ -1,5 +1,5 @@
-import "core-js";
 import { render } from "inferno";
+import "core-js";
 import "./index.css";
 import App from "./App";
 

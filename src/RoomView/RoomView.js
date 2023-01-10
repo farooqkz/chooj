@@ -125,12 +125,18 @@ class RoomView extends Component {
 
   getLeftText = () => {
     if (this.state.textInputFocus) return "+";
+    const currentEvt = this.currentEvent;
+    let msgtype = currentEvt.getContent().msgtype;
+    if (msgtype === "m.audio") return "Vol.";
     return "";
   };
 
   leftCb = () => {
     if (this.getLeftText() === "+") {
       alert("Not implemented yet");
+    }
+    if (this.getLeftText() === "Vol.") {
+      navigator.volumeManager.requestShow();
     }
   };
 

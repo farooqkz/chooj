@@ -1,117 +1,52 @@
 {
-  "name": "chooj",
-  "version": "0.0.0",
+  "name": "inferno-parcel-template",
+  "version": "1.0.0",
+  "description": "Inferno Parcel Template",
   "private": true,
+  "scripts": {
+    "dev": "parcel",
+    "build": "parcel build --dist-dir distProd",
+    "test": "npm run test:type-check && npm run test:jest",
+    "clean": "npm run clean:parcel",
+    "serve": "npm run build && serve ./distProd",
+    "clean:parcel": "rm -rf .parcel-cache dist",
+    "test:type-check": "tsc --noEmit --skipLibCheck",
+    "test:jest": "jest",
+    "test:updateSnapshot": "jest --updateSnapshot"
+  },
+  "author": "Sebastian Ware",
+  "license": "MIT",
   "dependencies": {
-    "@babel/core": "7.2.0",
-    "@svgr/webpack": "4.1.0",
-    "KaiUI": "git+https://github.com/AdrianMachado/KaiUI.git",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "10.0.1",
-    "babel-jest": "23.6.0",
-    "babel-loader": "8.0.4",
-    "babel-preset-inferno-app": "^8.0.3",
-    "bfj": "6.1.1",
-    "case-sensitive-paths-webpack-plugin": "2.1.2",
-    "chalk": "2.4.1",
+    "KaiUI": "git+https://github.com/farooqkz/KaiUIv2.git",
     "classnames": "^2.3.1",
-    "core-js": "^3.16.2",
-    "css-loader": "1.0.1",
-    "dotenv": "6.1.0",
-    "dotenv-expand": "4.2.0",
-    "eslint": "5.9.0",
-    "eslint-config-inferno-app": "^7.0.2",
-    "eslint-loader": "2.1.1",
-    "eslint-plugin-flowtype": "3.2.0",
-    "eslint-plugin-import": "2.14.0",
-    "eslint-plugin-inferno": "^7.11.0",
-    "eslint-plugin-jsx-a11y": "6.1.2",
-    "file-loader": "2.0.0",
-    "fs-extra": "7.0.1",
-    "html-webpack-plugin": "4.0.0-alpha.2",
-    "identity-obj-proxy": "3.0.0",
-    "inferno": "^7.4.8",
+    "core-js": "^3.26.1",
+    "inferno": "^8.0.4",
     "inferno-dev-utils": "^6.0.4",
-    "inferno-extras": "^7.4.8",
-    "jest": "23.6.0",
-    "jest-pnp-resolver": "1.0.2",
-    "jest-resolve": "23.6.0",
+    "inferno-extras": "^8.0.0",
     "jsqr": "^1.4.0",
     "localforage": "^1.9.0",
-    "matrix-js-sdk": "^15.1.1",
-    "mini-css-extract-plugin": "0.4.5",
-    "optimize-css-assets-webpack-plugin": "5.0.1",
-    "pnp-webpack-plugin": "1.2.1",
-    "postcss-flexbugs-fixes": "4.1.0",
-    "postcss-loader": "3.0.0",
-    "postcss-preset-env": "6.4.0",
-    "postcss-safe-parser": "4.0.1",
-    "prettier": "^2.3.2",
-    "querystring-browser": "^1.0.4",
-    "react-app-polyfill": "^0.1.3",
-    "resolve": "1.8.1",
-    "sass-loader": "7.1.0",
-    "style-loader": "0.23.1",
-    "terser-webpack-plugin": "1.1.0",
-    "url-loader": "1.1.2",
-    "webpack": "4.26.1",
-    "webpack-dev-server": "3.1.10",
-    "webpack-manifest-plugin": "2.0.4",
-    "workbox-webpack-plugin": "3.6.3"
-  },
-  "scripts": {
-    "start": "node scripts/start.js",
-    "build": "INLINE_RUNTIME_CHUNK=false node scripts/build.js",
-    "devbuild": "INLINE_RUNTIME_CHUNK=false node scripts/devbuild.js",
-    "test": "node scripts/test.js"
-  },
-  "eslintConfig": {
-    "extends": "inferno-app"
-  },
-  "browserslist": "ff 48",
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
-    ],
-    "resolver": "jest-pnp-resolver",
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx}",
-      "<rootDir>/src/**/?(*.)(spec|test).{js,jsx}"
-    ],
-    "testEnvironment": "jsdom",
-    "testURL": "http://localhost",
-    "transform": {
-      "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "moduleNameMapper": {
-      "^react$": "inferno-compat",
-      "^react-dom$": "inferno-compat",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "inferno-app"
-    ]
+    "matrix-js-sdk": "^21.1.0",
+    "prettier": "^2.3.2"
   },
   "devDependencies": {
-    "babel-plugin-transform-replace-expressions": "^0.2.0"
+    "@babel/core": "^7.12.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.19.6",
+    "@parcel/transformer-babel": "^2.8.2",
+    "@parcel/transformer-sass": "^2.8.2",
+    "babel-plugin-inferno": "^6.5.0",
+    "buffer": "^5.5.0",
+    "crypto-browserify": "^3.12.0",
+    "parcel": "^2.8.2",
+    "process": "^0.11.10",
+    "sass": "^1.57.1",
+    "serve": "^14.1.2",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.3"
+  },
+  "browserslist": "ff 48",
+  "targets": {
+    "default": {
+      "source": "src/index.html"
+    }
   }
 }
