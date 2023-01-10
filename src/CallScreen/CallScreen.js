@@ -1,8 +1,8 @@
 import { Component } from "inferno";
 import "./CallScreen.css";
 import SoftKey from "../ui/SoftKey";
-import waitingRing from "./waiting.ogg";
-import incomingRing from "./incoming.ogg";
+import waitingRing from "url:./waiting.ogg";
+import incomingRing from "url:./incoming.ogg";
 
 const personIcon = "/person_icon.png";
 

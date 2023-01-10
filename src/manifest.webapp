@@ -1,0 +1,31 @@
+{
+  "version": "0.0.0",
+  "name": "chooj",
+  "description": "Matrix client for KaiOS",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "Farooq Karimi Zadeh",
+    "url": "https://github.com/farooqkz/chooj"
+  },
+  "type": "certified",
+  "icons": {
+    "512": "/chooj.png"
+  },
+  "permissions": {
+    "audio-capture": "Used for voice calls",
+    "video-capture": "Used for video calls as well as logging in with QR",
+    "desktop-notification": "",
+    "systemXHR": "",
+    "audio-channel-telephony": "Used for voice calls",
+    "audio-channel-notification": "",
+    "audio-channel-ringer": "Used for ringtone for incoming voice calls",
+    "attention": "Used to show attention screen for incoming voice calls",
+    "push": "Used for receiving push notification",
+    "serviceworker": ""
+  },
+  "messages": [
+    { "push": "/index.html" },
+    { "push-register": "/index.html" }
+  ],
+  "origin": "app://chooj.bananahackers.net"
+}
