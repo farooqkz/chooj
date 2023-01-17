@@ -1,4 +1,4 @@
-import * as colors from "KaiUI/src/theme/colors.scss";
+import "KaiUI/src/theme/colors.scss";
 import "KaiUI/src/components/Tab/Tab.scss";
 
 const prefixCls = "kai-tab";
@@ -12,7 +12,7 @@ function Tab({ focusColor, isActive, onTabChange, label }) {
       }}
       className={actPrefixCls}
       style={{
-        "--tab-underline-color": focusColor || colors.defaultFocusColor,
+        "--tab-underline-color": focusColor || "var(--color-purple)",
       }}
     >
       <div className={`${actPrefixCls}-label`} $HasTextChildren>

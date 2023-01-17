@@ -1,5 +1,5 @@
 import "KaiUI/src/components/TextListItem/TextListItem.scss";
-import * as morecolor from "./morecolor.scss";
+import morecolor from "./morecolor";
 import { Component, createRef } from "inferno";
 import classNames from "classnames";
 

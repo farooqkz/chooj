@@ -1,8 +1,8 @@
 import { Component } from "inferno";
 import Tabs from "./ui/Tabs";
 import Tab from "./ui/Tab";
-import colors from "KaiUI/src/theme/colors.scss";
 import "KaiUI/src/views/TabView/TabView.scss";
+import morecolor from "./ui/morecolor";
 
 const prefixCls = "kai-tab-view";
 const tabViewTabs = `${prefixCls}-tabs`;
@@ -17,7 +17,7 @@ class TabView extends Component {
   constructor(props) {
     super(props);
     const { defaultActiveTab, focusColor } = props;
-    this.focusColor = focusColor || colors.defaultFocusColor;
+    this.focusColor = focusColor || morecolors.defaultFocusColor;
     this.tabs = this.props.tabLabels.map((label) => (
       <Tab label={label} focusColor={this.props.focusColor} />
     ));
