@@ -1,7 +1,7 @@
 import { Component } from "inferno";
 import classnames from "classnames";
 import "KaiUI/src/components/TextInput/TextInput.scss";
-import morecolor from "./morecolor.scss";
+import * as morecolor from "./morecolor.scss";
 
 const prefixCls = "kai-text-input";
 const labelCls = `${prefixCls}-label p-thi`;

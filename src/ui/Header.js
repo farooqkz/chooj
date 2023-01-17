@@ -1,7 +1,8 @@
 import "KaiUI/src/components/Header/Header.scss";
-import colors from "KaiUI/src/theme/colors.scss";
+import * as colors from "KaiUI/src/theme/colors.scss";
 
 function Header({ backgroundColor, text }) {
+  console.log(colors);
   return (
     <header
       className="kai-header"

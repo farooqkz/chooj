@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import "KaiUI/src/components/IconListItem/IconListItem.scss";
-import morecolor from "../morecolor.scss";
+import * as morecolor from "./morecolor.scss";
 
 const prefixCls = "kai-il";
 const lineCls = `${prefixCls}-line`;

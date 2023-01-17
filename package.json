@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "parcel",
     "build": "parcel build --dist-dir build",
+    "devbuild": "parcel build --no-optimize --dist-dir build",
     "clean": "npm run clean:parcel",
-    "serve": "npm run build && serve ./build",
+    "serve": "npm run devbuild && serve ./build",
     "clean:parcel": "rm -rf .parcel-cache build"
   },
   "author": "Sebastian Ware",
@@ -33,6 +34,8 @@
     "buffer": "^5.5.0",
     "crypto-browserify": "^3.12.0",
     "parcel": "^2.8.2",
+    "postcss": "^8.2.1",
+    "postcss-modules": "^4.3.0",
     "process": "^0.11.10",
     "serve": "^14.1.2",
     "stream-browserify": "^3.0.0",
