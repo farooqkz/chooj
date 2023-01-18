@@ -1,7 +1,7 @@
 {
-  "name": "inferno-parcel-template",
-  "version": "1.0.0",
-  "description": "Inferno Parcel Template",
+  "name": "chooj",
+  "version": "0.0.0",
+  "description": "Matrix client for KaiOS",
   "private": true,
   "scripts": {
     "dev": "parcel",
@@ -11,8 +11,8 @@
     "serve": "npm run devbuild && serve ./build",
     "clean:parcel": "rm -rf .parcel-cache build"
   },
-  "author": "Sebastian Ware",
-  "license": "MIT",
+  "author": "Farooq Karimi Zadeh",
+  "license": "GPLv3+",
   "dependencies": {
     "KaiUI": "git+https://github.com/farooqkz/KaiUIv2.git",
     "classnames": "^2.3.1",
@@ -46,5 +46,6 @@
     "default": {
       "source": "src/index.html"
     }
-  }
+  },
+  "sourceMap": false
 }
