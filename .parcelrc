@@ -1,0 +1,8 @@
+{
+  "extends": "@parcel/config-default",
+  "transformers": {
+    "sw.js": ["@parcel/transformer-js"],
+    "manifest.webapp": ["@parcel/transformer-raw"],
+    "chooj.png": ["@parcel/transformer-raw"]
+  }
+}

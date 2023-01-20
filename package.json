@@ -44,7 +44,12 @@
   "browserslist": "ff 48",
   "targets": {
     "default": {
-      "source": "src/index.html"
+      "source": [
+        "src/index.html",
+        "src/manifest.webapp",
+        "src/sw.js",
+        "src/chooj.png"
+      ]
     }
   },
   "sourceMap": false
