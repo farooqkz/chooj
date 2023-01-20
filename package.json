@@ -22,7 +22,7 @@
     "inferno-extras": "^8.0.0",
     "jsqr": "^1.4.0",
     "localforage": "^1.9.0",
-    "matrix-js-sdk": "^21.1.0",
+    "matrix-js-sdk": "^23.0.0",
     "prettier": "^2.3.2"
   },
   "devDependencies": {
