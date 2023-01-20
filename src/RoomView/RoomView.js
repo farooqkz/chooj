@@ -237,7 +237,7 @@ class RoomView extends Component {
         let mimetype = blob.type;
         window.mClient
           .uploadContent(blob, {
-            includeFilename: false,
+            type: mimetype,
           })
           .then((response) => {
             const mxcUrl = response;
