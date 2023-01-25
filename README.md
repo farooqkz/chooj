@@ -1,7 +1,8 @@
 # Chooj
 ## Matrix client for KaiOS with VoIP call support
 
-#### The project is inactive because I must spend my time on projects which make me real money. But if anyone is interested in sponoring, I would love to continue working on the project.
+### Looking for sponsors! Contact me!
+
 <div style="text-align: center">
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/farooqkz/chooj/Build/master)
@@ -26,7 +27,7 @@ Check related BananaHackers blog posts for more information.
 ### What does work so far?
 
  - Login process with password works(manually or by scanning a QR code)
- - Chatting works in all rooms. Partially, however.
+ - Chatting works in all rooms. Sending text and voice is supported. You can view incoming text, voice and photos.
  - Voice call partially works.
  - Very experimental and unreliable push notification support which you can enable it in Settings
  - The Cow says "Please wait" to you kindly :))
@@ -38,8 +39,7 @@ Check related BananaHackers blog posts for more information.
  - Donate to me with cryptocurrency or hardware(Contact me for any of those)
  - Tell others about Chooj
  - Idle in Chooj's Matrix room and help others when necessary
- - Solve one of the [issues](https://github.com/farooqkz/chooj/issues) especially creating Chooj a logo
- - Get Farooq something in his [wish list](https://github.com/farooqkz/my-wish-list/blob/main/README.md)
+ - Solve one of the [issues](https://github.com/farooqkz/chooj/issues).
  - ...
 
 ### Matrix chatroom for Chooj
@@ -47,6 +47,8 @@ Check related BananaHackers blog posts for more information.
 This project has got a Matrix room. See badges.
 
 ### Nightly builds
+
+##### I've switched the build system so nightly builds are temporary unavailable. You can however try building yourself.
 
  - You can download and sideload ZIP for each time I push stuff from [here](https://farooqkz.de1.hashbang.sh/matrix-client-builds/).
  - **NEW!** OmniSD builds are available there, too!
@@ -69,10 +71,10 @@ This app should work on all KaiOS versions. However it has been also tested on t
 
 The production build is currently broken and you may only use development builds.
 
- - Install Node v12.x if you haven't
+ - Install Node v18.x if you haven't
  - Install yarn if you haven't
  - `yarn install` in project's directory
- - `yarn run devbuild` to create a development build(faster build at the cost of heavier bundle)
+ - `yarn devbuild` to create a development build(faster build at the cost of heavier bundle) or `yarn build` for production builds
  - Now you can sideload the application in `build/` to your device.
 
 You can check guides on how to prepare your device for sideloading stuff
@@ -97,6 +99,15 @@ See [this post](https://blog.bananahackers.net/farooqkz/the-development-of-the-m
  - https://blog.bananahackers.net/farooqkz/the-development-of-the-matrix-client-has-started
  - https://blog.bananahackers.net/farooqkz/developing-a-call-only-matrix-client-with-crowdfunding-2
  - https://blog.bananahackers.net/farooqkz/developing-a-call-only-matrix-client-with-crowdfunding
+
+### Donations
+
+Donations are very welcome in the form of cryptocurrency(Bitcoin Cash is preferred). These people have donated to help fund the project:
+
+ - wreck
+ - A few from BananaHackers community donated a phone
+
+Because depth of pockets of different people varies, I haven't specified how much each donated.
 
 ### License
 
