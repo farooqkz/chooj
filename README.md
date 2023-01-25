@@ -18,9 +18,6 @@
 
 This is a free(open source) software Matrix client for KaiOS which is going to support VoIP calls. Perhaps voice call is already working, in this case please send a Pull Request to update this README.
 
-Part of this project is done through crowdfunding. About 100 dollars was donated so that I could buy a Nokia 800 Tough and start the project.
-
-Check related BananaHackers blog posts for more information.
 
 ### What does work so far?
 
