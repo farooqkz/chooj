@@ -83,15 +83,24 @@ class Login extends Component {
   rightCb = () => {
     switch (this.state.stage) {
       case 0:
-        if (!this.homeserverUrl.startsWith("https://"))
-          this.homeserverUrl = "https://" + this.homeserverUrl;
-        window.mClient = matrixcs.createClient({
-          baseUrl: this.homeserverUrl,
-        });
-        window.mClient.loginFlows().then((result) => {
-          this.loginFlows = result.flows;
-          this.setState({ cursor: 0, stage: 1 });
-        });
+        this.homeserverName = this.homeserverName.replace("https://", "");
+        this.homeserverName = this.homeserverName.replace("http://", "");
+        fetch(`https://${this.homeserverName}/.well-known/matrix/server`).then((r) => {
+          if (r.ok) {
+            r.json().then((j) => {
+              this.homeserverUrl = "https://" + j["m.server"];
+              window.mClient = matrixcs.createClient({
+                baseUrl: this.homeserverUrl,
+              });
+              window.mClient.loginFlows().then((result) => {
+                this.loginFlows = result.flows;
+                this.setState({ cursor: 0, stage: 1 });
+              }).catch((e) => console.log(e));
+            });
+          } else {
+            alert("Cannot connect to homeserver. Are you sure the address valid?");
+          }
+        }).catch((e) => console.log(e));
         break;
       case 1:
         this.selectedLoginFlow = this.loginFlows[this.state.cursor];
@@ -121,7 +130,6 @@ class Login extends Component {
     this.stageNames = ["Login Info", "Login method", "Login"];
     this.loginFlows = [];
     this.selectedLoginFlow = "";
-    this.homeserverUrl = "";
     this.username = "";
     this.password = "";
     this.homeserverName = "";
@@ -153,15 +161,7 @@ class Login extends Component {
             onChange: (value) => {
               this.homeserverName = value;
             },
-            label: "Homeserver name(without https://)",
-            type: "input",
-          },
-          {
-            placeholder: "matrix.example.com",
-            onChange: (value) => {
-              this.homeserverUrl = value;
-            },
-            label: "Homeserver URL",
+            label: "Homeserver name",
             type: "input",
           },
           {
@@ -174,7 +174,7 @@ class Login extends Component {
           },
           {
             tertiary:
-              "Press Call button and scan a QR in the following format to login with QR code instead of typing all these(PASS = password authentication): PASS server_name server_url username password",
+              "Press Call button and scan a QR in the following format to login with QR code instead of typing all these(PASS = password authentication): PASS server_name username password",
             type: "text",
           },
         ].map((attrs, index) => {
@@ -199,7 +199,7 @@ class Login extends Component {
         if (this.selectedLoginFlow.type === "m.login.password") {
           listViewChildren = (
             <TextInput
-              placeholder="%$#@%#$"
+              placeholder="Your super secret pass"
               fieldType="password"
               label="Enter password"
               onChange={(value) => {

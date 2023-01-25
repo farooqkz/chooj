@@ -28,65 +28,73 @@ class LoginWithQR extends Component {
     data = decoded.split(" ", 4);
     const flow = data[0];
     const server_name = data[1];
-    const server_url = data[2];
     const username = data[3];
     let password = null;
     if (
       window.confirm(
-        `Do you confirm? Flow: ${flow} | Server_name: ${server_name} | Server URL: ${server_url} | Username: ${username}`
+        `Do you confirm? Flow: ${flow} | Server name: ${server_name} | Username: ${username}`
       )
     ) {
       const start =
         flow.length +
         server_name.length +
-        server_url.length +
         username.length +
         3;
       password = decoded.substring(start + 1);
-      window.mClient = matrixcs.createClient({
-        baseUrl: server_url,
-      });
-      window.mClient.loginFlows().then((result) => {
-        let gotPasswordLogin = false;
-        for (let flow of result.flows) {
-          if ("m.login.password" === flow.type) {
-            gotPasswordLogin = true;
-            break;
-          }
-        }
-        if (gotPasswordLogin) {
-          window.mClient
-            .loginWithPassword(`@${username}:${server_name}`, password)
-            .then((result) => {
-              localforage.setItem("login", result).then(() => {
-                window.alert("Logged in as " + username);
-                // eslint-disable-next-line no-self-assign
-                window.location = window.location;
+      fetch(`https://${server_name}/.well-known/matrix/server`).then((r) => {
+        if (r.ok) {
+          r.json().then((j) => {
+              const server_url = j["m.server"];
+              window.mClient = matrixcs.createClient({
+                baseUrl: server_url,
               });
-            })
-            .catch((err) => {
-              switch (err.errcode) {
-                case "M_FORBIDDEN":
-                  alert("Incorrect login credentials");
-                  break;
-                case "M_USER_DEACTIVATED":
-                  alert("This account has been deactivated");
-                  break;
-                case "M_LIMIT_EXCEEDED":
-                  const retry = Math.ceil(err.retry_after_ms / 1000);
-                  alert("Too many requests! Retry after" + retry.toString());
-                  break;
-                default:
-                  alert("Login failed! Unknown reason");
-                  break;
-              }
-              // eslint-disable-next-line no-self-assign
-              window.location = window.location;
-            });
+              window.mClient.loginFlows().then((result) => {
+                let gotPasswordLogin = false;
+                for (let flow of result.flows) {
+                  if ("m.login.password" === flow.type) {
+                    gotPasswordLogin = true;
+                    break;
+                  }
+                }
+                if (gotPasswordLogin) {
+                  window.mClient
+                    .loginWithPassword(`@${username}:${server_name}`, password)
+                    .then((result) => {
+                      localforage.setItem("login", result).then(() => {
+                        window.alert("Logged in as " + username);
+                        // eslint-disable-next-line no-self-assign
+                        window.location = window.location;
+                      });
+                    })
+                    .catch((err) => {
+                      switch (err.errcode) {
+                        case "M_FORBIDDEN":
+                          alert("Incorrect login credentials");
+                          break;
+                        case "M_USER_DEACTIVATED":
+                          alert("This account has been deactivated");
+                          break;
+                        case "M_LIMIT_EXCEEDED":
+                          const retry = Math.ceil(err.retry_after_ms / 1000);
+                          alert("Too many requests! Retry after" + retry.toString());
+                          break;
+                        default:
+                          alert("Login failed! Unknown reason");
+                          break;
+                      }
+                      // eslint-disable-next-line no-self-assign
+                      window.location = window.location;
+                    });
+                } else {
+                  window.alert(
+                    "This homeserver does not support authentication with password"
+                  );
+                }
+              });
+
+          });
         } else {
-          window.alert(
-            "This homeserver does not support authentication with password"
-          );
+          alert("Cannot connect to homeserver. Are you sure the address is correct?");
         }
       });
     }

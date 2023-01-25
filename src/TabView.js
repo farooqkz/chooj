@@ -2,7 +2,7 @@ import { Component } from "inferno";
 import Tabs from "./ui/Tabs";
 import Tab from "./ui/Tab";
 import "KaiUI/src/views/TabView/TabView.scss";
-import morecolor from "./ui/morecolor";
+import morecolors from "./ui/morecolor";
 
 const prefixCls = "kai-tab-view";
 const tabViewTabs = `${prefixCls}-tabs`;
