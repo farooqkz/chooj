@@ -37,7 +37,7 @@ This is a free(open source) software Matrix client for KaiOS which is going to s
  - Solve one of the [issues](https://github.com/farooqkz/chooj/issues).
  - ...
 
-### Matrix chatroom for Chooj
+### Matrix chatroom for chooj
 
 This project has got a Matrix room. See badges.
 
