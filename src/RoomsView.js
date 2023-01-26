@@ -4,6 +4,7 @@ import ListView from "./ListView";
 import ChatRoomItem from "./ChatRoomItem";
 import TextListItem from "./ui/TextListItem";
 import { newRoomInState, updateState, isRoom, isDM } from "./utils";
+import hashIcon from "./hash_icon.png";
 
 class RoomsView extends Component {
   cursorChangeCb = (cursor) => {

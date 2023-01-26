@@ -3,6 +3,6 @@
   "transformers": {
     "sw.js": ["@parcel/transformer-js"],
     "manifest.webapp": ["@parcel/transformer-raw"],
-    "chooj.png": ["@parcel/transformer-raw"]
+    "*.png": ["@parcel/transformer-raw"]
   }
 }

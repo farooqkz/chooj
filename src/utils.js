@@ -1,4 +1,6 @@
 import { getHttpUriForMxc } from "matrix-js-sdk";
+import hashIcon from "./hash_icon.png";
+import personIcon from "./person_icon.png";
 
 const defaultAvatarSize = 36;
 
@@ -62,7 +64,7 @@ function newRoomInState(room, dm) {
     let userObj = client.getUser(theOtherId);
     result.avatarUrl = getAvatarOrDefault(
       userObj.avatarUrl,
-      "/person_icon.png"
+      personIcon
     );
     result.userId = theOtherId;
     result.displayName = room.getDefaultRoomName(client.getUserId());
@@ -73,7 +75,7 @@ function newRoomInState(room, dm) {
         defaultAvatarSize,
         defaultAvatarSize,
         "scale"
-      ) || "/hash_icon.png";
+      ) || hashIcon;
     result.displayName = room.name;
   }
   return result;
