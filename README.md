@@ -104,6 +104,20 @@ Donations are very welcome in the form of cryptocurrency(Bitcoin Cash is preferr
 
 Because depth of pockets of different people varies, I haven't specified how much each donated.
 
+You can make donations anonymously by sending an amount to my Bitcoin Cash address:
+
+```
+bitcoincash:qpxy55al8k3mux7j58taxt88jukmqur5ruv6tz7mkc
+```
+
+If you want me to mention your name in the list, please send me the source address before sending donation:
+
+```
+fkz atsine riseup dot net
+```
+
+Alternatively, you can send me private key of a Bitcoin Cash wallet.
+
 ### License
 
 This project is free software under GNU GPLv3 and comes without any warranty from author(s) of the project.
