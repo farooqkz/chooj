@@ -43,8 +43,6 @@ This project has got a Matrix room. See badges.
 
 ### Nightly builds
 
-##### I've switched the build system so nightly builds are temporary unavailable. You can however try building yourself.
-
  - You can download and sideload ZIP for each time I push stuff from [here](https://farooqkz.de1.hashbang.sh/matrix-client-builds/).
  - **NEW!** OmniSD builds are available there, too!
  - Thanks to hashbang which let's me host stuff there.
