@@ -1,4 +1,4 @@
-# Chooj
+# chooj
 ## Matrix client for KaiOS with VoIP call support
 
 ### Looking for sponsors! Contact me!
@@ -32,8 +32,8 @@ This is a free(open source) software Matrix client for KaiOS which is going to s
  - Create an issue and report a bug
  - Open a Pull Request and implement some wanted feature or fix some bug
  - Donate to me with cryptocurrency or hardware(Contact me for any of those)
- - Tell others about Chooj
- - Idle in Chooj's Matrix room and help others when necessary
+ - Tell others about chooj
+ - Idle in chooj's Matrix room and help others when necessary
  - Solve one of the [issues](https://github.com/farooqkz/chooj/issues).
  - ...
 
@@ -70,6 +70,7 @@ The production build is currently broken and you may only use development builds
  - Install yarn if you haven't
  - `yarn install` in project's directory
  - `yarn devbuild` to create a development build(faster build at the cost of heavier bundle) or `yarn build` for production builds
+ - *(Optional)* remove the Javascript modules from `index.html` as well as the related file(s).
  - Now you can sideload the application in `build/` to your device.
 
 You can check guides on how to prepare your device for sideloading stuff
@@ -79,7 +80,10 @@ and development at the BananaHackers wiki and website linked below:
 
 ### Why Github?
 
-See [this post](https://blog.bananahackers.net/farooqkz/the-development-of-the-matrix-client-has-started)
+See [this post](https://blog.bananahackers.net/farooqkz/the-development-of-the-matrix-client-has-started) to learn why
+I initially chose Github. For future, I might switch to a reliable Gitlab instance(other than gitlab.com)
+or even have both Github repository and a Gitlab repo and have them in sync. A Gitlab instance exclusively for chooj is also possible if
+someone funds it but very improbable.
 
 ### Why InfernoJS?
 
