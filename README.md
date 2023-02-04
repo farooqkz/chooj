@@ -44,10 +44,10 @@ This project has got a Matrix room. See badges.
 ### Nightly builds
 
  - You can download and sideload ZIP for each time I push stuff from [here](https://farooqkz.de1.hashbang.sh/matrix-client-builds/).
- - **NEW!** OmniSD builds are available there, too!
+ - OmniSD builds are available there, too!
  - Thanks to hashbang which let's me host stuff there.
  - Old ZIPs will be deleted after a some time.
- - Please allow a few minutes after each commit and the file will show up there.
+ - Please allow a few minutes(1-2) after each commit and the file will show up there.
 
 *NOTE: While I try to test stuff before pushing but you might find some broken builds there. There is no automated test yet.*
 
