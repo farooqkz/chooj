@@ -1,4 +1,5 @@
 import { getHttpUriForMxc } from "matrix-js-sdk";
+import { render } from "inferno";
 import hashIcon from "./hash_icon.png";
 import personIcon from "./person_icon.png";
 
@@ -175,6 +176,15 @@ function mxcMediaToHttp(hsUrl, mxcUrl) {
   return `${hsUrl}/_matrix/media/v3/download/${serverName}/${mediaId}`;
 }
 
+function toast(message, timeout) {
+  let container = document.querySelector("#toast");
+  container.style.display = "block";
+  render(<p $HasTextChildren>{message}</p>, container);
+  setTimeout(() => {
+    container.style.display = "none";
+  }, timeout);
+}
+
 export {
   updateState,
   newRoomInState,
@@ -187,4 +197,5 @@ export {
   bytesToHigherScale,
   msToHigherScale,
   mxcMediaToHttp,
+  toast,
 };
