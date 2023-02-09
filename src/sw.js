@@ -1,3 +1,4 @@
+/* eslint-disable */ 
 console.log("[Chooj SW] Hello Chooj's service worker is alive");
 
 self.onpushsubscriptionchange = (evt) => {
