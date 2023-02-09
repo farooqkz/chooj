@@ -49,6 +49,12 @@ class About extends Component {
       console.log("Okay they want to contact Farooq...");
       this.setState({ showContactScreen: true });
     }
+    if (evt.key === "Backspace" || evt.key === "b") {
+      if (this.state.showContactScreen) {
+        evt.preventDefault();
+        this.setState({ showContactScreen: false });
+      }
+    }
   };
 
   componentDidMount() {
