@@ -29,8 +29,6 @@ class RoomsView extends Component {
     this.setState((state) => updateState(room, state, false));
   };
 
-  handleMemberShipChange = (a, b
-
   constructor(props) {
     super(props);
     const client = window.mClient;

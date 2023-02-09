@@ -10,7 +10,7 @@ import Waiting from "./Waiting";
 import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
 import Settings from "./Settings";
-import { urlBase64ToUint8Array } from "./utils";
+import { urlBase64ToUint8Array, toast } from "./utils";
 
 const vapidPublicKey =
   "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
@@ -61,7 +61,7 @@ class Matrix extends Component {
       case "People":
         return "";
       case "Rooms":
-        return "";
+        return "Join";
       case "Invites":
         return "";
       case "Settings":
@@ -115,9 +115,32 @@ class Matrix extends Component {
     });
   };
 
-  softRightCb = () => {};
+  softRightCb = () => {
+    if (this.softRightText() === "Toast") {
+      toast("Hello", 1000);
+      return;
+    }
+  };
 
-  softLeftCb = () => {};
+  softLeftCb = () => {
+    if (document.querySelector("#menu").innerHTML) return;
+    if (this.softLeftText() === "Join") {
+      let roomAlias = window.prompt("Enter room name or Id");
+      if (!roomAlias) {
+        return;
+      }
+      toast("Joining", 1000);
+      window.mClient.joinRoom(roomAlias).then((room) => {
+        // syncing must be done and the joined room must be immediately opened
+        // however matrix-js-sdk v23.0.0 currently does not support it,
+        console.log(this);
+        toast("Joined", 1500);
+      }).catch((e) => {
+        window.alert("Some error occured during joining.");
+        console.log(e);
+      });
+    }
+  };
 
   softCenterCb = () => {
     if (document.querySelector("#menu").innerHTML) return;
