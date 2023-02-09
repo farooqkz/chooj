@@ -4,7 +4,6 @@ import ListView from "./ListView";
 import ChatRoomItem from "./ChatRoomItem";
 import TextListItem from "./ui/TextListItem";
 import { newRoomInState, updateState, isRoom, isDM } from "./utils";
-import hashIcon from "./hash_icon.png";
 
 class RoomsView extends Component {
   cursorChangeCb = (cursor) => {
@@ -29,6 +28,8 @@ class RoomsView extends Component {
     }
     this.setState((state) => updateState(room, state, false));
   };
+
+  handleMemberShipChange = (a, b
 
   constructor(props) {
     super(props);
