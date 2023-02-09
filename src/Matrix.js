@@ -1,4 +1,4 @@
-import { Component } from "inferno";
+import { Component, createPortal } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
 
 import TabView from "./TabView";
@@ -10,6 +10,8 @@ import Waiting from "./Waiting";
 import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
 import Settings from "./Settings";
+import DropDownMenu from "./DropDownMenu";
+import TextListItem from "./ui/TextListItem";
 import { urlBase64ToUint8Array, toast } from "./utils";
 
 const vapidPublicKey =
@@ -51,7 +53,7 @@ class Matrix extends Component {
   };
 
   onTabChange = (index) => {
-    this.setState({ currentTab: index });
+    if (!this.state.optionsMenu) this.setState({ currentTab: index });
   };
 
   softLeftText = () => {
@@ -76,9 +78,9 @@ class Matrix extends Component {
       case "About":
         return "";
       case "People":
-        return "";
+        return "Options";
       case "Rooms":
-        return "";
+        return "Options";
       case "Invites":
         return "";
       case "Settings":
@@ -116,9 +118,13 @@ class Matrix extends Component {
   };
 
   softRightCb = () => {
+    if (document.querySelector("#menu").innerHTML) return;
     if (this.softRightText() === "Toast") {
       toast("Hello", 1000);
       return;
+    }
+    if (this.softRightText() === "Options") {
+      this.setState({ optionsMenu: true });
     }
   };
 
@@ -130,15 +136,18 @@ class Matrix extends Component {
         return;
       }
       toast("Joining", 1000);
-      window.mClient.joinRoom(roomAlias).then((room) => {
-        // syncing must be done and the joined room must be immediately opened
-        // however matrix-js-sdk v23.0.0 currently does not support it,
-        console.log(this);
-        toast("Joined", 1500);
-      }).catch((e) => {
-        window.alert("Some error occured during joining.");
-        console.log(e);
-      });
+      window.mClient
+        .joinRoom(roomAlias)
+        .then((room) => {
+          // syncing must be done and the joined room must be immediately opened
+          // however matrix-js-sdk v23.0.0 currently does not support it,
+          console.log(this.roomsViewRef);
+          toast("Joined", 1500);
+        })
+        .catch((e) => {
+          window.alert("Some error occured during joining.");
+          console.log(e);
+        });
     }
   };
 
@@ -158,6 +167,21 @@ class Matrix extends Component {
         break;
       default:
         break;
+    }
+  };
+
+  onKeyDown = (evt) => {
+    if (evt.key === "Backspace" || evt.key === "b") {
+      if (this.state.optionsMenu) {
+        evt.preventDefault();
+        this.setState({ optionsMenu: false });
+      }
+    }
+  };
+
+  optionsSelectCb = (item) => {
+    if (item === 0) {
+      console.log(window.mClient.getRoom(this.roomId));
     }
   };
 
@@ -196,16 +220,18 @@ class Matrix extends Component {
     this.roomId = "";
     this.invite = null;
     this.call = null;
+    this.roomsViewRef = null;
     this.state = {
       currentTab: 0,
       call: null,
       syncDone: false,
       openRoomId: "",
+      optionsMenu: false,
     };
   }
 
   render() {
-    const { currentTab, call, syncDone, openRoomId } = this.state;
+    const { currentTab, call, syncDone, openRoomId, optionsMenu } = this.state;
     if (!syncDone) {
       return (
         <>
@@ -243,6 +269,9 @@ class Matrix extends Component {
               selectedRoomCb={(roomId) => {
                 this.roomId = roomId;
               }}
+              ref={(r) => {
+                this.roomsViewRef = r;
+              }}
             />
             <p>Invites are not implemented</p>
             <Settings />
@@ -258,6 +287,14 @@ class Matrix extends Component {
               centerCb={this.softCenterCb}
             />
           </footer>
+          {optionsMenu
+            ? createPortal(
+                <DropDownMenu title="Options" selectCb={this.optionsSelectCb}>
+                  <TextListItem primary="Leave this room" />
+                </DropDownMenu>,
+                document.querySelector("#menu")
+              )
+            : null}
         </>
       );
     }

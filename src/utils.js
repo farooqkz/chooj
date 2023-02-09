@@ -63,10 +63,7 @@ function newRoomInState(room, dm) {
   if (dm) {
     let theOtherId = room.guessDMUserId();
     let userObj = client.getUser(theOtherId);
-    result.avatarUrl = getAvatarOrDefault(
-      userObj.avatarUrl,
-      personIcon
-    );
+    result.avatarUrl = getAvatarOrDefault(userObj.avatarUrl, personIcon);
     result.userId = theOtherId;
     result.displayName = room.getDefaultRoomName(client.getUserId());
   } else {

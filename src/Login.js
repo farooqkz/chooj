@@ -85,22 +85,29 @@ class Login extends Component {
       case 0:
         this.homeserverName = this.homeserverName.replace("https://", "");
         this.homeserverName = this.homeserverName.replace("http://", "");
-        fetch(`https://${this.homeserverName}/.well-known/matrix/server`).then((r) => {
-          if (r.ok) {
-            r.json().then((j) => {
-              this.homeserverUrl = "https://" + j["m.server"];
-              window.mClient = matrixcs.createClient({
-                baseUrl: this.homeserverUrl,
+        fetch(`https://${this.homeserverName}/.well-known/matrix/server`)
+          .then((r) => {
+            if (r.ok) {
+              r.json().then((j) => {
+                this.homeserverUrl = "https://" + j["m.server"];
+                window.mClient = matrixcs.createClient({
+                  baseUrl: this.homeserverUrl,
+                });
+                window.mClient
+                  .loginFlows()
+                  .then((result) => {
+                    this.loginFlows = result.flows;
+                    this.setState({ cursor: 0, stage: 1 });
+                  })
+                  .catch((e) => console.log(e));
               });
-              window.mClient.loginFlows().then((result) => {
-                this.loginFlows = result.flows;
-                this.setState({ cursor: 0, stage: 1 });
-              }).catch((e) => console.log(e));
-            });
-          } else {
-            alert("Cannot connect to homeserver. Are you sure the address valid?");
-          }
-        }).catch((e) => console.log(e));
+            } else {
+              alert(
+                "Cannot connect to homeserver. Are you sure the address valid?"
+              );
+            }
+          })
+          .catch((e) => console.log(e));
         break;
       case 1:
         this.selectedLoginFlow = this.loginFlows[this.state.cursor];

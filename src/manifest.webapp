@@ -23,9 +23,6 @@
     "push": "Used for receiving push notification",
     "serviceworker": ""
   },
-  "messages": [
-    { "push": "/index.html" },
-    { "push-register": "/index.html" }
-  ],
+  "messages": [{ "push": "/index.html" }, { "push-register": "/index.html" }],
   "origin": "app://chooj.bananahackers.net"
 }

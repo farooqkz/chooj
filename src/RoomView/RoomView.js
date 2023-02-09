@@ -18,7 +18,8 @@ function IRCLikeUnsupportedEventItem({ isFocused, senderId }) {
   );
 }
 
-function CannotSendMessage() { // eslint-disable-line no-unused-vars
+function CannotSendMessage() {
+  // eslint-disable-line no-unused-vars
   return (
     <div style={{ "background-color": "gray" }}>
       <h5>Cannot send message to this room</h5>
@@ -75,7 +76,9 @@ class RoomView extends Component {
         this.setState({ cursor: cursor + 1 });
       }
     } else if (evt.key === "ArrowUp") {
-      if (waiting) { return; }
+      if (waiting) {
+        return;
+      }
       if (textInputFocus) {
         this.setState({ textInputFocus: false, cursor: lastEventIndex });
       } else if (cursor === 0) {
@@ -307,7 +310,7 @@ class RoomView extends Component {
             className={"kai-list-view"}
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
           >
-            {waiting ? <Waiting /> : null }
+            {waiting ? <Waiting /> : null}
             {this.timeline.getEvents().map((evt, index) => {
               let item = null;
               const senderId = evt.getSender();
