@@ -5,3 +5,18 @@
   top: 0;
   left: 0;
 }
+
+#toast {
+  background-color: black;
+  min-height: 18px;
+  bottom: auto;
+  color: white;
+  font-size: 12px;
+  top: 0;
+  left: 0;
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  z-index: 99999;
+  display: none;
+}
