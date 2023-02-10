@@ -4,12 +4,12 @@
   "description": "Matrix client for KaiOS",
   "private": true,
   "scripts": {
-    "dev": "parcel",
     "build": "parcel build --dist-dir build --no-source-maps --detailed-report 12",
     "devbuild": "parcel build --no-optimize --dist-dir build",
-    "clean": "npm run clean:parcel",
-    "serve": "npm run devbuild && serve ./build",
-    "clean:parcel": "rm -rf .parcel-cache build"
+    "clean": "yarn run clean:parcel",
+    "serve": "yarn run devbuild && serve ./build",
+    "clean:parcel": "rm -rf .parcel-cache build",
+    "lint": "yarn eslint src"
   },
   "author": "Farooq Karimi Zadeh",
   "license": "GPLv3+",
