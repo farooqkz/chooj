@@ -116,6 +116,7 @@ class DMsView extends Component {
           displayName={room.displayName}
           avatar={room.avatarUrl}
           lastEvent={room.lastEvent}
+          online={room.online}
           isFocused={index === cursor}
         />
       );

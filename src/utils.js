@@ -72,6 +72,7 @@ function newRoomInState(room, dm) {
     result.avatarUrl = getAvatarOrDefault(userObj.avatarUrl, personIcon);
     result.userId = theOtherId;
     result.displayName = room.getDefaultRoomName(client.getUserId());
+    result.online = userObj.presence;
   } else {
     result.avatarUrl =
       room.getAvatarUrl(
