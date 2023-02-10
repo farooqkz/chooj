@@ -12,15 +12,15 @@ class DropDownMenu extends Component {
   }
 
   render() {
-    const { title, selectCb, children } = this.props;
+    const { title, selectCb } = this.props;
+    let children = this.props.children instanceof Array ? this.props.children : [this.props.children];
     const listViewHeight =
       children.length * 6 + 1 + (window.isFullScreen ? 0 : 2);
+    const divLength = listViewHeight + 6;
     return (
       <div
         style={{
-          "min-height": `calc(100vh - ${
-            children.length * 6 - (window.isFullScreen ? 0 : 2)
-          }rem - 1.6rem)`,
+          "min-height": `calc(100vh - ${divLength}rem - 1.6rem)`,
           position: "absolute",
           left: 0,
           right: 0,
@@ -35,6 +35,7 @@ class DropDownMenu extends Component {
           cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}
           cursor={this.state.cursor}
           height={listViewHeight.toString() + "rem"}
+          captureKeys={["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "SoftLeft", "SoftRight", "Call"]}
         >
           {children.map((item, index) => {
             item.props.isFocused = index === this.state.cursor;

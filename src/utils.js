@@ -38,6 +38,12 @@ function updateState(room, state, dm) {
 }
 
 function makeEvent(evt, dm) {
+  if (!evt) {
+    return {
+      time: -1,
+      event_: "",
+    };
+  }
   let user = window.mClient.getUser(evt.getSender());
   return {
     time: evt.getTs(),

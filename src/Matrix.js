@@ -12,7 +12,7 @@ import CallScreen from "./CallScreen";
 import Settings from "./Settings";
 import DropDownMenu from "./DropDownMenu";
 import TextListItem from "./ui/TextListItem";
-import { urlBase64ToUint8Array, toast } from "./utils";
+import { urlBase64ToUint8Array, toast, updateState } from "./utils";
 
 const vapidPublicKey =
   "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
@@ -125,6 +125,7 @@ class Matrix extends Component {
     }
     if (this.softRightText() === "Options") {
       this.setState({ optionsMenu: true });
+      document.addEventListener("keydown", this.onKeyDown);
     }
   };
 
@@ -141,8 +142,9 @@ class Matrix extends Component {
         .then((room) => {
           // syncing must be done and the joined room must be immediately opened
           // however matrix-js-sdk v23.0.0 currently does not support it,
-          console.log(this.roomsViewRef);
-          toast("Joined", 1500);
+          window.mClient.syncApi.sync().then(() => 
+            this.roomsViewRef.setState((state) => updateState(room, state, false))
+          ).then(() => toast("Joined", 1750));
         })
         .catch((e) => {
           window.alert("Some error occured during joining.");
@@ -175,6 +177,7 @@ class Matrix extends Component {
       if (this.state.optionsMenu) {
         evt.preventDefault();
         this.setState({ optionsMenu: false });
+        document.removeEventListener("keydown", this.onKeyDown);
       }
     }
   };
@@ -183,6 +186,8 @@ class Matrix extends Component {
     if (item === 0) {
       console.log(window.mClient.getRoom(this.roomId));
     }
+    this.setState({ optionsMenu: false });
+    window.alert("Not implemented yet");
   };
 
   constructor(props) {
@@ -290,7 +295,7 @@ class Matrix extends Component {
           {optionsMenu
             ? createPortal(
                 <DropDownMenu title="Options" selectCb={this.optionsSelectCb}>
-                  <TextListItem primary="Leave this room" />
+                  <TextListItem primary="Leave" />
                 </DropDownMenu>,
                 document.querySelector("#menu")
               )

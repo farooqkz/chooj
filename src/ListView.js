@@ -5,7 +5,11 @@ import { findDOMNode } from "inferno-extras";
 class ListView extends Component {
   handleKeyDown = (evt) => {
     let cursor = this.state.cursor;
-    const { children, cursorChangeCb } = this.props;
+    const { children, cursorChangeCb, captureKeys } = this.props;
+
+    if (captureKeys instanceof Array && captureKeys.includes(evt.key)) {
+      evt.stopImmediatePropagation();
+    }
     if (evt.key === "ArrowUp") {
       cursor--;
       if (cursor === -1) cursor = children.length - 1;
@@ -42,6 +46,7 @@ class ListView extends Component {
     this.state = {
       cursor: cursor,
     };
+    console.log(props.capture);
   }
 
   componentDidUpdate() {
@@ -50,11 +55,11 @@ class ListView extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener("keydown", this.handleKeyDown);
+    document.addEventListener("keydown", this.handleKeyDown, Boolean(this.props.capture));
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown);
+    document.removeEventListener("keydown", this.handleKeyDown, Boolean(this.props.capture));
   }
 
   render() {
