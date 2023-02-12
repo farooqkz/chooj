@@ -21,7 +21,10 @@
     "audio-channel-ringer": "Used for ringtone for incoming voice calls",
     "attention": "Used to show attention screen for incoming voice calls",
     "push": "Used for receiving push notification",
-    "serviceworker": ""
+    "serviceworker": "",
+    "device-storage:pictures": {
+      "access": "readwrite"
+    }
   },
   "messages": [{ "push": "/index.html" }, { "push-register": "/index.html" }],
   "origin": "app://chooj.bananahackers.net"

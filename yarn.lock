@@ -5851,6 +5851,11 @@ write@1.0.3:
   dependencies:
     mkdirp "^0.5.1"
 
+xmimetype@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/xmimetype/-/xmimetype-1.1.1.tgz#96d6c32ed258f9daa46e7a5fdb6302dd32b58f77"
+  integrity sha512-doomuZpU5UwsUiLJUWXyGtLIQ8E9p/ehDVO1B677iIs20y/kFlie20XL32ijIrmu/idlHDyus4645+233wVseA==
+
 xxhash-wasm@^0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/xxhash-wasm/-/xxhash-wasm-0.4.2.tgz#752398c131a4dd407b5132ba62ad372029be6f79"

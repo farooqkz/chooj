@@ -1,5 +1,3 @@
 module.exports = {
-    "extends": [
-        "eslint-config-inferno-app"
-    ]
-}
+  extends: ["eslint-config-inferno-app"],
+};

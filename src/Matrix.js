@@ -142,9 +142,14 @@ class Matrix extends Component {
         .then((room) => {
           // syncing must be done and the joined room must be immediately opened
           // however matrix-js-sdk v23.0.0 currently does not support it,
-          window.mClient.syncApi.sync().then(() => 
-            this.roomsViewRef.setState((state) => updateState(room, state, false))
-          ).then(() => toast("Joined", 1750));
+          window.mClient.syncApi
+            .sync()
+            .then(() =>
+              this.roomsViewRef.setState((state) =>
+                updateState(room, state, false)
+              )
+            )
+            .then(() => toast("Joined", 1750));
         })
         .catch((e) => {
           window.alert("Some error occured during joining.");

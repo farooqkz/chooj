@@ -55,11 +55,19 @@ class ListView extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener("keydown", this.handleKeyDown, Boolean(this.props.capture));
+    document.addEventListener(
+      "keydown",
+      this.handleKeyDown,
+      Boolean(this.props.capture)
+    );
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown, Boolean(this.props.capture));
+    document.removeEventListener(
+      "keydown",
+      this.handleKeyDown,
+      Boolean(this.props.capture)
+    );
   }
 
   render() {

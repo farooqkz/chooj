@@ -13,7 +13,10 @@ class DropDownMenu extends Component {
 
   render() {
     const { title, selectCb } = this.props;
-    let children = this.props.children instanceof Array ? this.props.children : [this.props.children];
+    let children =
+      this.props.children instanceof Array
+        ? this.props.children
+        : [this.props.children];
     const listViewHeight =
       children.length * 6 + 1 + (window.isFullScreen ? 0 : 2);
     const divLength = listViewHeight + 6;
@@ -35,7 +38,15 @@ class DropDownMenu extends Component {
           cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}
           cursor={this.state.cursor}
           height={listViewHeight.toString() + "rem"}
-          captureKeys={["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "SoftLeft", "SoftRight", "Call"]}
+          captureKeys={[
+            "ArrowUp",
+            "ArrowDown",
+            "ArrowLeft",
+            "ArrowRight",
+            "SoftLeft",
+            "SoftRight",
+            "Call",
+          ]}
         >
           {children.map((item, index) => {
             item.props.isFocused = index === this.state.cursor;

@@ -5,16 +5,16 @@ jobs:
     runs-on: ubuntu-latest
     name: Send message via Matrix
     steps:
-    - name: Send message to test channel
-      id: matrix-chat-message
-      uses: fadenb/matrix-chat-message@v0.0.6
-      with:
-        homeserver: 'mozilla.modular.im'
-        token: ${{ secrets.ACCESS_TOKEN }}
-        channel: '!OQyTyXWouXhUmgvaQW:mozilla.org'
-        message: |
-          Thee in luck! New push to Chooj repository which means new development build available!
+      - name: Send message to test channel
+        id: matrix-chat-message
+        uses: fadenb/matrix-chat-message@v0.0.6
+        with:
+          homeserver: "mozilla.modular.im"
+          token: ${{ secrets.ACCESS_TOKEN }}
+          channel: "!OQyTyXWouXhUmgvaQW:mozilla.org"
+          message: |
+            Thee in luck! New push to Chooj repository which means new development build available!
 
-          Download from  https://farooqkz.de1.hashbang.sh/matrix-client-builds/${{ github.sha }}.zip to sideload OR
+            Download from  https://farooqkz.de1.hashbang.sh/matrix-client-builds/${{ github.sha }}.zip to sideload OR
 
-          Download from https://farooqkz.de1.hashbang.sh/matrix-client-builds/${{ github.sha }}-omnisd.zip to install with OmniSD.
+            Download from https://farooqkz.de1.hashbang.sh/matrix-client-builds/${{ github.sha }}-omnisd.zip to install with OmniSD.

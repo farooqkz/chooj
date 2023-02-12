@@ -1,8 +1,9 @@
 import { Component } from "inferno";
+import { extensionOf } from "xmimetype";
 import Header from "../ui/Header";
 import SoftKey from "../ui/SoftKey";
 import { IRCLikeMessageItem } from "../MessageItems";
-import { isDM, isRoom, updateState } from "../utils";
+import { isDM, isRoom, updateState, mxcMediaToHttp } from "../utils";
 import ChatTextInput from "../ChatTextInput";
 import VoiceInput from "../VoiceInput";
 import ScrollIntoView from "./ScrollIntoView";
@@ -66,16 +67,16 @@ class RoomView extends Component {
     const { closeRoomView } = this.props;
     if (cursor <= 5) {
       let prev = this.timeline.getEvents().lastIndex;
-        window.mClient
-          .paginateEventTimeline(this.timeline, { backwards: true, limit: 25 })
-          .then((notReachedEnd) => {
-            if (notReachedEnd) {
-              const current = this.timeline.getEvents().lastIndex;
-              this.setState({
-                cursor: current - prev,
-              });
-            }
-          });
+      window.mClient
+        .paginateEventTimeline(this.timeline, { backwards: true, limit: 25 })
+        .then((notReachedEnd) => {
+          if (notReachedEnd) {
+            const current = this.timeline.getEvents().lastIndex;
+            this.setState({
+              cursor: current - prev,
+            });
+          }
+        });
     }
     const lastEventIndex = this.room.getLiveTimeline().getEvents().lastIndex;
     if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
@@ -169,9 +170,38 @@ class RoomView extends Component {
         window.mClient.sendTextMessage(roomId, message);
         this.setState({ message: "" });
         break;
-      case "View":
-        alert("Not implemented yet");
-        //TODO: show enlarged image
+      case "Download":
+        let mxcUrl = this.currentEvent.getContent().url;
+        if (!mxcUrl) {
+          window.alert("Some error occured");
+          console.log("REPORT", this.currentEvent);
+          break;
+        }
+        fetch(mxcMediaToHttp(window.mClient.getHomeserverUrl(), mxcUrl)).then(
+          (r) => {
+            if (r.ok) {
+              r.blob().then((b) => {
+                let picStorage = navigator.getDeviceStorage("pictures");
+                let req = picStorage.addNamed(
+                  b,
+                  this.currentEvent.getContent().body ||
+                    "image." + extensionOf(b.type)
+                );
+                req.onsuccess = () => {
+                  window.alert("Successfully saved the image to gallery");
+                };
+                req.onerror = () => {
+                  window.alert(
+                    "Cannot save the file to gallery. Perhaps there is no space left?"
+                  );
+                  console.log("REPORT", req.error, b);
+                };
+              });
+            } else {
+              window.alert("Some error occured during fetching the image");
+            }
+          }
+        );
         break;
       case "Voice":
         this.setState({
@@ -208,7 +238,7 @@ class RoomView extends Component {
     } else if (currentEvt && currentEvt.getType() === "m.room.message") {
       let msgtype = currentEvt.getContent().msgtype;
       if (msgtype === "m.audio") return "Listen";
-      else if (msgtype === "m.image") return "View";
+      else if (msgtype === "m.image") return "Download";
       else return "";
     }
   };
