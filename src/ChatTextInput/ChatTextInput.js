@@ -12,7 +12,7 @@ function ChatTextInput({ isFocused, message, onChangeCb }) {
         onPaste={onChange}
         onInput={onChange}
         value={message || ""}
-        placeholder="Say Salam!"
+        placeholder="Say Hello!"
         style={`color: ${isFocused ? "var(--text-color)" : ""}`}
         ref={(input) => {
           if (!input) return;
