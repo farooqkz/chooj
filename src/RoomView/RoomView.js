@@ -64,6 +64,19 @@ class RoomView extends Component {
     }
     const { cursor, textInputFocus, message, waiting } = this.state;
     const { closeRoomView } = this.props;
+    if (cursor <= 5) {
+      let prev = this.timeline.getEvents().lastIndex;
+        window.mClient
+          .paginateEventTimeline(this.timeline, { backwards: true, limit: 25 })
+          .then((notReachedEnd) => {
+            if (notReachedEnd) {
+              const current = this.timeline.getEvents().lastIndex;
+              this.setState({
+                cursor: current - prev,
+              });
+            }
+          });
+    }
     const lastEventIndex = this.room.getLiveTimeline().getEvents().lastIndex;
     if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
       if (textInputFocus && message) return;
@@ -81,20 +94,6 @@ class RoomView extends Component {
       }
       if (textInputFocus) {
         this.setState({ textInputFocus: false, cursor: lastEventIndex });
-      } else if (cursor === 0) {
-        let prev = this.timeline.getEvents().lastIndex;
-        this.setState({ waiting: true });
-        window.mClient
-          .paginateEventTimeline(this.timeline, { backwards: true, limit: 10 })
-          .then((notReachedEnd) => {
-            if (notReachedEnd) {
-              const current = this.timeline.getEvents().lastIndex;
-              this.setState({
-                cursor: current - prev,
-                waiting: false,
-              });
-            }
-          });
       } else {
         this.setState({ cursor: cursor - 1 });
       }
