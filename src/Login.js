@@ -36,7 +36,6 @@ class Login extends Component {
     }
     if (evt.key === "c" || evt.key === "Call") {
       if (this.state.stage !== 0) return;
-      if (this.state.cursor !== 3) return;
       this.setState({ loginWithQR: true });
     }
   };

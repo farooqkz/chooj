@@ -28,7 +28,7 @@ class LoginWithQR extends Component {
     data = decoded.split(" ", 4);
     const flow = data[0];
     const server_name = data[1];
-    const username = data[3];
+    const username = data[2];
     let password = null;
     if (
       window.confirm(
@@ -36,13 +36,13 @@ class LoginWithQR extends Component {
       )
     ) {
       const start = flow.length + server_name.length + username.length + 3;
-      password = decoded.substring(start + 1);
+      password = decoded.substring(start);
       fetch(`https://${server_name}/.well-known/matrix/server`).then((r) => {
         if (r.ok) {
           r.json().then((j) => {
             const server_url = j["m.server"];
             window.mClient = matrixcs.createClient({
-              baseUrl: server_url,
+              baseUrl: `https://${server_url}`,
             });
             window.mClient.loginFlows().then((result) => {
               let gotPasswordLogin = false;
@@ -88,7 +88,13 @@ class LoginWithQR extends Component {
                   "This homeserver does not support authentication with password"
                 );
               }
+            }).catch((e) => {
+              window.alert("Error getting login flows from the server");
+              console.log(e);
             });
+          }).catch((e) => {
+            window.alert("Error getting information about the server");
+            console.log("REPORT", e);
           });
         } else {
           alert(

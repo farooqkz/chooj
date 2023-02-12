@@ -1,5 +1,6 @@
 import { Component, createPortal } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
+import { removeItem } from "localforage";
 
 import TabView from "./TabView";
 import SoftKey from "./ui/SoftKey";
@@ -84,7 +85,7 @@ class Matrix extends Component {
       case "Invites":
         return "";
       case "Settings":
-        return "";
+        return "Log out";
       default:
         return "";
     }
@@ -126,6 +127,16 @@ class Matrix extends Component {
     if (this.softRightText() === "Options") {
       this.setState({ optionsMenu: true });
       document.addEventListener("keydown", this.onKeyDown);
+    }
+    if (this.softRightText() === "Log out") {
+      window.mClient.logout(true).then(() => {
+        removeItem("login").then(() => {
+          window.alert("Logged out");
+          window.location = window.location; // eslint-disable-line no-self-assign
+        }).catch((e) => {
+          console.log("REPORT", e);
+        });
+      });
     }
   };
 
