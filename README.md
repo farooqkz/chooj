@@ -114,6 +114,8 @@ bitcoincash:qpxy55al8k3mux7j58taxt88jukmqur5ruv6tz7mkc
 ```
 
 If you want me to mention your name in the list, please send me the source address before sending donation:
+Alternatively, you can buy Bitcoin Cash from [stealthex.io](https://stealthex.io/?amount=30.4&from=usd&to=bch) and enter 
+my address as recipient address.
 
 ```
 fkz atsine riseup dot net
