@@ -32,7 +32,7 @@ This is a free(open source) software Matrix client for KaiOS which is going to s
 
  - Create an issue and report a bug
  - Open a Pull Request and implement some wanted feature or fix some bug
- - Donate to me with cryptocurrency or hardware(Contact me for any of those)
+ - Donate to me (see below)
  - Tell others about chooj
  - Idle in chooj's Matrix room and help others when necessary
  - Solve one of the [issues](https://github.com/farooqkz/chooj/issues).
@@ -107,6 +107,8 @@ Donations are very welcome in the form of cryptocurrency(Bitcoin Cash is preferr
 
 Because depth of pockets of different people varies, I haven't specified how much each donated.
 
+#### Donating money
+
 You can make donations anonymously by sending an amount to my Bitcoin Cash address:
 
 ```
@@ -114,14 +116,28 @@ bitcoincash:qpxy55al8k3mux7j58taxt88jukmqur5ruv6tz7mkc
 ```
 
 If you want me to mention your name in the list, please send me the source address before sending donation:
-Alternatively, you can buy Bitcoin Cash from [stealthex.io](https://stealthex.io/?amount=30.4&from=usd&to=bch) and enter 
-my address as recipient address.
 
 ```
 fkz atsine riseup dot net
 ```
 
-Alternatively, you can send me private key of a Bitcoin Cash wallet.
+You can also send me private key of a Bitcoin Cash wallet.
+
+In the case you don't have crypto already, you can buy Bitcoin Cash from [stealthex.io](https://stealthex.io/?amount=30.4&from=usd&to=bch) and enter 
+my address as recipient address.
+
+
+#### Donating hardware
+
+You can also donate KaiOS phones or other hardwares. KaiOS phones with one of more of these properties which are debug enabled will help with the development of project:
+
+ - KaiOS 3.x
+ - 256MB of RAM
+ - A processor weaker than SD205 which is used in my Nokia phone
+ - Selfie/front camera
+ - Volume buttons
+
+You can also donate me some other hardware which could be useful for my personal life. But in either case, especially donating KaiOS phone, contact me beforehand.
 
 ### License
 
