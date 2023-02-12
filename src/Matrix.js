@@ -1,6 +1,6 @@
 import { Component, createPortal } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
-import { removeItem } from "localforage";
+import * as localforage from "localforage";
 
 import TabView from "./TabView";
 import SoftKey from "./ui/SoftKey";
@@ -130,7 +130,7 @@ class Matrix extends Component {
     }
     if (this.softRightText() === "Log out") {
       window.mClient.logout(true).then(() => {
-        removeItem("login").then(() => {
+        localforage.removeItem("login", null).then(() => {
           window.alert("Logged out");
           window.location = window.location; // eslint-disable-line no-self-assign
         }).catch((e) => {
