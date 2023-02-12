@@ -326,6 +326,7 @@ class RoomView extends Component {
       typing,
       waiting,
     } = this.state;
+    console.log(this.room);
     return (
       <>
         <Header text={typing ? "Typing..." : this.room.name} />
@@ -367,7 +368,7 @@ class RoomView extends Component {
               );
             })}
           </div>
-          {isRecording ? (
+          {this.room.maySendMessage() ? (isRecording ? (
             <VoiceInput seconds={recordingSeconds} title={message} />
           ) : (
             <ChatTextInput
@@ -375,7 +376,7 @@ class RoomView extends Component {
               onChangeCb={this.messageChangeCb}
               isFocused={textInputFocus}
             />
-          )}
+          )) : (<CannotSendMessage />)}
         </div>
         <footer>
           <SoftKey
