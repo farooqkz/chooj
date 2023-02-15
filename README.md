@@ -109,6 +109,10 @@ Because depth of pockets of different people varies, I haven't specified how muc
 
 #### Donating money
 
+You can donate a monthly amount through [chooj's bountysource page](https://salt.bountysource.com/teams/chooj).
+
+#### Donating cryptocurrency
+
 You can make donations anonymously by sending an amount to my Bitcoin Cash address:
 
 ```
