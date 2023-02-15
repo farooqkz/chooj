@@ -2,22 +2,13 @@ import { Component } from "inferno";
 import { extensionOf } from "xmimetype";
 import Header from "../ui/Header";
 import SoftKey from "../ui/SoftKey";
-import { IRCLikeMessageItem } from "../MessageItems";
 import { isDM, isRoom, updateState, mxcMediaToHttp } from "../utils";
 import ChatTextInput from "../ChatTextInput";
 import VoiceInput from "../VoiceInput";
 import ScrollIntoView from "./ScrollIntoView";
-import "./UnsupportedEventItem.css";
 import "./RoomView.css";
 import WaitingCurve from "./waiting_curve.svg";
-
-function IRCLikeUnsupportedEventItem({ isFocused, senderId }) {
-  return (
-    <div className={"unsupportedevent" + (isFocused ? "--focused" : "")}>
-      <p $HasTextChildren>Unsupported Event from {senderId}</p>
-    </div>
-  );
-}
+import RoomEvent from "./RoomEvent";
 
 function CannotSendMessage() {
   // eslint-disable-line no-unused-vars
@@ -315,8 +306,6 @@ class RoomView extends Component {
   }
 
   render() {
-    const MessageItem = IRCLikeMessageItem;
-    const UnsupportedEventItem = IRCLikeUnsupportedEventItem;
     const {
       isRecording,
       recordingSeconds,
@@ -341,24 +330,15 @@ class RoomView extends Component {
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
           >
             {waiting ? <Waiting /> : null}
-            {this.timeline.getEvents().map((evt, index) => {
-              let item = null;
-              const senderId = evt.getSender();
-              if (evt.getType() === "m.room.message") {
-                item = (
-                  <MessageItem
-                    date={evt.getDate()}
-                    sender={{ userId: senderId }}
-                    content={evt.getContent()}
-                  />
-                );
-              } else {
-                item = <UnsupportedEventItem senderId={senderId} />;
+            {this.timeline.getEvents().filter((evt) => evt.getType()).map((evt, index) => {
+              let item = <RoomEvent evt={evt} isFocused={index === cursor && !textInputFocus} />;
+
+              if (item.props.isFocused) {
+                this.currentEvent = evt;
               }
 
-              if (index === cursor && !textInputFocus) {
-                item.props.isFocused = true;
-                this.currentEvent = evt;
+              if (!item) {
+                console.log("REPORT", item);
               }
 
               return (

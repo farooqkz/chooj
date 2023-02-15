@@ -189,6 +189,27 @@ function toast(message, timeout) {
   }, timeout);
 }
 
+function readableTimestamp(ts, includeSeconds) {
+  let date = new Date(ts);
+  let h = date.getHours().toString();
+  let m = date.getMinutes().toString();
+  if (h.length === 1) {
+    h = "0" + h;
+  }
+  if (m.length === 1) {
+    m = "0" + m;
+  }
+  let d = `${h}:${m}`;
+  if (includeSeconds) {
+    let s = date.getSeconds().toString();
+    if (s.length === 1) {
+      s = "0" + s;
+    }
+    d += ":" + s;
+  }
+  return "[" + d + "] ";
+}
+
 export {
   updateState,
   newRoomInState,
@@ -202,4 +223,5 @@ export {
   msToHigherScale,
   mxcMediaToHttp,
   toast,
+  readableTimestamp
 };

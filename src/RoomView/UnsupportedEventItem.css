@@ -1,11 +1,11 @@
-.unsupportedevent {
+.event {
   padding-top: 2px;
   padding-bottom: 2px;
   height: auto;
   width: 100%;
 }
 
-.unsupportedevent--focused {
+.event--focused {
   padding-top: 2px;
   padding-bottom: 2px;
   height: auto;
@@ -14,10 +14,10 @@
   color: white;
 }
 
-.unsupportedevent > p {
+.event > p {
   font-size: 12px !important;
 }
 
-.unsupportedevent--focused > p {
+.event--focused > p {
   font-size: 12px !important;
 }
