@@ -4,8 +4,8 @@
   "description": "Matrix client for KaiOS",
   "private": true,
   "scripts": {
-    "build": "parcel build --dist-dir build --no-source-maps --detailed-report 12",
-    "devbuild": "parcel build --no-optimize --dist-dir build",
+    "build": "rm -rf build && parcel build --dist-dir build --no-source-maps --detailed-report 12",
+    "devbuild": "rm -rf build && parcel build --no-optimize --dist-dir build",
     "clean": "yarn run clean:parcel",
     "serve": "yarn run devbuild && serve ./build",
     "clean:parcel": "rm -rf .parcel-cache build",
