@@ -1,6 +1,5 @@
 import { getHttpUriForMxc } from "matrix-js-sdk";
 import { render } from "inferno";
-import hashIcon from "./hash_icon.png";
 
 const defaultAvatarSize = 36;
 
