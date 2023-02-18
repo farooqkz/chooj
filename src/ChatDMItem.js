@@ -34,9 +34,10 @@ export default class ChatDMItem extends Component {
   }
 
   render() {
-    const { lastEvent, presence, displayName, avatarUrl } = this.state;
+    const { presence, displayName, avatarUrl } = this.state;
     const isFocused = this.props.isFocused;
     let avatar = getAvatarOrDefault(avatarUrl, personIcon);
+    let lastEvent = this.state.lastEvent;
     if (lastEvent.length >= 33) lastEvent = lastEvent.slice(0, 33) + "...";
 
     return (
