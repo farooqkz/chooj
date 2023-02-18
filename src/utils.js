@@ -188,7 +188,6 @@ function getRoomLastEvent(room) {
 
 export {
   updateState,
-  newRoomInState,
   isRoom,
   isDM,
   getAvatarOrDefault,
