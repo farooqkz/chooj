@@ -39,7 +39,6 @@ function IRCLikeMessageItemImage({
   text,
   width,
   height,
-  size,
   url,
   isFocused,
 }) {

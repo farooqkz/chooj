@@ -1,7 +1,6 @@
 import { getHttpUriForMxc } from "matrix-js-sdk";
 import { render } from "inferno";
 import hashIcon from "./hash_icon.png";
-import personIcon from "./person_icon.png";
 
 const defaultAvatarSize = 36;
 
@@ -18,21 +17,17 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
-function updateState(room, state, dm) {
+function updateState(room, state) {
   let isAlreadyOurRoom = false;
   // ^ is <room> a room we already have in this.state.rooms?
   state.rooms = state.rooms.map((ourRoom) => {
     if (room.roomId === ourRoom.roomId) {
       isAlreadyOurRoom = true;
-      let events = room.getLiveTimeline().getEvents();
-      let lastEvent = makeEvent(events[events.length - 1], dm);
-      ourRoom.lastEventTime = lastEvent.time;
-      ourRoom.lastEvent = lastEvent.event_;
     }
     return ourRoom;
   });
   if (!isAlreadyOurRoom) {
-    state.rooms.push(newRoomInState(room, dm));
+    state.rooms.push(room);
   }
   return state;
 }
@@ -126,7 +121,12 @@ function eventSender(sender, myself, dm) {
   }
 }
 
-function makeHumanReadableEvent(type, content, sender, myself, dm) {
+function makeHumanReadableEvent(evt, dm) {
+  const type = evt.getType();
+  const content = evt.getContent();
+  const sender = evt.getSender();
+  const myself = evt.getSender() === window.mClient.getUserId();
+
   switch (type) {
     case "m.call.hangup":
       return eventSender(sender, myself, dm) + " hanged the call up";
@@ -210,6 +210,11 @@ function readableTimestamp(ts, includeSeconds) {
   return "[" + d + "] ";
 }
 
+function getRoomLastEvent(room) {
+  let events = room.getLiveTimeline().getEvents();
+  return events[events.length - 1] || null;
+}
+
 export {
   updateState,
   newRoomInState,
@@ -223,5 +228,6 @@ export {
   msToHigherScale,
   mxcMediaToHttp,
   toast,
-  readableTimestamp
+  readableTimestamp,
+  getRoomLastEvent
 };

@@ -3,7 +3,7 @@ import { Component } from "inferno";
 import ListView from "./ListView";
 import ChatRoomItem from "./ChatRoomItem";
 import TextListItem from "./ui/TextListItem";
-import { newRoomInState, updateState, isRoom, isDM } from "./utils";
+import { getRoomLastEvent, updateState, isRoom, isDM } from "./utils";
 
 class RoomsView extends Component {
   cursorChangeCb = (cursor) => {
@@ -41,8 +41,7 @@ class RoomsView extends Component {
     }
     this.state.rooms = client
       .getVisibleRooms()
-      .filter(isRoom)
-      .map((room) => newRoomInState(room, false));
+      .filter(isRoom);
   }
 
   componentWillMount() {
@@ -59,15 +58,13 @@ class RoomsView extends Component {
   render() {
     const { cursor, rooms } = this.state;
     const sortedRooms = rooms.sort(
-      (first, second) => first.lastEventTime < second.lastEventTime
+      (first, second) => getRoomLastEvent(first).getTs() < getRoomLastEvent(second).getTs()
     );
     let renderedRooms = sortedRooms.map((room, index) => {
       return (
         <ChatRoomItem
           roomId={room.roomId}
-          displayName={room.displayName}
-          avatar={room.avatarUrl}
-          lastEvent={room.lastEvent}
+          key={room.roomId}
           isFocused={index === cursor}
         />
       );

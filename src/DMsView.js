@@ -4,7 +4,7 @@ import ListView from "./ListView";
 import ChatDMItem from "./ChatDMItem";
 import TextListItem from "./ui/TextListItem";
 import DropDownMenu from "./DropDownMenu";
-import { updateState, newRoomInState, isDM, isRoom } from "./utils";
+import { updateState, getRoomLastEvent, isDM, isRoom } from "./utils";
 
 function CallSelectionMenu({ selectCb }) {
   return (
@@ -68,13 +68,13 @@ class DMsView extends Component {
     if (!isDM(room)) {
       if (isRoom(room)) {
         // update RoomsView saved state
-        let state = window.stateStores.get("DMsView");
+        let state = window.stateStores.get("RoomsView");
         state = updateState(room, state, false);
-        window.stateStores.set("DMsView", state);
+        window.stateStores.set("RoomsView", state);
       }
       return;
     }
-    this.setState((state) => updateState(room, state, true));
+    this.setState((state) => updateState(room, state));
   };
 
   constructor(props) {
@@ -90,8 +90,7 @@ class DMsView extends Component {
     }
     this.state.rooms = client
       .getVisibleRooms()
-      .filter(isDM)
-      .map((room) => newRoomInState(room, true));
+      .filter(isDM);
   }
 
   componentWillMount() {
@@ -108,22 +107,20 @@ class DMsView extends Component {
   render() {
     const { cursor, rooms, showCallSelection } = this.state;
     const sortedRooms = rooms.sort(
-      (first, second) => first.lastEventTime < second.lastEventTime
+      (first, second) => getRoomLastEvent(first).getTs() < getRoomLastEvent(second).getTs() 
     );
     let renderedRooms = sortedRooms.map((room, index) => {
       return (
         <ChatDMItem
-          displayName={room.displayName}
-          avatar={room.avatarUrl}
-          lastEvent={room.lastEvent}
-          online={room.online}
+          room={room}
           isFocused={index === cursor}
+          key={room.roomId}
         />
       );
     });
 
     if (renderedRooms.length === 0) {
-      renderedRooms.push(<TextListItem primary="No DM :(" isFocused />);
+      renderedRooms.push(<TextListItem primary="No DM :(" isFocused key={0} />);
     }
     if (showCallSelection)
       return (
