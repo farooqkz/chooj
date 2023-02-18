@@ -52,35 +52,6 @@ function makeEvent(evt, dm) {
   };
 }
 
-function newRoomInState(room, dm) {
-  const client = window.mClient;
-  let events = room.getLiveTimeline().getEvents();
-  let lastEvent = makeEvent(events[events.length - 1], dm);
-  let result = {
-    roomId: room.roomId,
-    lastEvent: lastEvent.event_,
-    lastEventTime: lastEvent.time,
-  };
-  if (dm) {
-    let theOtherId = room.guessDMUserId();
-    let userObj = client.getUser(theOtherId);
-    result.avatarUrl = getAvatarOrDefault(userObj.avatarUrl, personIcon);
-    result.userId = theOtherId;
-    result.displayName = room.getDefaultRoomName(client.getUserId());
-    result.online = userObj.presence;
-  } else {
-    result.avatarUrl =
-      room.getAvatarUrl(
-        client.baseUrl,
-        defaultAvatarSize,
-        defaultAvatarSize,
-        "scale"
-      ) || hashIcon;
-    result.displayName = room.name;
-  }
-  return result;
-}
-
 function isDM(room) {
   return room.getJoinedMemberCount() === 2 && room.getMyMembership() === "join";
 }
