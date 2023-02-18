@@ -15,6 +15,7 @@ function IRCLikeUnsupportedEventItem({ isFocused, senderId }) {
 function MembershipEvent({ evt, isFocused }) {
   let content = evt.getContent();
   const senderId = evt.getSender();
+  const ts = evt.getTs();
 
   switch (content.membership.toLower()) {
     case "join":
