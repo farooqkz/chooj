@@ -52,7 +52,7 @@ export default function RoomEvent({ evt, isFocused }) {
           isFocused={isFocused}
         />
       );
-    /*
+      /*
     case "m.room.member":
       return (
         <MembershipEvent

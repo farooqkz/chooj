@@ -9,6 +9,7 @@ import ScrollIntoView from "./ScrollIntoView";
 import "./RoomView.css";
 import WaitingCurve from "./waiting_curve.svg";
 import RoomEvent from "./RoomEvent";
+import ImageViewer  from "../ImageViewer";
 
 function CannotSendMessage() {
   // eslint-disable-line no-unused-vars
@@ -48,7 +49,7 @@ class RoomView extends Component {
   };
 
   handleKeyDown = (evt) => {
-    const VALID_KEYS = ["b", "Backspace", "ArrowDown", "ArrowUp"];
+    const VALID_KEYS = ["b", "Backspace", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
     // Backspace is used on an actual device
     // b is used for testing in desktop browser
     if (!VALID_KEYS.includes(evt.key)) {
@@ -68,6 +69,17 @@ class RoomView extends Component {
             });
           }
         });
+    }
+
+    if (this.state.imageViewer) {
+      console.log("REPORT", this.imageViewer);
+      if (evt.key.startsWith("Arrow")) {
+        let key = evt.key.replace("Arrow", "").toLower();
+        this.imageViewer.move(key);
+      } else if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
+        this.setState({ imageViewer: false });
+      }
+      return;
     }
     const lastEventIndex = this.room.getLiveTimeline().getEvents().lastIndex;
     if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
@@ -117,11 +129,22 @@ class RoomView extends Component {
     }
   };
 
+  getRightText = () => {
+    if (this.state.imageViewer) {
+      return "-";
+    }
+    return "";
+  };
+
   getLeftText = () => {
     if (this.state.textInputFocus) return "+";
     const currentEvt = this.currentEvent;
     let msgtype = currentEvt.getContent().msgtype;
     if (msgtype === "m.audio") return "Vol.";
+    if (msgtype === "m.image") return "View";
+    if (this.state.imageViewer) {
+      return "+";
+    }
     return "";
   };
 
@@ -131,6 +154,18 @@ class RoomView extends Component {
     }
     if (this.getLeftText() === "Vol.") {
       navigator.volumeManager.requestShow();
+    }
+    if (this.getLeftText() === "View") {
+      this.setState({ imageViewer: true }); 
+    }
+    if (this.imageViewer && this.getLeftText() === "+") {
+      this.imageViewer.zoomIn();
+    }
+  };
+
+  rightCb = () => {
+    if (this.imageViewer && this.getLeftText() === "-") {
+      this.imageViewer.zoomOut();
     }
   };
 
@@ -247,6 +282,7 @@ class RoomView extends Component {
     this.timeline = this.room.getLiveTimeline();
     this.recorder = null;
     this.recording = [];
+    this.imageViewer = null;
     this.recordingInterval = 0;
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       this.recorder = new MediaRecorder(stream);
@@ -290,6 +326,7 @@ class RoomView extends Component {
       isRecording: false,
       recordingSeconds: 0,
       waiting: false,
+      imageViewer: false,
     };
   }
 
@@ -314,10 +351,12 @@ class RoomView extends Component {
       textInputFocus,
       typing,
       waiting,
+      imageViewer,
     } = this.state;
-    console.log(this.room);
     return (
       <>
+        { imageViewer && this.currentEvent.getContent().msgtype === "m.image" ?
+          <ImageViewer ref={(ref) => { this.imageViewer = ref; }} url={window.mClient.mxcUrlToHttp(this.currentEvent.getContent().url)} height={this.currentEvent.getContent().info.h} width={this.currentEvent.getContent().info.w} /> : null }
         <Header text={typing ? "Typing..." : this.room.name} />
         <div
           className="eventsandtextinput"
@@ -364,6 +403,8 @@ class RoomView extends Component {
             centerCb={this.centerCb}
             leftText={this.getLeftText()}
             leftCb={this.leftCb}
+            rightCb={this.rightCb}
+            rightText={this.getRightText()}
           />
         </footer>
       </>
