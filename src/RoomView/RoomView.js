@@ -72,11 +72,11 @@ class RoomView extends Component {
     }
 
     if (this.state.imageViewer) {
-      console.log("REPORT", this.imageViewer);
       if (evt.key.startsWith("Arrow")) {
-        let key = evt.key.replace("Arrow", "").toLower();
+        let key = evt.key.replace("Arrow", "").toLowerCase();
         this.imageViewer.move(key);
-      } else if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
+      } else if (VALID_KEYS.slice(0, 2).includes(evt.key)) { // if it is backspace
+        evt.preventDefault();
         this.setState({ imageViewer: false });
       }
       return;
@@ -137,20 +137,24 @@ class RoomView extends Component {
   };
 
   getLeftText = () => {
+    if (this.state.imageViewer) {
+      return "+";
+    }
     if (this.state.textInputFocus) return "+";
     const currentEvt = this.currentEvent;
     let msgtype = currentEvt.getContent().msgtype;
     if (msgtype === "m.audio") return "Vol.";
     if (msgtype === "m.image") return "View";
-    if (this.state.imageViewer) {
-      return "+";
-    }
     return "";
   };
 
   leftCb = () => {
     if (this.getLeftText() === "+") {
-      alert("Not implemented yet");
+      if (this.state.imageViewer) {
+        this.imageViewer && this.imageViewer.zoomIn();
+      } else {
+        alert("Not implemented yet");
+      }
     }
     if (this.getLeftText() === "Vol.") {
       navigator.volumeManager.requestShow();
@@ -158,13 +162,10 @@ class RoomView extends Component {
     if (this.getLeftText() === "View") {
       this.setState({ imageViewer: true }); 
     }
-    if (this.imageViewer && this.getLeftText() === "+") {
-      this.imageViewer.zoomIn();
-    }
   };
 
   rightCb = () => {
-    if (this.imageViewer && this.getLeftText() === "-") {
+    if (this.state.imageViewer && this.imageViewer && this.getRightText() === "-") {
       this.imageViewer.zoomOut();
     }
   };
@@ -172,6 +173,9 @@ class RoomView extends Component {
   centerCb = () => {
     const { message, isRecording } = this.state;
     const { roomId } = this.props;
+    if (this.getCenterText() === "Reset") {
+      this.imageViewer && this.imageViewer.resetZoom();
+    }
     switch (this.getCenterText()) {
       case "Select":
         // TODO: start call or something
@@ -248,7 +252,10 @@ class RoomView extends Component {
   };
 
   getCenterText = () => {
-    const { isRecording, showMenu, textInputFocus, message } = this.state;
+    const { isRecording, showMenu, textInputFocus, message, imageViewer } = this.state;
+    if (imageViewer) {
+      return "Reset";
+    }
     const currentEvt = this.currentEvent;
     if (isRecording) {
       return "Send";
