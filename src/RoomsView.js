@@ -71,10 +71,10 @@ class RoomsView extends Component {
     });
 
     if (renderedRooms.length === 0) {
-      renderedRooms.push(<TextListItem primary="No Rooms :(" isFocused />);
+      renderedRooms.push(<TextListItem primary="No Rooms :(" isFocused key={0} />);
     }
     return (
-      <ListView cursor={this.state.cursor} cursorChangeCb={this.cursorChangeCb}>
+      <ListView cursor={this.state.cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
         {renderedRooms}
       </ListView>
     );

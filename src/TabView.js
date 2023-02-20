@@ -19,7 +19,7 @@ class TabView extends Component {
     const { defaultActiveTab, focusColor } = props;
     this.focusColor = focusColor || morecolors.defaultFocusColor;
     this.tabs = this.props.tabLabels.map((label) => (
-      <Tab label={label} focusColor={this.props.focusColor} />
+      <Tab label={label} focusColor={this.props.focusColor} key={label} />
     ));
     //this.state = window.stateStores.get("TabView") || { activeTab: 0 };
     this.state = {
@@ -39,7 +39,7 @@ class TabView extends Component {
           <Tabs
             defaultActiveChild={this.state.activeTab}
             onChangeIndex={this.handleChangeIndex}
-            $HasNonKeyedChildren
+            $HasKeyedChildren
           >
             {this.tabs}
           </Tabs>

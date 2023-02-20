@@ -125,7 +125,7 @@ class DMsView extends Component {
     if (showCallSelection)
       return (
         <>
-          <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb}>
+          <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
             {renderedRooms}
           </ListView>
           {createPortal(
@@ -135,7 +135,7 @@ class DMsView extends Component {
         </>
       );
     return (
-      <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb}>
+      <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
         {renderedRooms}
       </ListView>
     );
