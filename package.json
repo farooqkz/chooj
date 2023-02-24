@@ -4,7 +4,7 @@
   "description": "Matrix client for KaiOS",
   "private": true,
   "scripts": {
-    "build": "rm -rf build && parcel build --dist-dir build --no-source-maps --detailed-report 12",
+    "build": "rm -rf build && parcel build --dist-dir build --no-source-maps --detailed-report 12 && yarn node justkai.js",
     "devbuild": "rm -rf build && parcel build --no-optimize --dist-dir build",
     "clean": "yarn run clean:parcel",
     "serve": "yarn run devbuild && serve ./build",
@@ -40,6 +40,7 @@
     "eslint-plugin-import": "2.x",
     "eslint-plugin-inferno": "^7",
     "eslint-plugin-jsx-a11y": "6.x",
+    "htmlparser2": "^8.0.1",
     "parcel": "^2.8.2",
     "postcss": "^8.2.1",
     "postcss-modules": "^4.3.0",
