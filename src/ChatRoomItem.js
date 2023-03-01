@@ -1,11 +1,22 @@
 import { Component } from "inferno";
 
-import IconListItem from "./ui/IconListItem";
+import { IconListItem, Avatar } from "KaiUI";
 import { makeHumanReadableEvent, getRoomLastEvent } from "./utils";
-import Avatar from "./Avatar";
 import roomIcon from "./hash_icon.png";
 
 export default class ChatRoomItem extends Component {
+  onRoomNameUpdate = (a, b, c) => {
+    console.log("RAPORT", a, b, c);
+  };
+  
+  onTimelineUpdate = (a, b, c) => {
+    console.log("ARAPORT", a, b, c);
+  };
+  
+  onAvatarChange = (a, b, c) => {
+    console.log("BRAPORT", a, b, c);
+  };
+
   constructor(props) {
     super(props);
     let room = window.mClient.getRoom(props.roomId);
@@ -16,12 +27,24 @@ export default class ChatRoomItem extends Component {
     };
   }
 
+  componentDidMount() {
+    let room = window.mClient.getRoom(this.props.roomId);
+    room.on("Room.name", this.onRoomNameUpdate);
+    room.on("Room.timeline", this.onTimelineUpdate);
+  }
+  
+  componentWillUnmount() {
+    let room = window.mClient.getRoom(this.props.roomId);
+    room.off("Room.name", this.onRoomNameUpdate);
+    room.off("Room.timeline", this.onTimelineUpdate);
+  }
+
   render() {
     const { avatarUrl, displayName } = this.state;
     const isFocused = this.props.isFocused;
 
     let lastEvent = this.state.lastEvent;
-    lastEvent = lastEvent.length >= 33 ? lastEvent.slice(0, 33) + "..." : lastEvent;
+    lastEvent = lastEvent.length >= 25 ? lastEvent.slice(0, 25) + "..." : lastEvent;
 
     return (
       <IconListItem
