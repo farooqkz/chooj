@@ -1,4 +1,5 @@
 import { createTextVNode } from "inferno";
+import { MatrixEvent } from "matrix-js-sdk";
 
 import { IRCLikeMessageItem } from "../MessageItems";
 import { readableTimestamp } from "../utils";
@@ -12,17 +13,20 @@ function IRCLikeUnsupportedEventItem({ isFocused, senderId }) {
   );
 }
 
+/**
+ * @param {{evt: MatrixEvent, isFocused: boolean}} params 
+ */
 function MembershipEvent({ evt, isFocused }) {
   let content = evt.getContent();
-  const senderId = evt.getSender();
+  // const senderId = evt.getSender();
   const ts = evt.getTs();
 
-  switch (content.membership.toLower()) {
+  switch (content.membership.toLowerCase()) {
     case "join":
       return (
         <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
           <p $HasTextChildren>
-            {createTextVNode(readableTimestamp(ts) + content.displayName + " joined.")}
+            {readableTimestamp(ts) + content.displayname + " joined."}
           </p>
         </div>
       );
@@ -30,7 +34,7 @@ function MembershipEvent({ evt, isFocused }) {
       if (isFocused) console.log("REPORT", evt);
       return (
         <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
-          <p $HasTextChildren>{createTextVNode(`Unknown membership event from ${content.displayName}`)}</p>
+          <p $HasTextChildren>{`Unknown membership event from ${content.displayname}`}</p>
         </div>
       );
   }
@@ -53,7 +57,7 @@ export default function RoomEvent({ evt, isFocused }) {
           isFocused={isFocused}
         />
       );
-      /*
+    
     case "m.room.member":
       return (
         <MembershipEvent
@@ -61,7 +65,7 @@ export default function RoomEvent({ evt, isFocused }) {
           isFocused={isFocused}
         />
       );
-      */
+  
     default:
       if (isFocused) console.log(evt);
       return <UnsupportedEventItem senderId={senderId} isFocused={isFocused} />;
