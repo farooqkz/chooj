@@ -25,6 +25,7 @@ export default class ChatRoomItem extends Component {
       avatarUrl: room.getAvatarUrl(window.mClient.baseUrl, 36, 36, "scale") || roomIcon,
       displayName: room.name,
     };
+    console.log("HI", this.state);
   }
 
   componentDidMount() {
@@ -50,8 +51,8 @@ export default class ChatRoomItem extends Component {
     return (
       <IconListItem
         icon={<Avatar avatar={avatarUrl} />}
-        secondary={displayName}
-        primary={lastEvent}
+        secondary={displayName || ""}
+        primary={lastEvent || ""}
         isFocused={isFocused}
       />
     );

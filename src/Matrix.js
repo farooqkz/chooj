@@ -246,6 +246,7 @@ class Matrix extends Component {
       openRoomId: "",
       optionsMenu: false,
     };
+    console.log("MATRIX", this);
   }
 
   render() {

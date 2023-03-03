@@ -97,12 +97,10 @@ class DMsView extends Component {
 
   componentWillMount() {
     document.addEventListener("keydown", this.handleKeyDown);
-    window.mClient.addListener("Room.timeline", this.handleTimelineUpdate);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
-    window.mClient.removeListener("Room.timeline", this.handleTimelineUpdate);
     window.stateStores.set("DMsView", this.state);
   }
 

@@ -98,13 +98,15 @@ class About extends Component {
         <ListView
           cursor={this.state.cursor}
           cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}
-          $HasKeyedChildren
         >
+      /*
           {items.map((item, index) => {
             item.props.isFocused = index === this.state.cursor;
             item.props.key = index;
             return item;
           })}
+          */
+      {items}
         </ListView>
         {this.state.showContactScreen
           ? createPortal(

@@ -18,23 +18,28 @@ class Login extends Component {
 
   handleKeyDown = (evt) => {
     if (evt.key === "Backspace" || evt.key === "b") {
-      evt.preventDefault();
       if (this.state.loginWithQR) {
+        evt.preventDefault();
         this.setState({ loginWithQR: false });
         return;
       }
-      if (this.state.stage <= 0) {
-        if (window.confirm("Quit?")) {
-          window.close();
-        } else {
-          this.setState({ stage: 0 });
+      if (this.state.stage === 0) {
+        if (this.state.cursor > 1) {
+          evt.preventDefault();
         }
+      } else if (this.state.stage === 2) {
+        if (this.state.cursor !== 0) {
+          evt.preventDefault();
+        }
+      }
+      if (this.state.stage <= 0) {
         return;
       }
       this.setState((prevState) => {
         prevState.cursor = 0;
         prevState.stage--;
       });
+      return;
     }
     if (evt.key === "c" || evt.key === "Call") {
       if (this.state.stage !== 0) return;

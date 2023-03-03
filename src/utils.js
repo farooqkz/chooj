@@ -92,6 +92,9 @@ function eventSender(sender, myself, dm) {
 }
 
 function makeHumanReadableEvent(evt, dm) {
+  if (!(evt instanceof Object)) {
+    console.log("BOOO", evt);
+  }
   const type = evt.getType();
   const content = evt.getContent();
   const sender = evt.getSender();

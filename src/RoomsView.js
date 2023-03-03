@@ -45,12 +45,10 @@ class RoomsView extends Component {
 
   componentWillMount() {
     document.addEventListener("keydown", this.handleKeyDown);
-    window.mClient.addListener("Room.timeline", this.handleTimelineUpdate);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
-    window.mClient.removeListener("Room.timeline", this.handleTimelineUpdate);
     window.stateStores.set("RoomsView", this.state);
   }
 
@@ -71,11 +69,12 @@ class RoomsView extends Component {
     if (renderedRooms.length === 0) {
       renderedRooms.push(<TextListItem primary="No Rooms :(" isFocused key={0} />);
     }
-    console.log("REN", renderedRooms);
     return (
-      <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
-        {renderedRooms}
-      </ListView>
+      <>
+        <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
+          {renderedRooms}
+        </ListView>
+      </>
     );
   }
 }
