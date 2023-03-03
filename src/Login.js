@@ -1,12 +1,14 @@
 import { Component } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
 import * as localforage from "localforage";
+import {
+  TextListItem,
+  TextInput,
+  Header,
+  SoftKey,
+  ListView
+} from "KaiUI";
 
-import TextListItem from "./ui/TextListItem";
-import TextInput from "./ui/TextInput";
-import SoftKey from "./ui/SoftKey";
-import Header from "./ui/Header";
-import ListView from "./ListView";
 import LoginWithQR from "./LoginWithQR";
 
 class Login extends Component {

@@ -1,11 +1,14 @@
 import { Component, createPortal } from "inferno";
-import ListView from "./ListView";
-import IconListItem from "./ui/IconListItem";
-import TextListItem from "./ui/TextListItem";
-import Separator from "./ui/Separator";
+import {
+  ListView,
+  IconListItem,
+  TextListItem,
+  Separator,
+  DropDownMenu
+} from "KaiUI";
+
 import FarooqAvatar from "./FarooqAvatar.png";
 import AdrianAvatar from "./AdrianAvatar.png";
-import DropDownMenu from "./DropDownMenu";
 import { startDM } from "./utils"; // eslint-disable-line no-unused-vars
 
 function ContactSelectionMenu({ selectCb }) {
@@ -95,10 +98,11 @@ class About extends Component {
         <ListView
           cursor={this.state.cursor}
           cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}
-          $HasNonKeyedChildren
+          $HasKeyedChildren
         >
           {items.map((item, index) => {
             item.props.isFocused = index === this.state.cursor;
+            item.props.key = index;
             return item;
           })}
         </ListView>

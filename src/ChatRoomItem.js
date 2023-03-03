@@ -42,6 +42,7 @@ export default class ChatRoomItem extends Component {
   render() {
     const { avatarUrl, displayName } = this.state;
     const isFocused = this.props.isFocused;
+    console.log(this.props, this.state);
 
     let lastEvent = this.state.lastEvent;
     lastEvent = lastEvent.length >= 25 ? lastEvent.slice(0, 25) + "..." : lastEvent;

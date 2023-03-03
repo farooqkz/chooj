@@ -11,4 +11,5 @@ window.stateStores = new Map();
 // ^ This is used to save state of components on unmount
 // and later retrieve it when the component is constructed
 
+Object.defineProperty(XMLHttpRequest.prototype, "mozSystem", { value: true });
 render(<App />, document.getElementById("root"));

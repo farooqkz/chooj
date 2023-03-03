@@ -2,8 +2,7 @@ import { Component, createPortal } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
 import * as localforage from "localforage";
 
-import TabView from "./TabView";
-import SoftKey from "./ui/SoftKey";
+import { TabView, TextListItem, SoftKey, DropDownMenu } from "KaiUI";
 import DMsView from "./DMsView";
 import RoomsView from "./RoomsView";
 import About from "./About";
@@ -11,8 +10,6 @@ import Waiting from "./Waiting";
 import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
 import Settings from "./Settings";
-import DropDownMenu from "./DropDownMenu";
-import TextListItem from "./ui/TextListItem";
 import { urlBase64ToUint8Array, toast, updateState } from "./utils";
 
 const vapidPublicKey =

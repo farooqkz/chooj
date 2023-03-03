@@ -1,9 +1,11 @@
 import { Component, createPortal } from "inferno";
+import {
+  ListView,
+  TextListItem,
+  DropDownMenu,
+} from "KaiUI";
 
-import ListView from "./ListView";
 import ChatDMItem from "./ChatDMItem";
-import TextListItem from "./ui/TextListItem";
-import DropDownMenu from "./DropDownMenu";
 import { updateState, getRoomLastEvent, isDM, isRoom } from "./utils";
 
 function CallSelectionMenu({ selectCb }) {
