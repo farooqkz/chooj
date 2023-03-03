@@ -1,6 +1,7 @@
 import { Component, createPortal } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
 import * as localforage from "localforage";
+import { MatrixClient } from "matrix-js-sdk";
 
 import TabView from "./TabView";
 import SoftKey from "./ui/SoftKey";
@@ -199,11 +200,28 @@ class Matrix extends Component {
   };
 
   optionsSelectCb = (item) => {
+    /** @type {MatrixClient} */
+    const matrix = window.mClient
     if (item === 0) {
-      console.log(window.mClient.getRoom(this.roomId));
+      // leave
+      const room = matrix.getRoom(this.roomId)
+      if (!room) {
+        alert("Error: no room selected")
+      }
+      if (confirm(`Are you sure to leave '${room.name}'?`)) {
+        matrix.leave(room.roomId)
+      }
     }
+    // forget is currently not nessary, leaving already removes the room from the list
+    // else if (item===1) {
+    //  // forget
+    //  const room = matrix.getRoom(this.roomId)
+    //   if(!room) {
+    //     alert("Error: no room selected")
+    //   }
+    //   matrix.forget(room.roomId)
+    // }
     this.setState({ optionsMenu: false });
-    window.alert("Not implemented yet");
   };
 
   constructor(props) {
@@ -310,11 +328,13 @@ class Matrix extends Component {
           </footer>
           {optionsMenu
             ? createPortal(
-                <DropDownMenu title="Options" selectCb={this.optionsSelectCb}>
-                  <TextListItem primary="Leave" />
-                </DropDownMenu>,
-                document.querySelector("#menu")
-              )
+              <DropDownMenu title="Options" selectCb={this.optionsSelectCb}>
+                <TextListItem primary="Leave" />
+                {/* forget is currently not nessary, leaving already removes the room from the list */}
+                {/* <TextListItem primary="Forget Room" /> */}
+              </DropDownMenu>,
+              document.querySelector("#menu")
+            )
             : null}
         </>
       );
