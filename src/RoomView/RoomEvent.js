@@ -30,6 +30,14 @@ function MembershipEvent({ evt, isFocused }) {
           </p>
         </div>
       );
+      case "leave":
+        return (
+          <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
+            <p $HasTextChildren>
+              {readableTimestamp(ts) + content.displayname + " left."}
+            </p>
+          </div>
+        );
     default:
       if (isFocused) console.log("REPORT", evt);
       return (
