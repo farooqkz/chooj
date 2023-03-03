@@ -5,10 +5,10 @@ import { IRCLikeMessageItem } from "../MessageItems";
 import { readableTimestamp } from "../utils";
 import "./UnsupportedEventItem.css";
 
-function IRCLikeUnsupportedEventItem({ isFocused, senderId }) {
+function IRCLikeUnsupportedEventItem({ isFocused, senderId, type }) {
   return (
     <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
-      <p>Unsupported Event from {createTextVNode(senderId)}</p>
+      <p>Unsupported Event from {createTextVNode(senderId)}: {type}</p>
     </div>
   );
 }
@@ -21,7 +21,9 @@ function MembershipEvent({ evt, isFocused }) {
   // const senderId = evt.getSender();
   const ts = evt.getTs();
 
-  switch (content.membership.toLowerCase()) {
+  const eventType = content.membership.toLowerCase()
+
+  switch (eventType) {
     case "join":
       return (
         <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
@@ -30,19 +32,19 @@ function MembershipEvent({ evt, isFocused }) {
           </p>
         </div>
       );
-      case "leave":
-        return (
-          <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
-            <p $HasTextChildren>
-              {readableTimestamp(ts) + content.displayname + " left."}
-            </p>
-          </div>
-        );
+    case "leave":
+      return (
+        <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
+          <p $HasTextChildren>
+            {readableTimestamp(ts) + content.displayname + " left."}
+          </p>
+        </div>
+      );
     default:
       if (isFocused) console.log("REPORT", evt);
       return (
         <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
-          <p $HasTextChildren>{`Unknown membership event from ${content.displayname}`}</p>
+          <p $HasTextChildren>{`Unknown membership event from ${content.displayname}: ${eventType}`}</p>
         </div>
       );
   }
@@ -65,7 +67,7 @@ export default function RoomEvent({ evt, isFocused }) {
           isFocused={isFocused}
         />
       );
-    
+
     case "m.room.member":
       return (
         <MembershipEvent
@@ -73,9 +75,9 @@ export default function RoomEvent({ evt, isFocused }) {
           isFocused={isFocused}
         />
       );
-  
+
     default:
       if (isFocused) console.log(evt);
-      return <UnsupportedEventItem senderId={senderId} isFocused={isFocused} />;
+      return <UnsupportedEventItem senderId={senderId} isFocused={isFocused} type={type} />;
   }
 }
