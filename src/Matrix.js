@@ -164,7 +164,7 @@ class Matrix extends Component {
             .then(() => toast("Joined", 1750));
         })
         .catch((e) => {
-          window.alert("Some error occured during joining.");
+          window.alert("Some error occured during joining:" + e);
           console.log(e);
         });
     }
