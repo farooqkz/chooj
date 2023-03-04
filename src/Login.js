@@ -176,6 +176,7 @@ class Login extends Component {
             },
             label: "Homeserver name",
             type: "input",
+            key: "homeserver"
           },
           {
             placeholder: "mrpotato",
@@ -184,11 +185,13 @@ class Login extends Component {
             },
             label: "Username",
             type: "input",
+            key: "username"
           },
           {
             tertiary:
               "Press Call button and scan a QR in the following format to login with QR code instead of typing all these(PASS = password authentication): PASS server_name username password",
             type: "text",
+            key: "qrHint"
           },
         ].map((attrs, index) => {
           const C = attrs.type === "input" ? TextInput : TextListItem;
@@ -202,9 +205,9 @@ class Login extends Component {
       case 1:
         listViewChildren = this.loginFlows.map((flow, index) => {
           if (index === this.state.cursor) {
-            return <TextListItem primary={flow.type} isFocused />;
+            return <TextListItem key={"flow"+flow.type} primary={flow.type} isFocused />;
           } else {
-            return <TextListItem primary={flow.type} />;
+            return <TextListItem key={"flow"+flow.type} primary={flow.type} />;
           }
         });
         break;
@@ -212,6 +215,7 @@ class Login extends Component {
         if (this.selectedLoginFlow.type === "m.login.password") {
           listViewChildren = (
             <TextInput
+              key="password-field"
               placeholder="Your super secret pass"
               fieldType="password"
               label="Enter password"
@@ -223,7 +227,7 @@ class Login extends Component {
           );
         } else {
           alert("Unsupported login flow: " + this.selectedLoginFlow.type);
-          listViewChildren = <TextListItem primary=":(" isFocused />;
+          listViewChildren = <TextListItem key="unsupported" primary=":(" isFocused />;
         }
         break;
       default:
