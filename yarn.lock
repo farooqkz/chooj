@@ -972,16 +972,13 @@
   resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.21.0.tgz#cd242c6551ffb51830049d68d9743ab65b45b820"
   integrity sha512-/J4WBTpWtQ4itN1rb3ao8LfClmVcmz2pO6oYb7Qd4h7VSqUhIbJIvrykz9Ew1WMg6eFWsKdsMHc5uPbFxqlCpg==
 
-"KaiUI@npm:kaiuing-inferno@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/kaiuing-inferno/-/kaiuing-inferno-1.0.0.tgz#6aee677650b42305dd80d3f7b05e52702e44ef37"
-  integrity sha512-4fawYt0MJcXISKZQgzn++PB5MqoTDmH920SE5yc+Betg064AaZelxPXCcOwBcsgNsYEvGTCrbAkszgwkPqpDoA==
+"KaiUI@npm:kaiuing-inferno@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/kaiuing-inferno/-/kaiuing-inferno-1.2.0.tgz#3a708229d20ea7c2303e180825dcea9c0bbbc287"
+  integrity sha512-DeKNany9k4f6/RbVMcaSna9Xtf0UrSTwOaYao3TFGznYBRykzlJ/BD26NGMcapgZWl53/lDUUSrEPDp+JOR2Kw==
   dependencies:
     "@swc/helpers" "^0.4.14"
     KaiUI "npm:kaiuing@^2.0.0"
-    classnames "^2.3.2"
-    inferno "^8.0.6"
-    inferno-extras "^8.0.6"
 
 "KaiUI@npm:kaiuing@^2.0.0":
   version "2.0.0"
@@ -1538,7 +1535,7 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-classnames@^2.3.1, classnames@^2.3.2:
+classnames@^2.3.1:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
   integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
@@ -2790,13 +2787,6 @@ inferno-error-overlay@^5.0.4:
   resolved "https://registry.yarnpkg.com/inferno-error-overlay/-/inferno-error-overlay-5.0.4.tgz#ddf2100f0e430e31cb36d9bb2333bb917314bcf9"
   integrity sha512-WCuf8/WSj66OUasHSRywqZ1GR8VrQ2OErlYnothNoHmqaff2wwd890Nu37isPFRQvDhXetCVGGW22i4NcSyd3w==
 
-inferno-extras@^8.0.0:
-  version "8.0.5"
-  resolved "https://registry.yarnpkg.com/inferno-extras/-/inferno-extras-8.0.5.tgz#c9c13cca130c8150ebc14b03887cec722f036a64"
-  integrity sha512-GtfJ/5lEgMzeSxQ3Ba2sKmHqpO9epXD0zD5CfwluA/VoLjmKXX6ec3BejEbrB304Pbu2OISC22CIoAppLN8a7A==
-  dependencies:
-    inferno "8.0.5"
-
 inferno-extras@^8.0.6:
   version "8.0.6"
   resolved "https://registry.yarnpkg.com/inferno-extras/-/inferno-extras-8.0.6.tgz#7673cf861f195f7890700700ff6a4c76df3b9ef7"
@@ -2804,24 +2794,10 @@ inferno-extras@^8.0.6:
   dependencies:
     inferno "8.0.6"
 
-inferno-vnode-flags@8.0.5:
-  version "8.0.5"
-  resolved "https://registry.yarnpkg.com/inferno-vnode-flags/-/inferno-vnode-flags-8.0.5.tgz#328767cadcd4270d7e70268e8fec93331dc57e27"
-  integrity sha512-HF/frYUEV/tcCxM73FXwJYgaxKfHZD1fl1UaEwpoFils52ce/1O02GtbGKyd2ts93hZ592W7yu5jKDTM6k/shA==
-
 inferno-vnode-flags@8.0.6:
   version "8.0.6"
   resolved "https://registry.yarnpkg.com/inferno-vnode-flags/-/inferno-vnode-flags-8.0.6.tgz#1234a0d8e4112f7ec683de0911f3e9767ecc252f"
   integrity sha512-hG9AdtdsK/8ZWojT5ebRqQ7LWHJLLM53ZeiVht7U4bTVzhvMnZHHZ72Ef0SBXZ8hsOVUY/X1GvfUvN9vAaw0NA==
-
-inferno@8.0.5, inferno@^8.0.4:
-  version "8.0.5"
-  resolved "https://registry.yarnpkg.com/inferno/-/inferno-8.0.5.tgz#6c480b92eae6acdf2eba9d4986f98b2b71349977"
-  integrity sha512-dg+h9wdQOR34lTSh9KLhV+62wdnWXI58e7nam9YxXof45IBzgWsKkVuGL0Rp0DkioPNA47bT3v7MvbsGgL58Tg==
-  dependencies:
-    csstype "^3.1.1"
-    inferno-vnode-flags "8.0.5"
-    opencollective-postinstall "^2.0.3"
 
 inferno@8.0.6, inferno@^8.0.6:
   version "8.0.6"
