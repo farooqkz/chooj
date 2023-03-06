@@ -62,7 +62,7 @@ class RoomView extends Component {
     }
     const { cursor, textInputFocus, message, waiting } = this.state;
     const { closeRoomView } = this.props;
-    if (cursor <= 5) {
+    if (cursor <= 5 && !this.reachedEndOfTimeline) {
       let prev = this.timeline.getEvents().lastIndex;
       window.mClient
         .paginateEventTimeline(this.timeline, { backwards: true, limit: 25 })
@@ -72,6 +72,8 @@ class RoomView extends Component {
             this.setState({
               cursor: current - prev,
             });
+          } else {
+            this.reachedEndOfTimeline = true;
           }
         });
     }
@@ -104,7 +106,7 @@ class RoomView extends Component {
       if (textInputFocus) {
         this.setState({ textInputFocus: false, cursor: lastEventIndex });
       } else {
-        this.setState({ cursor: cursor - 1 });
+        this.setState({ cursor: Math.max(0, cursor - 1) });
       }
     }
   };
@@ -295,6 +297,7 @@ class RoomView extends Component {
     this.recorder = null;
     this.recording = [];
     this.imageViewer = null;
+    this.reachedEndOfTimeline = false;
     this.recordingInterval = 0;
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       this.recorder = new MediaRecorder(stream);
