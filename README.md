@@ -22,10 +22,10 @@ This is a free(open source) software Matrix client for KaiOS which is going to s
 ### What does work so far?
 
  - Login process with password works(manually or by scanning a QR code)
- - Chatting works in all rooms. Sending text and voice is supported. You can view incoming text, voice and photos.
- - Voice call partially works.
+ - Chatting works in all rooms. Sending text and voice is supported. You can view incoming text and photos and listen to voice messages.
+ - Voice call might work.
  - Very experimental and unreliable push notification support which you can enable it in Settings
- - You can join public rooms. But there is [a bug](https://github.com/farooqkz/chooj/issues/66) which you must restart the app after joining.
+ - You can join public rooms. But there is [a bug](https://github.com/farooqkz/chooj/issues/66) which you must restart the app after joining. You can also leave rooms but the same bug exists.
  - The Cow says "Please wait" to you kindly :))
 
 ### How to help?
@@ -63,13 +63,10 @@ This app should work on all KaiOS versions. However it has been also tested on t
 
 ### How to build?
 
-The production build is currently broken and you may only use development builds.
-
  - Install Node v18.x if you haven't
  - Install yarn if you haven't
- - `yarn install` in project's directory
+ - `yarn install` in the project's directory
  - `yarn devbuild` to create a development build(faster build at the cost of heavier bundle) or `yarn build` for production builds
- - *(Optional)* remove the Javascript modules from `index.html` as well as the related file(s).
  - Now you can sideload the application in `build/` to your device.
 
 You can check guides on how to prepare your device for sideloading stuff
@@ -109,11 +106,7 @@ Because depth of pockets of different people varies, I haven't specified how muc
 
 #### Donating money
 
-You can donate a monthly amount through [chooj's bountysource page](https://salt.bountysource.com/teams/chooj).
-
-#### Donating cryptocurrency
-
-You can make donations anonymously by sending an amount to my Bitcoin Cash address:
+You can make donations by sending an amount to my Bitcoin Cash address:
 
 ```
 bitcoincash:qpxy55al8k3mux7j58taxt88jukmqur5ruv6tz7mkc
@@ -128,7 +121,7 @@ fkz atsine riseup dot net
 You can also send me private key of a Bitcoin Cash wallet.
 
 In the case you don't have crypto already, you can buy Bitcoin Cash from [stealthex.io](https://stealthex.io/?amount=30.4&from=usd&to=bch) and enter 
-my address as recipient address.
+my address as the recipient address.
 
 
 #### Donating hardware
@@ -136,7 +129,7 @@ my address as recipient address.
 You can also donate KaiOS phones or other hardwares. KaiOS phones with one of more of these properties which are debug enabled will help with the development of project:
 
  - KaiOS 3.x
- - 256MB of RAM
+ - Less than 256MB of RAM/Memory
  - A processor weaker than SD205 which is used in my Nokia phone
  - Selfie/front camera
  - Volume buttons
