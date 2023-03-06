@@ -188,6 +188,15 @@ function getRoomLastEvent(room) {
   return events[events.length - 1] || null;
 }
 
+function getSomeDisplayName(userId) {
+  let userObj = window.mClient.getUser(userId);
+  if (userObj) {
+    return userObj.displayName || userObj.userId.split(":")[0].replace("@", "");
+  } else {
+    return "-@UnknownUser@-";
+  }
+}
+
 export {
   updateState,
   isRoom,
@@ -201,5 +210,6 @@ export {
   mxcMediaToHttp,
   toast,
   readableTimestamp,
-  getRoomLastEvent
+  getRoomLastEvent,
+  getSomeDisplayName
 };

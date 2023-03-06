@@ -2,14 +2,22 @@ import { createTextVNode } from "inferno";
 import { MatrixEvent } from "matrix-js-sdk";
 
 import { IRCLikeMessageItem } from "../MessageItems";
-import { readableTimestamp } from "../utils";
+import { readableTimestamp, getSomeDisplayName } from "../utils";
 import "./UnsupportedEventItem.css";
+
+function Event({ children, isFocused }) {
+  return (
+    <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
+      {children}
+    </div>
+  );
+}
 
 function IRCLikeUnsupportedEventItem({ isFocused, senderId, type }) {
   return (
-    <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
-      <p>Unsupported Event from {createTextVNode(senderId)}: {type}</p>
-    </div>
+    <Event isFocused={isFocused}>
+      <p>Unsupported Event from {createTextVNode(getSomeDisplayName(senderId))}: {type}</p>
+    </Event>
   );
 }
 
@@ -26,26 +34,26 @@ function MembershipEvent({ evt, isFocused }) {
   switch (eventType) {
     case "join":
       return (
-        <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
+        <Event isFocused={isFocused}>
           <p $HasTextChildren>
             {readableTimestamp(ts) + content.displayname + " joined."}
           </p>
-        </div>
+        </Event>
       );
     case "leave":
       return (
-        <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
+        <Event isFocused={isFocused}>
           <p $HasTextChildren>
             {readableTimestamp(ts) + content.displayname + " left."}
           </p>
-        </div>
+        </Event>
       );
     default:
       if (isFocused) console.log("REPORT", evt);
       return (
-        <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
+        <Event {...isFocused}>
           <p $HasTextChildren>{`Unknown membership event from ${content.displayname}: ${eventType}`}</p>
-        </div>
+        </Event>
       );
   }
 }
@@ -55,7 +63,8 @@ export default function RoomEvent({ evt, isFocused }) {
   const senderId = evt.getSender();
   const MessageItem = IRCLikeMessageItem;
   const UnsupportedEventItem = IRCLikeUnsupportedEventItem;
-
+  const displayName = getSomeDisplayName(senderId);
+  const ts = readableTimestamp(evt.getTs());
 
   switch (type) {
     case "m.room.message":
@@ -67,7 +76,6 @@ export default function RoomEvent({ evt, isFocused }) {
           isFocused={isFocused}
         />
       );
-
     case "m.room.member":
       return (
         <MembershipEvent
@@ -75,7 +83,39 @@ export default function RoomEvent({ evt, isFocused }) {
           isFocused={isFocused}
         />
       );
-
+    case "m.call.hangup":
+      return (
+        <Event isFocused={isFocused}>
+          <p>
+            <b $HasTextChildren>
+              {ts}
+            </b>
+            {createTextVNode(`${displayName} has ended the call.`)}
+          </p>
+        </Event>
+      );
+    case "m.call.invite":
+      return (
+        <Event isFocused={isFocused}>
+          <p>
+            <b $HasTextChildren>
+              {ts}
+            </b>
+            {createTextVNode(`${displayName} has started a call.`)}
+          </p>
+        </Event>
+      );
+    case "m.room.create":
+      return (
+        <Event isFocused={isFocused}>
+          <p>
+            <b $HasTextChildren>
+              {ts}
+            </b>
+            {createTextVNode(`${displayName} created this room.`)}
+          </p>
+        </Event>
+      );
     default:
       if (isFocused) console.log(evt);
       return <UnsupportedEventItem senderId={senderId} isFocused={isFocused} type={type} />;

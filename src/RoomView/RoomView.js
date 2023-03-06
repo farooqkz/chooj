@@ -10,6 +10,12 @@ import WaitingCurve from "./waiting_curve.svg";
 import RoomEvent from "./RoomEvent";
 import ImageViewer  from "../ImageViewer";
 
+
+let HIDDEN_EVENTS = [
+  "m.call.select_answer",
+  "m.call.candidates",
+]; // these events won't be shown to the user. TODO: Use something with better search cost
+
 function CannotSendMessage() {
   // eslint-disable-line no-unused-vars
   return (
@@ -375,7 +381,7 @@ class RoomView extends Component {
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
           >
             {waiting ? <Waiting /> : null}
-            {this.timeline.getEvents().filter((evt) => evt.getType()).map((evt, index) => {
+            {this.timeline.getEvents().filter((evt) => evt.getType() && !HIDDEN_EVENTS.includes(evt.getType())).map((evt, index) => {
               let item = <RoomEvent evt={evt} isFocused={index === cursor && !textInputFocus} />;
 
               if (item.props.isFocused) {
