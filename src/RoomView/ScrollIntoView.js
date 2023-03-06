@@ -11,6 +11,7 @@ function ScrollIntoView({ children, shouldScroll }) {
             }
           : null
       }
+      $HasVNodeChildren
     >
       {children}
     </div>
