@@ -4,7 +4,7 @@ import * as matrixcs from "matrix-js-sdk";
 import * as localforage from "localforage";
 
 import "./LoginWithQR.css";
-import SoftKey from "../ui/SoftKey";
+import { SoftKey } from "KaiUI";
 
 class LoginWithQR extends Component {
   takePhoto = () => {

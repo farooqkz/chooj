@@ -1,6 +1,8 @@
 import { Component } from "inferno";
-import ListView from "./ListView";
-import TextListItem from "./ui/TextListItem";
+import {
+  ListView,
+  TextListItem,
+} from "KaiUI";
 
 class InvitesView extends Component {
   getInvite = (room) => room.getMyMembership() === "invite";

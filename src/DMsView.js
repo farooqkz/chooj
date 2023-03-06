@@ -1,9 +1,11 @@
 import { Component, createPortal } from "inferno";
+import {
+  ListView,
+  TextListItem,
+  DropDownMenu,
+} from "KaiUI";
 
-import ListView from "./ListView";
 import ChatDMItem from "./ChatDMItem";
-import TextListItem from "./ui/TextListItem";
-import DropDownMenu from "./DropDownMenu";
 import { updateState, getRoomLastEvent, isDM, isRoom } from "./utils";
 
 function CallSelectionMenu({ selectCb }) {
@@ -95,12 +97,10 @@ class DMsView extends Component {
 
   componentWillMount() {
     document.addEventListener("keydown", this.handleKeyDown);
-    window.mClient.addListener("Room.timeline", this.handleTimelineUpdate);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
-    window.mClient.removeListener("Room.timeline", this.handleTimelineUpdate);
     window.stateStores.set("DMsView", this.state);
   }
 

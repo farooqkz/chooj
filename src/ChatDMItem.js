@@ -1,15 +1,36 @@
 import { Component } from "inferno";
-import Avatar from "./Avatar";
-import IconListItem from "./ui/IconListItem";
+import { Avatar, IconListItem } from "KaiUI";
 import personIcon from "./person_icon.png";
 import { makeHumanReadableEvent, getRoomLastEvent, getAvatarOrDefault } from "./utils";
 
 export default class ChatDMItem extends Component {
-  updateState = (evt, handler, t) => {
+  updateDisplayName = (evt) => {
+    console.log("DN", evt);
+    this.setState((state) => {
+      state.displayName = evt.getContent().displayName || state.displayName;
+      return state;
+    });
+  };
+
+  updateAvatar = (evt) => {
+    console.log("A", evt);
+    this.setState((state) => {
+      state.avatarUrl = evt.getContent().avatarUrl || state.avatarUrl;
+      return state;
+    });
+  };
+
+  updatePresence = (evt, handler, t) => {
     console.log("RAPORT", evt);
     console.log("RAPORT", handler);
     console.log("RAPORT", t);
   };
+
+  updateTimeline = (evt, _room) => { 
+    this.setState({
+      lastEvent: makeHumanReadableEvent(evt, true)
+    });
+  }
 
   constructor(props) {
     super(props);
@@ -23,14 +44,20 @@ export default class ChatDMItem extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     let user = window.mClient.getUser(this.props.room.guessDMUserId());
-    user.on("User", this.updateState);
+    user.on("Room.membership", this.updatePresence);
+    user.on("Room.membership", this.updateAvatar);
+    user.on("Room.membership", this.updateDisplayName);
+    this.props.room.on("Room.timeline", this.updateTimeline);
   }
 
   componentWillUnmount() {
     let user = window.mClient.getUser(this.props.room.guessDMUserId());
-    user.off("User", this.updateState);
+    user.off("User.presence", this.updatePresence);
+    user.off("User.avatarUrl", this.updateAvatar);
+    user.off("User.displayName", this.updateDisplayName);
+    this.props.room.off("Room.timeline", this.updateTimeline);
   }
 
   render() {

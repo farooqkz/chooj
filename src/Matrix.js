@@ -1,9 +1,9 @@
 import { Component, createPortal } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
 import * as localforage from "localforage";
+import { MatrixClient } from "matrix-js-sdk";
 
-import TabView from "./TabView";
-import SoftKey from "./ui/SoftKey";
+import { TabView, TextListItem, SoftKey, DropDownMenu } from "KaiUI";
 import DMsView from "./DMsView";
 import RoomsView from "./RoomsView";
 import About from "./About";
@@ -11,8 +11,6 @@ import Waiting from "./Waiting";
 import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
 import Settings from "./Settings";
-import DropDownMenu from "./DropDownMenu";
-import TextListItem from "./ui/TextListItem";
 import { urlBase64ToUint8Array, toast, updateState } from "./utils";
 
 const vapidPublicKey =
@@ -163,7 +161,7 @@ class Matrix extends Component {
             .then(() => toast("Joined", 1750));
         })
         .catch((e) => {
-          window.alert("Some error occured during joining.");
+          window.alert("Some error occured during joining:" + e);
           console.log(e);
         });
     }
@@ -199,11 +197,27 @@ class Matrix extends Component {
   };
 
   optionsSelectCb = (item) => {
+    /** @type {MatrixClient} */
+    const matrix = window.mClient
     if (item === 0) {
-      console.log(window.mClient.getRoom(this.roomId));
+      // leave
+      const room = matrix.getRoom(this.roomId)
+      if (!room) {
+        alert("Error: no room selected")
+      } else if (confirm(`Are you sure to leave '${room.name}'?`)) {
+        matrix.leave(room.roomId)
+      }
     }
+    // forget is currently not nessary, leaving already removes the room from the list
+    // else if (item===1) {
+    //  // forget
+    //  const room = matrix.getRoom(this.roomId)
+    //   if(!room) {
+    //     alert("Error: no room selected")
+    //   }
+    //   matrix.forget(room.roomId)
+    // }
     this.setState({ optionsMenu: false });
-    window.alert("Not implemented yet");
   };
 
   constructor(props) {
@@ -249,6 +263,7 @@ class Matrix extends Component {
       openRoomId: "",
       optionsMenu: false,
     };
+    console.log("MATRIX", this);
   }
 
   render() {
@@ -310,11 +325,13 @@ class Matrix extends Component {
           </footer>
           {optionsMenu
             ? createPortal(
-                <DropDownMenu title="Options" selectCb={this.optionsSelectCb}>
-                  <TextListItem primary="Leave" />
-                </DropDownMenu>,
-                document.querySelector("#menu")
-              )
+              <DropDownMenu title="Options" selectCb={this.optionsSelectCb}>
+                <TextListItem primary="Leave" />
+                {/* forget is currently not nessary, leaving already removes the room from the list */}
+                {/* <TextListItem primary="Forget Room" /> */}
+              </DropDownMenu>,
+              document.querySelector("#menu")
+            )
             : null}
         </>
       );

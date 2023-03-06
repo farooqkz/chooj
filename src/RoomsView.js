@@ -1,8 +1,7 @@
 import { Component } from "inferno";
+import { ListView, TextListItem } from "KaiUI";
 
-import ListView from "./ListView";
 import ChatRoomItem from "./ChatRoomItem";
-import TextListItem from "./ui/TextListItem";
 import { getRoomLastEvent, updateState, isRoom, isDM } from "./utils";
 
 class RoomsView extends Component {
@@ -46,19 +45,17 @@ class RoomsView extends Component {
 
   componentWillMount() {
     document.addEventListener("keydown", this.handleKeyDown);
-    window.mClient.addListener("Room.timeline", this.handleTimelineUpdate);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
-    window.mClient.removeListener("Room.timeline", this.handleTimelineUpdate);
     window.stateStores.set("RoomsView", this.state);
   }
 
   render() {
     const { cursor, rooms } = this.state;
     const sortedRooms = rooms.sort(
-      (first, second) => getRoomLastEvent(first).getTs() < getRoomLastEvent(second).getTs()
+      (first, second) => getRoomLastEvent(first).getTs() < getRoomLastEvent(second).getTs() 
     );
     let renderedRooms = sortedRooms.map((room, index) => {
       return (
@@ -69,14 +66,15 @@ class RoomsView extends Component {
         />
       );
     });
-
     if (renderedRooms.length === 0) {
       renderedRooms.push(<TextListItem primary="No Rooms :(" isFocused key={0} />);
     }
     return (
-      <ListView cursor={this.state.cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
-        {renderedRooms}
-      </ListView>
+      <>
+        <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
+          {renderedRooms}
+        </ListView>
+      </>
     );
   }
 }

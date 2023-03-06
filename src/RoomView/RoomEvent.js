@@ -1,28 +1,42 @@
 import { createTextVNode } from "inferno";
+import { MatrixEvent } from "matrix-js-sdk";
 
 import { IRCLikeMessageItem } from "../MessageItems";
 import { readableTimestamp } from "../utils";
 import "./UnsupportedEventItem.css";
 
-function IRCLikeUnsupportedEventItem({ isFocused, senderId }) {
+function IRCLikeUnsupportedEventItem({ isFocused, senderId, type }) {
   return (
     <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
-      <p>Unsupported Event from {createTextVNode(senderId)}</p>
+      <p>Unsupported Event from {createTextVNode(senderId)}: {type}</p>
     </div>
   );
 }
 
+/**
+ * @param {{evt: MatrixEvent, isFocused: boolean}} params 
+ */
 function MembershipEvent({ evt, isFocused }) {
   let content = evt.getContent();
-  const senderId = evt.getSender();
+  // const senderId = evt.getSender();
   const ts = evt.getTs();
 
-  switch (content.membership.toLower()) {
+  const eventType = content.membership.toLowerCase()
+
+  switch (eventType) {
     case "join":
       return (
         <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
           <p $HasTextChildren>
-            {createTextVNode(readableTimestamp(ts) + content.displayName + " joined.")}
+            {readableTimestamp(ts) + content.displayname + " joined."}
+          </p>
+        </div>
+      );
+    case "leave":
+      return (
+        <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
+          <p $HasTextChildren>
+            {readableTimestamp(ts) + content.displayname + " left."}
           </p>
         </div>
       );
@@ -30,7 +44,7 @@ function MembershipEvent({ evt, isFocused }) {
       if (isFocused) console.log("REPORT", evt);
       return (
         <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
-          <p $HasTextChildren>{createTextVNode(`Unknown membership event from ${content.displayName}`)}</p>
+          <p $HasTextChildren>{`Unknown membership event from ${content.displayname}: ${eventType}`}</p>
         </div>
       );
   }
@@ -53,7 +67,7 @@ export default function RoomEvent({ evt, isFocused }) {
           isFocused={isFocused}
         />
       );
-      /*
+
     case "m.room.member":
       return (
         <MembershipEvent
@@ -61,9 +75,9 @@ export default function RoomEvent({ evt, isFocused }) {
           isFocused={isFocused}
         />
       );
-      */
+
     default:
       if (isFocused) console.log(evt);
-      return <UnsupportedEventItem senderId={senderId} isFocused={isFocused} />;
+      return <UnsupportedEventItem senderId={senderId} isFocused={isFocused} type={type} />;
   }
 }

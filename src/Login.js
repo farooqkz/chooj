@@ -1,12 +1,14 @@
 import { Component } from "inferno";
 import * as matrixcs from "matrix-js-sdk";
 import * as localforage from "localforage";
+import {
+  TextListItem,
+  TextInput,
+  Header,
+  SoftKey,
+  ListView
+} from "KaiUI";
 
-import TextListItem from "./ui/TextListItem";
-import TextInput from "./ui/TextInput";
-import SoftKey from "./ui/SoftKey";
-import Header from "./ui/Header";
-import ListView from "./ListView";
 import LoginWithQR from "./LoginWithQR";
 
 class Login extends Component {
@@ -16,23 +18,28 @@ class Login extends Component {
 
   handleKeyDown = (evt) => {
     if (evt.key === "Backspace" || evt.key === "b") {
-      evt.preventDefault();
       if (this.state.loginWithQR) {
+        evt.preventDefault();
         this.setState({ loginWithQR: false });
         return;
       }
-      if (this.state.stage <= 0) {
-        if (window.confirm("Quit?")) {
-          window.close();
-        } else {
-          this.setState({ stage: 0 });
+      if (this.state.stage === 0) {
+        if (this.state.cursor > 1) {
+          evt.preventDefault();
         }
+      } else if (this.state.stage === 2) {
+        if (this.state.cursor !== 0) {
+          evt.preventDefault();
+        }
+      }
+      if (this.state.stage <= 0) {
         return;
       }
       this.setState((prevState) => {
         prevState.cursor = 0;
         prevState.stage--;
       });
+      return;
     }
     if (evt.key === "c" || evt.key === "Call") {
       if (this.state.stage !== 0) return;
@@ -169,6 +176,7 @@ class Login extends Component {
             },
             label: "Homeserver name",
             type: "input",
+            key: "homeserver"
           },
           {
             placeholder: "mrpotato",
@@ -177,11 +185,13 @@ class Login extends Component {
             },
             label: "Username",
             type: "input",
+            key: "username"
           },
           {
             tertiary:
               "Press Call button and scan a QR in the following format to login with QR code instead of typing all these(PASS = password authentication): PASS server_name username password",
             type: "text",
+            key: "qrHint"
           },
         ].map((attrs, index) => {
           const C = attrs.type === "input" ? TextInput : TextListItem;
@@ -195,9 +205,9 @@ class Login extends Component {
       case 1:
         listViewChildren = this.loginFlows.map((flow, index) => {
           if (index === this.state.cursor) {
-            return <TextListItem primary={flow.type} isFocused />;
+            return <TextListItem key={"flow"+flow.type} primary={flow.type} isFocused />;
           } else {
-            return <TextListItem primary={flow.type} />;
+            return <TextListItem key={"flow"+flow.type} primary={flow.type} />;
           }
         });
         break;
@@ -205,6 +215,7 @@ class Login extends Component {
         if (this.selectedLoginFlow.type === "m.login.password") {
           listViewChildren = (
             <TextInput
+              key="password-field"
               placeholder="Your super secret pass"
               fieldType="password"
               label="Enter password"
@@ -216,7 +227,7 @@ class Login extends Component {
           );
         } else {
           alert("Unsupported login flow: " + this.selectedLoginFlow.type);
-          listViewChildren = <TextListItem primary=":(" isFocused />;
+          listViewChildren = <TextListItem key="unsupported" primary=":(" isFocused />;
         }
         break;
       default:

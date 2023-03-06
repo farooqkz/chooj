@@ -1,6 +1,6 @@
 import { Component } from "inferno";
 import "./CallScreen.css";
-import SoftKey from "../ui/SoftKey";
+import { SoftKey } from "KaiUI";
 import waitingRing from "url:./waiting.ogg";
 import incomingRing from "url:./incoming.ogg";
 

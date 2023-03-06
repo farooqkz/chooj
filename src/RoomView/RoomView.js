@@ -1,7 +1,6 @@
 import { Component } from "inferno";
 import { extensionOf } from "xmimetype";
-import Header from "../ui/Header";
-import SoftKey from "../ui/SoftKey";
+import { Header, SoftKey } from "KaiUI";
 import { isDM, isRoom, updateState, mxcMediaToHttp } from "../utils";
 import ChatTextInput from "../ChatTextInput";
 import VoiceInput from "../VoiceInput";

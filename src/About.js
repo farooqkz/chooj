@@ -1,11 +1,14 @@
 import { Component, createPortal } from "inferno";
-import ListView from "./ListView";
-import IconListItem from "./ui/IconListItem";
-import TextListItem from "./ui/TextListItem";
-import Separator from "./ui/Separator";
+import {
+  ListView,
+  IconListItem,
+  TextListItem,
+  Separator,
+  DropDownMenu
+} from "KaiUI";
+
 import FarooqAvatar from "./FarooqAvatar.png";
 import AdrianAvatar from "./AdrianAvatar.png";
-import DropDownMenu from "./DropDownMenu";
 import { startDM } from "./utils"; // eslint-disable-line no-unused-vars
 
 function ContactSelectionMenu({ selectCb }) {
@@ -75,32 +78,30 @@ class About extends Component {
 
   render() {
     let items = [
-      <TextListItem tertiary="Press Call button while in this Tab to contact Farooq the developer of this app" />,
+      <TextListItem key="call-Farooq" tertiary="Press Call button while in this Tab to contact Farooq the developer of this app" isFocused={0 === this.state.cursor} />,
       <IconListItem
+        key="dev-Farooq"
         iconSrc={FarooqAvatar}
         primary="Farooq Karimi Zadeh"
-        secondary="App Developer"
+        secondary="App Developer" isFocused={1 === this.state.cursor}
       />,
-      <TextListItem primary="Affe Null" secondary="Contributor" />,
-      <Separator text="Libraries and modules" />,
+      <TextListItem key="dev-Affe" primary="Affe Null" secondary="Contributor"  isFocused={2 === this.state.cursor} />,
+      <Separator key="sep-lib" text="Libraries and modules"  isFocused={3 === this.state.cursor} />,
       <IconListItem
+        key="lib-kaiui"
         iconSrc={AdrianAvatar}
         primary="Adrian Machado"
-        secondary="KaiUI"
+        secondary="KaiUI"  isFocused={4 === this.state.cursor}
       />,
-      <TextListItem primary="matrix.org" secondary="matrix-js-sdk" />,
+      <TextListItem key="lib-matrix" primary="matrix.org" secondary="matrix-js-sdk"  isFocused={5 === this.state.cursor} />,
     ];
     return (
       <>
         <ListView
           cursor={this.state.cursor}
           cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}
-          $HasNonKeyedChildren
         >
-          {items.map((item, index) => {
-            item.props.isFocused = index === this.state.cursor;
-            return item;
-          })}
+        {items}
         </ListView>
         {this.state.showContactScreen
           ? createPortal(
