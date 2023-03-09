@@ -24,12 +24,9 @@ class App extends Component {
     if (this.state.online === null) {
       let xhr = new XMLHttpRequest({ mozSystem: true });
       xhr.open("HEAD", "https://example.com");
-      xhr.onload = () => this.setState({ online: true });
+      this.timeout = setTimeout(() => this.setState({ online: false }), 5000);
+      xhr.onload = () => clearTimeout(this.timeout) || this.setState({ online: true });
       xhr.send();
-      setTimeout(() => this.setState((prevState) => {
-        prevState.online = Boolean(prevState.online);
-        return prevState;
-      }), 5000);
     }
   }
 
