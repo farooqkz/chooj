@@ -31,26 +31,6 @@ function updateState(room, state) {
   return state;
 }
 
-function makeEvent(evt, dm) {
-  if (!evt) {
-    return {
-      time: -1,
-      event_: "",
-    };
-  }
-  let user = window.mClient.getUser(evt.getSender());
-  return {
-    time: evt.getTs(),
-    event_: makeHumanReadableEvent(
-      evt.getType(),
-      evt.getContent(),
-      user && user.displayName,
-      window.mClient.getUserId(),
-      dm
-    ),
-  };
-}
-
 function isDM(room) {
   return room.getJoinedMemberCount() === 2 && room.getMyMembership() === "join";
 }
@@ -211,5 +191,5 @@ export {
   toast,
   readableTimestamp,
   getRoomLastEvent,
-  getSomeDisplayName
+  getSomeDisplayName,
 };
