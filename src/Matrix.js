@@ -231,6 +231,7 @@ class Matrix extends Component {
       identityServer:
         props.data.well_known["m.identity_server"] &&
         props.data.well_known["m.identity_server"].base_url,
+//      store: new matrixcs.IndexedDBStore({ indexedDB: window.indexedDB, localStorage: window.localStorage }),
     });
     const client = window.mClient;
     client.on("Call.incoming", (call) => {
