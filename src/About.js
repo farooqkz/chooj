@@ -77,23 +77,24 @@ class About extends Component {
   }
 
   render() {
+    const cursor = this.state.cursor;
     let items = [
-      <TextListItem key="call-Farooq" tertiary="Press Call button while in this Tab to contact Farooq the developer of this app" isFocused={0 === this.state.cursor} />,
+      <TextListItem key="call-Farooq" tertiary="Press Call button while in this Tab to contact Farooq the developer of this app" isFocused={0 === cursor} />,
       <IconListItem
         key="dev-Farooq"
         iconSrc={FarooqAvatar}
         primary="Farooq Karimi Zadeh"
-        secondary="App Developer" isFocused={1 === this.state.cursor}
+        secondary="App Developer" isFocused={1 === cursor}
       />,
-      <TextListItem key="dev-Affe" primary="Affe Null" secondary="Contributor"  isFocused={2 === this.state.cursor} />,
-      <Separator key="sep-lib" text="Libraries and modules"  isFocused={3 === this.state.cursor} />,
+      <TextListItem key="dev-Affe" primary="Affe Null" secondary="Contributor"  isFocused={2 === cursor} />,
+      <Separator key="sep-lib" text="Libraries and modules" />,
       <IconListItem
         key="lib-kaiui"
         iconSrc={AdrianAvatar}
         primary="Adrian Machado"
-        secondary="KaiUI"  isFocused={4 === this.state.cursor}
+        secondary="KaiUI"  isFocused={3 === cursor}
       />,
-      <TextListItem key="lib-matrix" primary="matrix.org" secondary="matrix-js-sdk"  isFocused={5 === this.state.cursor} />,
+      <TextListItem key="lib-matrix" primary="matrix.org" secondary="matrix-js-sdk"  isFocused={4 === cursor} />,
     ];
     return (
       <>
