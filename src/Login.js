@@ -1,5 +1,5 @@
 import { Component } from "inferno";
-import * as matrixcs from "matrix-js-sdk";
+import { createClient } from "matrix-js-sdk";
 import * as localforage from "localforage";
 import {
   TextListItem,
@@ -96,7 +96,7 @@ class Login extends Component {
             if (r.ok) {
               r.json().then((j) => {
                 this.homeserverUrl = "https://" + j["m.server"];
-                window.mClient = matrixcs.createClient({
+                window.mClient = createClient({
                   baseUrl: this.homeserverUrl,
                 });
                 window.mClient

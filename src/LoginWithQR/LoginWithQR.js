@@ -1,6 +1,6 @@
 import { Component } from "inferno";
 import jsQR from "jsqr";
-import * as matrixcs from "matrix-js-sdk";
+import { createClient } from "matrix-js-sdk";
 import * as localforage from "localforage";
 
 import "./LoginWithQR.css";
@@ -41,7 +41,7 @@ class LoginWithQR extends Component {
         if (r.ok) {
           r.json().then((j) => {
             const server_url = j["m.server"];
-            window.mClient = matrixcs.createClient({
+            window.mClient = createClient({
               baseUrl: `https://${server_url}`,
             });
             window.mClient.loginFlows().then((result) => {

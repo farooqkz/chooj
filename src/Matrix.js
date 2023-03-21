@@ -1,5 +1,5 @@
 import { Component, createPortal } from "inferno";
-import * as matrixcs from "matrix-js-sdk";
+import { createClient } from "matrix-js-sdk";
 import * as localforage from "localforage";
 import { MatrixClient } from "matrix-js-sdk";
 
@@ -223,7 +223,7 @@ class Matrix extends Component {
   constructor(props) {
     super(props);
     console.log("LOGIN DATA", props.data);
-    window.mClient = matrixcs.createClient({
+    window.mClient = createClient({
       userId: props.data.user_id,
       accessToken: props.data.access_token,
       deviceId: props.data.device_id,
