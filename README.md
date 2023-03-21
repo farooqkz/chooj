@@ -5,7 +5,7 @@
 
 <div style="text-align: center">
 
-![Chat on Matrix](https://img.shields.io/matrix/chooj:mozilla.org.svg?server_fqdn=mozilla.modular.im)
+[![Chat on Matrix](https://img.shields.io/matrix/chooj:mozilla.org.svg?server_fqdn=mozilla.modular.im)](https://matrix.to/#/#chooj:mozilla.org?via=mozilla.org)
 [![CodeFactor](https://www.codefactor.io/repository/github/farooqkz/chooj/badge)](https://www.codefactor.io/repository/github/farooqkz/chooj)
 [![DeepScan grade](https://deepscan.io/api/teams/15094/projects/18237/branches/443145/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=15094&pid=18237&bid=443145)
 ![Lines of code](https://img.shields.io/tokei/lines/github/farooqkz/chooj)
