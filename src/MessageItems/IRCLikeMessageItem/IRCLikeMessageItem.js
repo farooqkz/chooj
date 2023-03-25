@@ -4,7 +4,8 @@ import {
   mxcMediaToHttp,
   bytesToHigherScale,
   msToHigherScale,
-  readableTimestamp
+  readableTimestamp,
+  getSomeDisplayName,
 } from "../../utils";
 
 function IRCLikeMessageItemText({ date, text, sender, isFocused }) {
@@ -74,6 +75,7 @@ function IRCLikeMessageItemAudio({
 }) {
   const hsUrl = window.mClient.getHomeserverUrl();
   url = mxcMediaToHttp(hsUrl, url);
+  console.log("A", url, bytesToHigherScale(size), msToHigherScale(duration), text, date);
   return (
     <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
       <p>
@@ -103,7 +105,7 @@ function IRCLikeMessageItemUnknown({ date, isFocused, sender }) {
 function IRCLikeMessageItem({ date, sender, content, isFocused }) {
   const userId = sender.userId;
   let userObj = window.mClient.getUser(userId);
-  let displayName = (userObj && userObj.displayName) || userId;
+  let displayName = getSomeDisplayName(userId);
   // In matrix-js-sdk 15.1.1 sometimes getUser(...) returns null. This is a temporary workaround.
   let d = readableTimestamp(date);
   switch (content.msgtype) {
@@ -146,7 +148,7 @@ function IRCLikeMessageItem({ date, sender, content, isFocused }) {
           text={content.body}
           duration={content.info.duration}
           size={content.info.size}
-          url={content.url}
+          url={content.url.content_uri}
           isFocused={isFocused}
         />
       );
