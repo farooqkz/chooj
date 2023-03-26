@@ -22,3 +22,18 @@
 .ircmsg--focused > p {
   font-size: 15px !important;
 }
+
+@keyframes being_sent {
+  from { background-color: black; }
+  to { background-color: red; }
+}
+
+.sending {
+  animation-name: being_sent;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+.not_sent {
+  color: red;
+}

@@ -1,4 +1,5 @@
 import { createTextVNode } from "inferno";
+import classNames from "classnames";
 import "./IRCLikeMessageItem.css";
 import {
   mxcMediaToHttp,
@@ -8,9 +9,21 @@ import {
   getSomeDisplayName,
 } from "../../utils";
 
-function IRCLikeMessageItemText({ date, text, sender, isFocused }) {
+
+function getClassNameFromStatus(status) {
+  if (status === null) return "";
+  if (status === "not_sent") {
+    return "not_sent";
+  } else if (status === "sent") {
+    return "";
+  } else {
+    return "sending";
+  }
+}
+
+function IRCLikeMessageItemText({ date, text, sender, isFocused, status }) {
   return (
-    <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
+    <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
       <p>
         <b $HasTextChildren>{date}</b>
         <b $HasTextChildren>{`<${sender}>`}</b>
@@ -20,9 +33,9 @@ function IRCLikeMessageItemText({ date, text, sender, isFocused }) {
   );
 }
 
-function IRCLikeMessageItemNotice({ date, isFocused, text, sender }) {
+function IRCLikeMessageItemNotice({ date, isFocused, text, sender, status }) {
   return (
-    <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
+    <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
       <p>
         <i>
           <b $HasTextChildren>{date}</b>
@@ -42,6 +55,7 @@ function IRCLikeMessageItemImage({
   height,
   url,
   isFocused,
+  status,
 }) {
   while (height > (192 * 2) / 3) {
     height *= 0.75;
@@ -53,7 +67,7 @@ function IRCLikeMessageItemImage({
   }
   url = window.mClient.mxcUrlToHttp(url, width, height, "scale", true);
   return (
-    <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
+    <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
       <p>
         <b $HasTextChildren>{date}</b>
         <b $HasTextChildren>{`<${sender}>`}</b>
@@ -72,12 +86,13 @@ function IRCLikeMessageItemAudio({
   duration,
   url,
   text,
+  status,
 }) {
   const hsUrl = window.mClient.getHomeserverUrl();
   url = mxcMediaToHttp(hsUrl, url);
   console.log("A", url, bytesToHigherScale(size), msToHigherScale(duration), text, date);
   return (
-    <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
+    <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
       <p>
         <b $HasTextChildren>{date}</b>
         <b $HasTextChildren>{`${sender} has sent an audio clip.`}</b>
@@ -93,18 +108,17 @@ function IRCLikeMessageItemAudio({
   );
 }
 
-function IRCLikeMessageItemUnknown({ date, isFocused, sender }) {
+function IRCLikeMessageItemUnknown({ date, isFocused, sender, status }) {
   return (
-    <div className={"ircmsg" + (isFocused ? "--focused" : "")} tabIndex={0}>
+    <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
       <b $HasTextChildren>{date}</b>
       <p $HasTextChildren>Unsupported message type was sent from {sender}</p>
     </div>
   );
 }
 
-function IRCLikeMessageItem({ date, sender, content, isFocused }) {
+function IRCLikeMessageItem({ date, sender, content, isFocused, status }) {
   const userId = sender.userId;
-  let userObj = window.mClient.getUser(userId);
   let displayName = getSomeDisplayName(userId);
   // In matrix-js-sdk 15.1.1 sometimes getUser(...) returns null. This is a temporary workaround.
   let d = readableTimestamp(date);
@@ -115,6 +129,7 @@ function IRCLikeMessageItem({ date, sender, content, isFocused }) {
           date={d}
           sender={displayName}
           text={content.body}
+          status={status}
           isFocused={isFocused}
         />
       );
@@ -124,6 +139,7 @@ function IRCLikeMessageItem({ date, sender, content, isFocused }) {
           date={d}
           sender={displayName}
           text={content.body}
+          status={status}
           isFocused={isFocused}
         />
       );
@@ -137,6 +153,7 @@ function IRCLikeMessageItem({ date, sender, content, isFocused }) {
           height={content.info.h}
           size={content.info.size}
           url={content.url}
+          status={status}
           isFocused={isFocused}
         />
       );
@@ -149,6 +166,7 @@ function IRCLikeMessageItem({ date, sender, content, isFocused }) {
           duration={content.info.duration}
           size={content.info.size}
           url={content.url.content_uri}
+          status={status}
           isFocused={isFocused}
         />
       );
@@ -161,6 +179,7 @@ function IRCLikeMessageItem({ date, sender, content, isFocused }) {
         <IRCLikeMessageItemUnknown
           date={d}
           sender={sender.userId}
+          status={status}
           isFocused={isFocused}
         />
       );
