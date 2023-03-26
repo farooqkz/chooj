@@ -90,7 +90,6 @@ function IRCLikeMessageItemAudio({
 }) {
   const hsUrl = window.mClient.getHomeserverUrl();
   url = mxcMediaToHttp(hsUrl, url);
-  console.log("A", url, bytesToHigherScale(size), msToHigherScale(duration), text, date);
   return (
     <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
       <p>
