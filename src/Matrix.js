@@ -1,7 +1,6 @@
 import { Component, createPortal } from "inferno";
 import { createClient } from "matrix-js-sdk";
 import * as localforage from "localforage";
-import { MatrixClient } from "matrix-js-sdk";
 
 import { TabView, TextListItem, SoftKey, DropDownMenu } from "KaiUI";
 import DMsView from "./DMsView";

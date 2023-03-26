@@ -1,5 +1,4 @@
 import { createTextVNode } from "inferno";
-import { MatrixEvent } from "matrix-js-sdk";
 
 import { IRCLikeMessageItem } from "../MessageItems";
 import { readableTimestamp, getSomeDisplayName } from "../utils";
@@ -65,6 +64,7 @@ export default function RoomEvent({ evt, isFocused }) {
   const UnsupportedEventItem = IRCLikeUnsupportedEventItem;
   const displayName = getSomeDisplayName(senderId);
   const ts = readableTimestamp(evt.getTs());
+  const status = evt.status;
 
   switch (type) {
     case "m.room.message":
@@ -73,6 +73,7 @@ export default function RoomEvent({ evt, isFocused }) {
           date={evt.getDate()}
           sender={{ userId: senderId }}
           content={evt.getContent()}
+          status={status}
           isFocused={isFocused}
         />
       );
