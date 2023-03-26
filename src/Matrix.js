@@ -204,7 +204,7 @@ class Matrix extends Component {
       const room = matrix.getRoom(this.roomId)
       if (!room) {
         alert("Error: no room selected")
-      } else if (confirm(`Are you sure to leave '${room.name}'?`)) {
+      } else if (window.confirm(`Are you sure to leave '${room.name}'?`)) {
         matrix.leave(room.roomId)
       }
     }
