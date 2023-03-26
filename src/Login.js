@@ -91,7 +91,7 @@ class Login extends Component {
       case 0:
         this.homeserverName = this.homeserverName.replace("https://", "");
         this.homeserverName = this.homeserverName.replace("http://", "");
-        fetch(`https://${this.homeserverName}/.well-known/matrix/server`)
+        fetch(`https://${this.homeserverName}/.well-known/matrix/client`)
           .then((r) => {
             if (r.ok) {
               r.json().then((j) => {
