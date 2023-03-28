@@ -101,7 +101,7 @@ class RoomView extends Component {
       }
       return;
     }
-    const lastEventIndex = this.getVisibleEvents().lastIndex;
+    const lastEventIndex = this.getVisibleEvents().length - 1;
     if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
       if (textInputFocus && message) return;
       evt.preventDefault();
@@ -137,7 +137,7 @@ class RoomView extends Component {
     }
     if (room.roomId === this.room.roomId) {
       let events = this.getVisibleEvents();
-      const lastEventIndex = events.lastIndex;
+      const lastEventIndex = events.length - 1;
       const { cursor, textInputFocus } = this.state;
       if (textInputFocus) {
         // partial support
@@ -171,7 +171,8 @@ class RoomView extends Component {
     if (imageViewer) {
       return "-";
     }
-    if (!textInputFocus && this.currentEvent && this.currentEvent.status === "not_sent") {
+    const currentEvt = this.currentEvent;
+    if (!textInputFocus && currentEvt && currentEvt.status === "not_sent") {
       return "Delete";
     }
     return "";
@@ -183,7 +184,7 @@ class RoomView extends Component {
     }
     if (this.state.textInputFocus) return "+";
     const currentEvt = this.currentEvent;
-    if (currentEvent) {
+    if (currentEvt) {
       if (currentEvt.status === "not_sent") {
         return "Retry";
       }
@@ -331,6 +332,7 @@ class RoomView extends Component {
 
   constructor(props) {
     super(props);
+    console.log("DIS", this);
     this.room = window.mClient.getRoom(props.roomId);
     if (this.room === null) {
       alert("Cannot retrieve room information");
