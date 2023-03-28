@@ -25,7 +25,6 @@ export default class ChatRoomItem extends Component {
       avatarUrl: room.getAvatarUrl(window.mClient.baseUrl, 36, 36, "scale") || roomIcon,
       displayName: room.name,
     };
-    console.log("HI", this.state);
   }
 
   componentDidMount() {
