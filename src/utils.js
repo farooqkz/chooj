@@ -32,11 +32,11 @@ function updateState(room, state) {
 }
 
 function isDM(room) {
-  return room.getJoinedMemberCount() === 2 && room.getMyMembership() === "join";
+  return room.getJoinedMemberCount() === 2 && room.getMyMembership() === "join" && !room.isSpaceRoom();
 }
 
 function isRoom(room) {
-  return room.getJoinedMemberCount() > 2 && room.getMyMembership() === "join";
+  return room.getJoinedMemberCount() > 2 && room.getMyMembership() === "join" && !room.isSpaceRoom();
 }
 
 function getAvatarOrDefault(mxcUrl, defaultUrl, size) {
