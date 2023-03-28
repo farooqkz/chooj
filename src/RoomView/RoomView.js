@@ -11,10 +11,18 @@ import RoomEvent from "./RoomEvent";
 import ImageViewer  from "../ImageViewer";
 
 
-let HIDDEN_EVENTS = [
-  "m.call.select_answer",
-  "m.call.candidates",
-]; // these events won't be shown to the user. TODO: Use something with better search cost
+let HIDDEN_EVENTS = new Map([
+  ["m.call.select_answer", true],
+  ["m.call.candidates", true],
+]); // these events won't be shown to the user.
+
+let EVENT_STATUS_FOR_UPDATE = new Map([
+  ["not_sent", true],
+  ["sent", true],
+  [null, true],
+]); // if status for the sent event by user converts to any of these,
+    // we won't go for re-render anymore.
+
 
 function CannotSendMessage() {
   // eslint-disable-line no-unused-vars
@@ -33,13 +41,18 @@ function Waiting() {
   );
 }
 
+
 class RoomView extends Component {
   messageChangeCb = (message) => {
     this.setState({ message: message });
     window.mClient.sendTyping(this.room.roomId, true, 75);
   };
+  
+  getVisibleEvents = () => {
+    return this.timeline.getEvents().filter((evt) => evt.getType() && !HIDDEN_EVENTS.get(evt.getType()));
+  };
 
-  handleTyping = (evt, member) => {
+  handleTyping = (_evt, member) => {
     if (member.roomId !== this.room.roomId) {
       return;
     }
@@ -63,12 +76,12 @@ class RoomView extends Component {
     const { cursor, textInputFocus, message, waiting } = this.state;
     const { closeRoomView } = this.props;
     if (cursor <= 5 && !this.reachedEndOfTimeline) {
-      let prev = this.timeline.getEvents().lastIndex;
+      let prev = this.getVisibleEvents().length - 1;
       window.mClient
         .paginateEventTimeline(this.timeline, { backwards: true, limit: 25 })
         .then((notReachedEnd) => {
           if (notReachedEnd) {
-            const current = this.timeline.getEvents().lastIndex;
+            const current = this.getVisibleEvents().length - 1;
             this.setState({
               cursor: current - prev,
             });
@@ -88,7 +101,7 @@ class RoomView extends Component {
       }
       return;
     }
-    const lastEventIndex = this.room.getLiveTimeline().getEvents().lastIndex;
+    const lastEventIndex = this.getVisibleEvents().lastIndex;
     if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
       if (textInputFocus && message) return;
       evt.preventDefault();
@@ -123,7 +136,7 @@ class RoomView extends Component {
       window.stateStores.set("DMsView", roomsViewState);
     }
     if (room.roomId === this.room.roomId) {
-      let events = this.timeline.getEvents();
+      let events = this.getVisibleEvents();
       const lastEventIndex = events.lastIndex;
       const { cursor, textInputFocus } = this.state;
       if (textInputFocus) {
@@ -135,10 +148,31 @@ class RoomView extends Component {
       });
     }
   };
+  
+  eventSentCb = (response) => {
+    let evt = this.room.findEventById(response.event_id);
+    let dis = this;
+    function updateFn() {
+      if (EVENT_STATUS_FOR_UPDATE.get(evt.status)) {
+        dis.forceUpdate();
+        evt.off("Event.status", updateFn);
+      }
+    }
+    evt.on("Event.status", updateFn);
+  };
+
+  eventSentFailCb = (error) => {
+    window.alert("Cannot sent message");
+    console.log("ERROR", error);
+  }
 
   getRightText = () => {
-    if (this.state.imageViewer) {
+    const { imageViewer, textInputFocus } = this.state;
+    if (imageViewer) {
       return "-";
+    }
+    if (!textInputFocus && this.currentEvent && this.currentEvent.status === "not_sent") {
+      return "Delete";
     }
     return "";
   };
@@ -149,11 +183,17 @@ class RoomView extends Component {
     }
     if (this.state.textInputFocus) return "+";
     const currentEvt = this.currentEvent;
-    let msgtype = currentEvt.getContent().msgtype;
-    if (msgtype === "m.audio") return "Vol.";
-    if (msgtype === "m.image") return "View";
+    if (currentEvent) {
+      if (currentEvt.status === "not_sent") {
+        return "Retry";
+      }
+      let msgtype = currentEvt.getContent().msgtype;
+      if (msgtype === "m.audio") return "Vol.";
+      if (msgtype === "m.image") return "View";
+    }
     return "";
   };
+  
 
   leftCb = () => {
     if (this.getLeftText() === "+") {
@@ -169,11 +209,17 @@ class RoomView extends Component {
     if (this.getLeftText() === "View") {
       this.setState({ imageViewer: true }); 
     }
+    if (this.getLeftText() === "Retry") {
+      window.mClient.resendEvent(this.currentEvent).then(this.eventSentCb).catch(this.eventSentFailCb);
+    }
   };
-
+  
   rightCb = () => {
     if (this.state.imageViewer && this.imageViewer && this.getRightText() === "-") {
       this.imageViewer.zoomOut();
+    }
+    if (this.getRightText() === "Delete") {
+      window.mClient.redactEvent(this.room.roomId, this.currentEvent.getId());
     }
   };
 
@@ -204,7 +250,7 @@ class RoomView extends Component {
           alert("Not sending empty message!");
           break;
         }
-        window.mClient.sendTextMessage(roomId, message);
+        window.mClient.sendTextMessage(roomId, message).then(this.eventSentCb).catch(this.eventSentFailCb);
         this.setState({ message: "" });
         break;
       case "Download":
@@ -332,7 +378,7 @@ class RoomView extends Component {
           .catch(() => alert("Cannot send voice"));
       };
     });
-    const lastEventIndex = this.timeline.getEvents().lastIndex;
+    const lastEventIndex = this.getVisibleEvents().length - 1;
     this.state = {
       showMenu: false,
       cursor: lastEventIndex,
@@ -375,17 +421,17 @@ class RoomView extends Component {
         <Header text={typing ? "Typing..." : this.room.name} />
         <div
           className="eventsandtextinput"
-          ref={(ref) => {
-            this.eventsDiv = ref;
-          }}
         >
           <div
             className={"kai-list-view"}
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
+            ref={(r) => {
+              this.r = r;
+            }}
           >
             {waiting ? <Waiting /> : null}
-            {this.timeline.getEvents().filter((evt) => evt.getType() && !HIDDEN_EVENTS.includes(evt.getType())).map((evt, index) => {
-              let item = <RoomEvent evt={evt} isFocused={index === cursor && !textInputFocus} />;
+            {this.getVisibleEvents().map((evt, index, arr) => {
+              let item = <RoomEvent evt={evt} isFocused={index === cursor && !textInputFocus}/>;
 
               if (item.props.isFocused) {
                 this.currentEvent = evt;

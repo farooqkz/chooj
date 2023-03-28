@@ -31,6 +31,7 @@
 .sending {
   animation-name: being_sent;
   animation-duration: 2s;
+  animation-direction: alternate;
   animation-iteration-count: infinite;
 }
 
