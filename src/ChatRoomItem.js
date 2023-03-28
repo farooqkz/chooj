@@ -12,10 +12,6 @@ export default class ChatRoomItem extends Component {
   onTimelineUpdate = (a, b, c) => {
     console.log("ARAPORT", a, b, c);
   };
-  
-  onAvatarChange = (a, b, c) => {
-    console.log("BRAPORT", a, b, c);
-  };
 
   constructor(props) {
     super(props);

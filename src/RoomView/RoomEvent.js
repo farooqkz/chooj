@@ -50,7 +50,7 @@ function MembershipEvent({ evt, isFocused }) {
     default:
       if (isFocused) console.log("REPORT", evt);
       return (
-        <Event {...isFocused}>
+        <Event isFocused={isFocused}>
           <p $HasTextChildren>{`Unknown membership event from ${content.displayname}: ${eventType}`}</p>
         </Event>
       );

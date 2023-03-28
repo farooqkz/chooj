@@ -6,7 +6,6 @@ import ChatTextInput from "../ChatTextInput";
 import VoiceInput from "../VoiceInput";
 import ScrollIntoView from "./ScrollIntoView";
 import "./RoomView.css";
-import WaitingCurve from "./waiting_curve.svg";
 import RoomEvent from "./RoomEvent";
 import ImageViewer  from "../ImageViewer";
 
@@ -25,18 +24,9 @@ let EVENT_STATUS_FOR_UPDATE = new Map([
 
 
 function CannotSendMessage() {
-  // eslint-disable-line no-unused-vars
   return (
     <div style={{ "background-color": "gray" }}>
       <h5>Cannot send message to this room</h5>
-    </div>
-  );
-}
-
-function Waiting() {
-  return (
-    <div>
-      <img src={WaitingCurve} height="16px" width="16px" alt="" />
     </div>
   );
 }
@@ -73,7 +63,7 @@ class RoomView extends Component {
     if (!VALID_KEYS.includes(evt.key)) {
       return;
     }
-    const { cursor, textInputFocus, message, waiting } = this.state;
+    const { cursor, textInputFocus, message } = this.state;
     const { closeRoomView } = this.props;
     if (cursor <= 5 && !this.reachedEndOfTimeline) {
       let prev = this.getVisibleEvents().length - 1;
@@ -113,9 +103,6 @@ class RoomView extends Component {
         this.setState({ cursor: cursor + 1 });
       }
     } else if (evt.key === "ArrowUp") {
-      if (waiting) {
-        return;
-      }
       if (textInputFocus) {
         this.setState({ textInputFocus: false, cursor: lastEventIndex });
       } else {
@@ -388,7 +375,6 @@ class RoomView extends Component {
       textInputFocus: true,
       isRecording: false,
       recordingSeconds: 0,
-      waiting: false,
       imageViewer: false,
     };
   }
@@ -413,7 +399,6 @@ class RoomView extends Component {
       message,
       textInputFocus,
       typing,
-      waiting,
       imageViewer,
     } = this.state;
     return (
@@ -431,7 +416,6 @@ class RoomView extends Component {
               this.r = r;
             }}
           >
-            {waiting ? <Waiting /> : null}
             {this.getVisibleEvents().map((evt, index, arr) => {
               let item = <RoomEvent evt={evt} isFocused={index === cursor && !textInputFocus}/>;
 
