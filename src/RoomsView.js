@@ -1,5 +1,5 @@
 import { Component } from "inferno";
-import { ListViewKeyed, TextListItem } from "KaiUI";
+import { ListViewKeyed } from "KaiUI";
 
 import ChatRoomItem from "./ChatRoomItem";
 import { getRoomLastEvent, updateState, isRoom, isDM } from "./utils";
