@@ -1,4 +1,4 @@
-import { Component, createPortal } from "inferno";
+import { Component, createPortal, VNode } from "inferno";
 import {
   ListViewKeyed,
   IconListItem,
@@ -8,14 +8,18 @@ import {
 } from "KaiUI";
 
 import FarooqAvatar from "./FarooqAvatar.png";
-import AdrianAvatar from "./AdrianAvatar.png";
 import { startDM } from "./utils"; // eslint-disable-line no-unused-vars
 
-function ContactSelectionMenu({ selectCb }) {
+interface ContactSelectionMenuProps {
+  selectCb: (label: string) => void;
+}
+
+function ContactSelectionMenu({ selectCb }: ContactSelectionMenuProps) : JSX.Element {
   return (
     <DropDownMenu
       title="Contact Farooq"
-      selectCb={(cursor) => selectCb(["email", "matrix"][cursor])}
+      selectCb={selectCb}
+      labels={["email", "matrix"]}
     >
       <TextListItem primary="Email" />
       <TextListItem primary="Matrix" />
@@ -23,7 +27,7 @@ function ContactSelectionMenu({ selectCb }) {
   );
 }
 
-function contactFarooq(contactWay) {
+function contactFarooq(contactWay: string) {
   // eslint-disable-next-line no-useless-concat
   let myEmailAddr = "mailto:" + "f" + "kz" + "@" + "riseup.net";
   switch (contactWay) {
@@ -46,8 +50,13 @@ function contactFarooq(contactWay) {
   }
 }
 
-class About extends Component {
-  handleKeyDown = (evt) => {
+
+interface AboutState {
+  showContactScreen: Boolean;
+}
+
+class About extends Component<{}, AboutState> {
+  handleKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === "Call" || evt.key === "c") {
       console.log("Okay they want to contact Farooq...");
       this.setState({ showContactScreen: true });
@@ -68,39 +77,35 @@ class About extends Component {
     document.removeEventListener("keydown", this.handleKeyDown);
   }
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
-      cursor: 0,
       showContactScreen: false,
     };
   }
 
   render() {
-    const cursor = this.state.cursor;
     let items = [
       <TextListItem key="call-Farooq" tertiary="Press Call button while in this Tab to contact Farooq the developer of this app" />,
       <IconListItem
         key="dev-Farooq"
         iconSrc={FarooqAvatar}
         primary="Farooq Karimi Zadeh"
-        secondary="App Developer"
+        secondary="Main app developer"
       />,
       <TextListItem key="dev-Affe" primary="Affe Null" secondary="Contributor" />,
-      <Separator key="sep-lib" text="Libraries and modules" />,
-      <IconListItem
-        key="lib-kaiui"
-        iconSrc={AdrianAvatar}
-        primary="Adrian Machado"
-        secondary="KaiUI" 
-      />,
-      <TextListItem key="lib-matrix" primary="matrix.org" secondary="matrix-js-sdk" />,
+      <TextListItem key="dev-slaux" primary="Simon Laux" secondary="Contributor" />,
+      <Separator key="sep-lib" text="Major libraries" />,
+      <TextListItem key="lib-matrix" primary="matrix-js-sdk" />,
+      <TextListItem key="lib-kaiuing" primary="KaiUIng" />,
+      <TextListItem key="lib-inferno" primary="InfernoJS" />,
+      <TextListItem key="lib-localforage" primary="localforage" />,
+
     ];
     return (
       <>
         <ListViewKeyed
-          cursor={this.state.cursor}
-          cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}
+          cursor={0}
           $HasKeyedChildren
         >
           {items}
