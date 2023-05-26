@@ -1,19 +1,23 @@
 import { Component } from "inferno";
 import { ListViewKeyed } from "KaiUI";
+import { Room, RoomEvent, MatrixEvent, IRoomTimelineData } from "matrix-js-sdk";
 
 import ChatRoomItem from "./ChatRoomItem";
 import { getRoomLastEvent, updateState, isRoom, isDM } from "./utils";
 import NoItem from "./NoItem";
+import { RoomsViewState, RoomsViewProps } from "./types";
 
-class RoomsView extends Component {
-  cursorChangeCb = (cursor) => {
+class RoomsView extends Component<RoomsViewProps> {
+  public state: RoomsViewState;
+
+  cursorChangeCb = (cursor: number) => {
     const rooms = this.state.rooms;
     if (rooms.length !== 0) this.props.selectedRoomCb(rooms[cursor].roomId);
     else this.props.selectedRoomCb(null);
     this.setState({ cursor: cursor });
   };
 
-  handleTimelineUpdate = (evt, room, toStartOfTimeline, removed, data) => {
+  handleTimelineUpdate = (_evt: MatrixEvent, room?: Room, toStartOfTimeline?: Boolean, _removed: Boolean, data: IRoomTimelineData) => {
     if (!room || toStartOfTimeline || !data.liveEvent) {
       return;
     }
@@ -21,12 +25,12 @@ class RoomsView extends Component {
       if (isDM(room)) {
         // update DMsView saved state
         let state = window.stateStores.get("DMsView");
-        state = updateState(room, state, true);
+        state = updateState(room, state;
         window.stateStores.set("DMsView", state);
       }
       return;
     }
-    this.setState((state) => updateState(room, state, false));
+    this.setState((state: RoomsViewState) => updateState(room, state));
   };
 
   constructor(props) {
@@ -43,22 +47,22 @@ class RoomsView extends Component {
       .getVisibleRooms()
       .filter(isRoom);
   }
-
-  componentWillMount() {
-    document.addEventListener("keydown", this.handleKeyDown);
+  
+  componentDidMount() {
+    window.mClient.on(RoomEvent.Timeline, this.handleTimelineUpdate);
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown);
+    window.mClient.off(RoomEvent.Timeline, this.handleTimelineUpdate);
     window.stateStores.set("RoomsView", this.state);
   }
 
   render() {
     const { cursor, rooms } = this.state;
-    const sortedRooms = rooms.sort(
-      (first, second) => getRoomLastEvent(first).getTs() < getRoomLastEvent(second).getTs() 
+    rooms.sort(
+      (first: Room, second: Room) => getRoomLastEvent(first).getTs() - getRoomLastEvent(second).getTs() 
     );
-    let renderedRooms = sortedRooms.map((room) => {
+    let renderedRooms = rooms.map((room: Room) => {
       return (
         <ChatRoomItem
           roomId={room.roomId}
