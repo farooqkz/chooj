@@ -1,16 +1,28 @@
 import { Component } from "inferno";
 import "./ImageViewer.css";
 
-export default class ImageViewer extends Component {
+interface ImageViewerState {
+  zoom: number;
+  offsetTop: number;
+  offsetLeft: number;
+}
+
+interface ImageViewerProps {
+  url: string;
+  height: number;
+  width: number;
+}
+
+export default class ImageViewer extends Component<ImageViewerProps, ImageViewerState> {
   zoomIn = () => {
-    this.setState((state) => {
+    this.setState((state: ImageViewerState) => {
       state.zoom *= 1.5;
       return state;
     });
   };
 
   zoomOut = () => {
-    this.setState((state) => {
+    this.setState((state: ImageViewerState) => {
       state.zoom /= 1.5;
       return state;
     });
@@ -20,23 +32,25 @@ export default class ImageViewer extends Component {
     this.setState({ zoom: 1 });
   }
 
-  move = (direction) => {
+  move = (direction: string) => {
+    /*
     const { height, width } = this.props;
     const SCREEN_WIDTH = 240;
     const SCREEN_HEIGHT = 320;
-    this.setState((state) => {
+    */
+    this.setState((state: ImageViewerState) => {
       switch (direction) {
         case "left":
-          state.offsetLeft += parseInt(state.zoom * 50);
+          state.offsetLeft += Math.floor(state.zoom * 50);
           break;
         case "right":
-          state.offsetLeft -= parseInt(state.zoom * 50);
+          state.offsetLeft -= Math.floor(state.zoom * 50);
           break;
         case "up":
-          state.offsetTop += parseInt(state.zoom * 50);
+          state.offsetTop += Math.floor(state.zoom * 50);
           break;
         case "down":
-          state.offsetTop -= parseInt(state.zoom * 50);
+          state.offsetTop -= Math.floor(state.zoom * 50);
           break;
         default:
           console.log("[ImageViewer] Invalid direction for move:", direction);
@@ -51,7 +65,7 @@ export default class ImageViewer extends Component {
     });
   };
 
-  constructor(props) {
+  constructor(props: ImageViewerProps) {
     super(props);
     this.state = {
       zoom: 1,
