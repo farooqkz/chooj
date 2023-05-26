@@ -1,8 +1,9 @@
 import { Component } from "inferno";
-import { ListView, TextListItem } from "KaiUI";
+import { ListViewKeyed, TextListItem } from "KaiUI";
 
 import ChatRoomItem from "./ChatRoomItem";
 import { getRoomLastEvent, updateState, isRoom, isDM } from "./utils";
+import NoItem from "./NoItem";
 
 class RoomsView extends Component {
   cursorChangeCb = (cursor) => {
@@ -57,24 +58,21 @@ class RoomsView extends Component {
     const sortedRooms = rooms.sort(
       (first, second) => getRoomLastEvent(first).getTs() < getRoomLastEvent(second).getTs() 
     );
-    let renderedRooms = sortedRooms.map((room, index) => {
+    let renderedRooms = sortedRooms.map((room) => {
       return (
         <ChatRoomItem
           roomId={room.roomId}
           key={room.roomId}
-          isFocused={index === cursor}
         />
       );
     });
     if (renderedRooms.length === 0) {
-      renderedRooms.push(<TextListItem primary="No Rooms :(" isFocused key={0} />);
+      return <NoItem text="You are not in any room" />;
     }
     return (
-      <>
-        <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
-          {renderedRooms}
-        </ListView>
-      </>
+      <ListViewKeyed cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
+        {renderedRooms}
+      </ListViewKeyed>
     );
   }
 }

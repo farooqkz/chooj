@@ -1,6 +1,6 @@
 import { Component, createPortal } from "inferno";
 import {
-  ListView,
+  ListViewKeyed,
   IconListItem,
   TextListItem,
   Separator,
@@ -79,31 +79,32 @@ class About extends Component {
   render() {
     const cursor = this.state.cursor;
     let items = [
-      <TextListItem key="call-Farooq" tertiary="Press Call button while in this Tab to contact Farooq the developer of this app" isFocused={0 === cursor} />,
+      <TextListItem key="call-Farooq" tertiary="Press Call button while in this Tab to contact Farooq the developer of this app" />,
       <IconListItem
         key="dev-Farooq"
         iconSrc={FarooqAvatar}
         primary="Farooq Karimi Zadeh"
-        secondary="App Developer" isFocused={1 === cursor}
+        secondary="App Developer"
       />,
-      <TextListItem key="dev-Affe" primary="Affe Null" secondary="Contributor"  isFocused={2 === cursor} />,
+      <TextListItem key="dev-Affe" primary="Affe Null" secondary="Contributor" />,
       <Separator key="sep-lib" text="Libraries and modules" />,
       <IconListItem
         key="lib-kaiui"
         iconSrc={AdrianAvatar}
         primary="Adrian Machado"
-        secondary="KaiUI"  isFocused={3 === cursor}
+        secondary="KaiUI" 
       />,
-      <TextListItem key="lib-matrix" primary="matrix.org" secondary="matrix-js-sdk"  isFocused={4 === cursor} />,
+      <TextListItem key="lib-matrix" primary="matrix.org" secondary="matrix-js-sdk" />,
     ];
     return (
       <>
-        <ListView
+        <ListViewKeyed
           cursor={this.state.cursor}
           cursorChangeCb={(cursor) => this.setState({ cursor: cursor })}
+          $HasKeyedChildren
         >
-        {items}
-        </ListView>
+          {items}
+        </ListViewKeyed>
         {this.state.showContactScreen
           ? createPortal(
               <ContactSelectionMenu

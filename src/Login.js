@@ -6,7 +6,7 @@ import {
   TextInput,
   Header,
   SoftKey,
-  ListView
+  ListViewKeyed
 } from "KaiUI";
 
 import LoginWithQR from "./LoginWithQR";
@@ -193,22 +193,14 @@ class Login extends Component {
             type: "text",
             key: "qrHint"
           },
-        ].map((attrs, index) => {
+        ].map((attrs) => {
           const C = attrs.type === "input" ? TextInput : TextListItem;
-          if (index === this.state.cursor) {
-            return <C {...attrs} isFocused />;
-          } else {
-            return <C {...attrs} />;
-          }
+          return <C {...attrs} />;
         });
         break;
       case 1:
         listViewChildren = this.loginFlows.map((flow, index) => {
-          if (index === this.state.cursor) {
-            return <TextListItem key={"flow"+flow.type} primary={flow.type} isFocused />;
-          } else {
-            return <TextListItem key={"flow"+flow.type} primary={flow.type} />;
-          }
+          return <TextListItem key={"flow"+flow.type} primary={flow.type} />;
         });
         break;
       case 2:
@@ -222,12 +214,11 @@ class Login extends Component {
               onChange={(value) => {
                 this.password = value;
               }}
-              isFocused
             />
           );
         } else {
           alert("Unsupported login flow: " + this.selectedLoginFlow.type);
-          listViewChildren = <TextListItem key="unsupported" primary=":(" isFocused />;
+          listViewChildren = <TextListItem key="unsupported" primary=":(" />;
         }
         break;
       default:
@@ -237,12 +228,13 @@ class Login extends Component {
     return (
       <div>
         <Header text={this.stageNames[this.state.stage]} />
-        <ListView
+        <ListViewKeyed  
           cursorChangeCb={this.cursorChangeCb}
           cursor={this.state.cursor}
+          $HasKeyedChildren
         >
           {listViewChildren}
-        </ListView>
+        </ListViewKeyed>
         <footer>
           <SoftKey
             leftText="Quit"

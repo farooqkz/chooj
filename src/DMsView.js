@@ -1,12 +1,13 @@
 import { Component, createPortal } from "inferno";
 import {
-  ListView,
+  ListViewKeyed,
   TextListItem,
   DropDownMenu,
 } from "KaiUI";
 
 import ChatDMItem from "./ChatDMItem";
 import { updateState, getRoomLastEvent, isDM, isRoom } from "./utils";
+import NoItem from "./NoItem";
 
 function CallSelectionMenu({ selectCb }) {
   return (
@@ -109,35 +110,28 @@ class DMsView extends Component {
     const sortedRooms = rooms.sort(
       (first, second) => getRoomLastEvent(first).getTs() < getRoomLastEvent(second).getTs() 
     );
-    let renderedRooms = sortedRooms.map((room, index) => {
+    let renderedRooms = sortedRooms.map((room) => {
       return (
         <ChatDMItem
           room={room}
-          isFocused={index === cursor}
           key={room.roomId}
         />
       );
     });
 
     if (renderedRooms.length === 0) {
-      renderedRooms.push(<TextListItem primary="No DM :(" isFocused key={0} />);
+      return <NoItem text="You haven't got any DM" />;
     }
-    if (showCallSelection)
-      return (
-        <>
-          <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
-            {renderedRooms}
-          </ListView>
-          {createPortal(
-            <CallSelectionMenu selectCb={this.startCall} />,
-            document.getElementById("menu")
-          )}
-        </>
-      );
     return (
-      <ListView cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
-        {renderedRooms}
-      </ListView>
+      <>
+        <ListViewKeyed cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
+          {renderedRooms}
+        </ListViewKeyed>
+        { showCallSelection ? createPortal(
+          <CallSelectionMenu selectCb={this.startCall} />,
+          document.getElementById("menu")
+        ) : null}
+      </>
     );
   }
 }
