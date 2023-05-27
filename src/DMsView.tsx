@@ -4,16 +4,29 @@ import {
   TextListItem,
   DropDownMenu,
 } from "KaiUI";
-
+import { Room, MatrixEvent } from "matrix-js-sdk";
 import ChatDMItem from "./ChatDMItem";
 import { updateState, getRoomLastEvent, isDM, isRoom } from "./utils";
 import NoItem from "./NoItem";
+import { startCall } from "./types";
 
-function CallSelectionMenu({ selectCb }) {
+interface DMsViewProps {
+  startCall: startCall;
+  selectedRoomCb: (roomId: string | null) => void;
+}
+
+interface DMsViewState {
+  cursor: number;
+  showCallSelection: Boolean;
+  rooms: Array<Room>;
+}
+
+function CallSelectionMenu({ selectCb }: { selectCb: (type) => void }) {
   return (
     <DropDownMenu
       title="Start call"
-      selectCb={(cursor) => selectCb(["voice", "video"][cursor])}
+      selectCb={selectCb}
+      labels={["voice", "video"]}
     >
       <TextListItem primary="Voice call" />
       <TextListItem primary="Video call" />
@@ -21,8 +34,8 @@ function CallSelectionMenu({ selectCb }) {
   );
 }
 
-class DMsView extends Component {
-  handleKeyDown = (evt) => {
+class DMsView extends Component<DMsViewProps, DMsViewState> {
+  handleKeyDown = (evt: KeyboardEvent) => {
     const { showCallSelection, rooms } = this.state;
     if (evt.key === "Call" || evt.key === "c") {
       if (rooms.length === 0) {
@@ -40,7 +53,7 @@ class DMsView extends Component {
     }
   };
 
-  startCall = (type) => {
+  startCall = (type: string) => {
     this.setState({ showCallSelection: false });
     if (type !== "voice") {
       alert("Not implemented");
@@ -52,7 +65,7 @@ class DMsView extends Component {
     this.props.startCall(roomId, type, userId);
   };
 
-  cursorChangeCb = (cursor) => {
+  cursorChangeCb = (cursor: number) => {
     if (!this.state.showCallSelection) {
       const rooms = this.state.rooms;
       if (rooms.length !== 0) {
@@ -63,7 +76,7 @@ class DMsView extends Component {
       this.setState({ cursor: cursor });
     }
   };
-
+/*
   handleTimelineUpdate = (evt, room, toStartOfTimeline, removed, data) => {
     if (!room || toStartOfTimeline || !data.liveEvent) {
       return;
@@ -79,8 +92,8 @@ class DMsView extends Component {
     }
     this.setState((state) => updateState(room, state));
   };
-
-  constructor(props) {
+*/
+  constructor(props: DMsViewProps) {
     super(props);
     const client = window.mClient;
     this.state = window.stateStores.get("DMsView") || {
@@ -107,10 +120,13 @@ class DMsView extends Component {
 
   render() {
     const { cursor, rooms, showCallSelection } = this.state;
-    const sortedRooms = rooms.sort(
-      (first, second) => getRoomLastEvent(first).getTs() < getRoomLastEvent(second).getTs() 
-    );
-    let renderedRooms = sortedRooms.map((room) => {
+    rooms.sort(
+      (first: Room, second: Room) => {
+        let firstRoomEvent: MatrixEvent | null = getRoomLastEvent(first);
+        let secondRoomEvent: MatrixEvent | null = getRoomLastEvent(second);
+        return (firstRoomEvent && firstRoomEvent.getTs()) || 0 - ((secondRoomEvent && secondRoomEvent.getTs()) || 0);
+      });
+    let renderedRooms = rooms.map((room: Room) => {
       return (
         <ChatDMItem
           room={room}
