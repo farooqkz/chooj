@@ -10,6 +10,7 @@ import Waiting from "./Waiting";
 import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
 import Settings from "./Settings";
+import InvitesView from "./InvitesView";
 import { urlBase64ToUint8Array, toast, updateState } from "./utils";
 
 const vapidPublicKey =
@@ -309,7 +310,7 @@ class Matrix extends Component {
                 this.roomsViewRef = r;
               }}
             />
-            <p>Invites are not implemented</p>
+            <InvitesView selectedInviteCb={(invite) => { this.invite = invite }} />
             <Settings />
             <About />
           </TabView>
