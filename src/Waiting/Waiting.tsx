@@ -1,7 +1,7 @@
 import "./Waiting.css";
 import cow from "./cowsay-pleasewait.png";
 
-let tips = [
+let tips: Array<string> = [
   "Use call key in People tab to quickly call someone",
   "In About tab, you can see credits",
   "Contact developer by pressing Call key in About tab",
@@ -9,10 +9,10 @@ let tips = [
 ];
 
 function randomTip() {
-  return tips[parseInt(Math.random() * tips.length)];
+  return tips[Math.floor(Math.random() * tips.length)];
 }
 
-function Waiting({ noTip }) {
+function Waiting({ noTip }: { noTip?: Boolean }) {
   return (
     <>
       <img className="waiting" src={cow} alt="" />
