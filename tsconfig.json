@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strict": true,
+    "jsx": "preserve",
+    "baseUrl": "./src",
+    "moduleResolution": "node",
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "lib": ["es2017", "dom"],
+    "allowSyntheticDefaultImports": true,
+    "types": ["inferno"]
+  },
+  "exclude": [
+    "dist"
+  ]
+}
