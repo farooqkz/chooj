@@ -4,18 +4,27 @@ import Waiting from "./Waiting";
 import * as localforage from "localforage";
 import Matrix from "./Matrix";
 import Login from "./Login";
+import { LoginData } from "./types";
 
-class App extends Component {
-  constructor(props) {
+interface AppState {
+  state: string | null;
+  online: Boolean | null;
+}
+
+class App extends Component<{}, AppState> {
+  private loginData: null | LoginData;
+  private timeout: null | number;
+  constructor(props: {}) {
     super(props);
     this.loginData = null;
+    this.timeout = null;
     this.state = {
       state: null,
       online: navigator.onLine ? null : false,
     };
-    localforage.getItem("login").then((login) => {
+    localforage.getItem("login").then((login: unknown) => {
       if (login) {
-        this.loginData = login;
+        this.loginData = login as LoginData;
         this.setState({ state: "matrix" });
       } else {
         this.setState({ state: "login" });
@@ -25,7 +34,7 @@ class App extends Component {
       let xhr = new XMLHttpRequest({ mozSystem: true });
       xhr.open("HEAD", "https://example.com");
       this.timeout = setTimeout(() => this.setState({ online: false }), 5000);
-      xhr.onload = () => clearTimeout(this.timeout) || this.setState({ online: true });
+      xhr.onload = () => this.timeout && clearTimeout(this.timeout) || this.setState({ online: true });
       xhr.send();
     }
   }
