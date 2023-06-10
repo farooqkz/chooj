@@ -52,7 +52,7 @@ class Login extends Component {
       case "m.login.password":
         window.mClient
           .loginWithPassword(
-            `@${this.username}:${this.homeserverName}`,
+            `${this.username}`,
             this.password
           )
           .then((result) => {
@@ -95,7 +95,9 @@ class Login extends Component {
           .then((r) => {
             if (r.ok) {
               r.json().then((j) => {
-                this.homeserverUrl = "https://" + j["m.server"];
+                const m_server = j["m.server"];
+                const server_url = m_server.split(':')[0];
+                this.homeserverUrl = "https://" + server_url;
                 window.mClient = createClient({
                   baseUrl: this.homeserverUrl,
                 });
