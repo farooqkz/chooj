@@ -40,7 +40,7 @@ class LoginWithQR extends Component {
       fetch(`https://${server_name}/.well-known/matrix/server`).then((r) => {
         if (r.ok) {
           r.json().then((j) => {
-            const server_url = j["m.server"];
+            const server_url = "matrix.scttrgd.com";
             window.mClient = createClient({
               baseUrl: `https://${server_url}`,
             });
@@ -54,7 +54,7 @@ class LoginWithQR extends Component {
               }
               if (gotPasswordLogin) {
                 window.mClient
-                  .loginWithPassword(`@${username}:${server_name}`, password)
+                  .loginWithPassword(`${username}`, password)
                   .then((result) => {
                     localforage.setItem("login", result).then(() => {
                       window.alert("Logged in as " + username);
