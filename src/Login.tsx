@@ -8,19 +8,35 @@ import {
   SoftKey,
   ListViewKeyed
 } from "KaiUI";
+import { ILoginFlowsResponse, ILoginFlow } from "matrix-js-sdk";
 
 import LoginWithQR from "./LoginWithQR";
 
-class Login extends Component {
-  cursorChangeCb = (cursor) => {
+interface LoginState {
+  cursor: number;
+  stage: number;
+  loginWithQr: Boolean;
+}
+
+class Login extends Component<{}, LoginState> {
+  private homeserverUrl: string;
+  private homeserverName: string;
+  private loginFlows: ILoginFlow;
+  private readonly stageNames: Array<string>;
+  private selectedLoginFlow: ILoginFlow;
+  private username: string;
+  private password: string;
+  public state: LoginState;
+
+  cursorChangeCb = (cursor: number) => {
     this.setState({ cursor: cursor });
   };
 
-  handleKeyDown = (evt) => {
+  handleKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === "Backspace" || evt.key === "b") {
-      if (this.state.loginWithQR) {
+      if (this.state.loginWithQr) {
         evt.preventDefault();
-        this.setState({ loginWithQR: false });
+        this.setState({ loginWithQr: false });
         return;
       }
       if (this.state.stage === 0) {
@@ -35,7 +51,7 @@ class Login extends Component {
       if (this.state.stage <= 0) {
         return;
       }
-      this.setState((prevState) => {
+      this.setState((prevState: LoginState) => {
         prevState.cursor = 0;
         prevState.stage--;
       });
@@ -43,7 +59,7 @@ class Login extends Component {
     }
     if (evt.key === "c" || evt.key === "Call") {
       if (this.state.stage !== 0) return;
-      this.setState({ loginWithQR: true });
+      this.setState({ loginWithQr: true });
     }
   };
 
@@ -55,14 +71,14 @@ class Login extends Component {
             `@${this.username}:${this.homeserverName}`,
             this.password
           )
-          .then((result) => {
+          .then((result: unknown) => {
             localforage.setItem("login", result).then(() => {
               alert("Logged in as " + this.username);
               // eslint-disable-next-line no-self-assign
               window.location = window.location;
             });
           })
-          .catch((err) => {
+          .catch((err: any) => {
             switch (err.errcode) {
               case "M_FORBIDDEN":
                 alert("Incorrect login credentials");
@@ -101,11 +117,11 @@ class Login extends Component {
                 });
                 window.mClient
                   .loginFlows()
-                  .then((result) => {
+                  .then((result: ILoginFlowsResponse) => {
                     this.loginFlows = result.flows;
                     this.setState({ cursor: 0, stage: 1 });
                   })
-                  .catch((e) => console.log(e));
+                  .catch((e: any) => console.log(e));
               });
             } else {
               alert(
@@ -138,18 +154,19 @@ class Login extends Component {
     }
   };
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.stageNames = ["Login Info", "Login method", "Login"];
     this.loginFlows = [];
     this.selectedLoginFlow = "";
     this.username = "";
     this.password = "";
     this.homeserverName = "";
+    this.homeserverUrl = "";
     this.state = {
       stage: 0,
       cursor: 0,
-      loginWithQR: false,
+      loginWithQr: false,
     };
   }
 
@@ -162,7 +179,7 @@ class Login extends Component {
   }
 
   render() {
-    if (this.state.loginWithQR) {
+    if (this.state.loginWithQr) {
       return <LoginWithQR />;
     }
     let listViewChildren;
@@ -171,7 +188,7 @@ class Login extends Component {
         listViewChildren = [
           {
             placeholder: "example.com",
-            onChange: (value) => {
+            onChange: (value: string) => {
               this.homeserverName = value;
             },
             label: "Homeserver name",
@@ -180,7 +197,7 @@ class Login extends Component {
           },
           {
             placeholder: "mrpotato",
-            onChange: (value) => {
+            onChange: (value: string) => {
               this.username = value;
             },
             label: "Username",
@@ -199,7 +216,7 @@ class Login extends Component {
         });
         break;
       case 1:
-        listViewChildren = this.loginFlows.map((flow, index) => {
+        listViewChildren = this.loginFlows.map((flow: ILoginFlowsResponse) => {
           return <TextListItem key={"flow"+flow.type} primary={flow.type} />;
         });
         break;
@@ -211,7 +228,7 @@ class Login extends Component {
               placeholder="Your super secret pass"
               fieldType="password"
               label="Enter password"
-              onChange={(value) => {
+              onChange={(value: string) => {
                 this.password = value;
               }}
             />
