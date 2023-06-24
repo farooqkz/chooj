@@ -1,5 +1,5 @@
 import { Component, createPortal } from "inferno";
-import { createClient } from "matrix-js-sdk";
+import { createClient, MatrixCall } from "matrix-js-sdk";
 import * as localforage from "localforage";
 
 import { TabView, TextListItem, SoftKey, DropDownMenu } from "KaiUI";
@@ -16,8 +16,45 @@ import { urlBase64ToUint8Array, toast, updateState } from "./utils";
 const vapidPublicKey =
   "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
 
-class Matrix extends Component {
-  pushNotification = (device_id) => {
+interface MatrixProps {
+  data: any;
+}
+
+interface Call {
+  type: string;
+  userId: string;
+  roomId: string;
+}
+
+interface MatrixState {
+  currentTab: number;
+  call: Call | null;
+  syncDone: boolean;
+  openRoomId: string;
+  optionsMenu: boolean;
+}
+
+class Matrix extends Component<MatrixProps, MatrixState> {
+  private pushNotification: (device_id: string) => void;
+  private onTabChange: (index: number) => void;
+  private softLeftText: () => string;
+  private softRightText: () => string;
+  private softCenterText: () => string;
+  private openRoom: () => void;
+  private startCall: (roomId: string, type: string, userId: string) => void;
+  private softRightCb: () => void;
+  private softCenterCb: () => void;
+  private softLeftCb: () => void;
+  private onKeyDown: (evt: KeyboardEvent) => void;
+  private optionsSelectCb: (item: number) => void;
+  
+  private tabs: Array<string>;
+  private roomId: string;
+  private call: MatrixCall | null;
+  private roomsViewRef: null | HTMLElement;
+  private invite: Room | null;
+
+  pushNotification = (device_id: string) => {
     if (!window.navigator.serviceWorker) return;
     if (!window.PushManager) return;
     window.navigator.serviceWorker.register("/sw.js").then((swReg) => {
@@ -51,7 +88,7 @@ class Matrix extends Component {
     });
   };
 
-  onTabChange = (index) => {
+  onTabChange = (index: number) => {
     if (!this.state.optionsMenu) this.setState({ currentTab: index });
   };
 
@@ -110,7 +147,7 @@ class Matrix extends Component {
     this.setState({ openRoomId: this.roomId });
   };
 
-  startCall = (roomId, type, userId) => {
+  startCall = (roomId: string, type: string, userId: string) => {
     this.setState({
       call: { type: type, roomId: roomId, displayName: userId },
     });
@@ -186,7 +223,7 @@ class Matrix extends Component {
     }
   };
 
-  onKeyDown = (evt) => {
+  onKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === "Backspace" || evt.key === "b") {
       if (this.state.optionsMenu) {
         evt.preventDefault();
@@ -196,7 +233,7 @@ class Matrix extends Component {
     }
   };
 
-  optionsSelectCb = (item) => {
+  optionsSelectCb = (item: number) => {
     /** @type {MatrixClient} */
     const matrix = window.mClient
     if (item === 0) {
@@ -248,7 +285,7 @@ class Matrix extends Component {
         });
       }
     });
-    client.once("sync", (state, prevState, res) => {
+    client.once("sync", () => {
       this.setState({ syncDone: true });
     });
     client.startClient({ lazyLoadMembers: true });
