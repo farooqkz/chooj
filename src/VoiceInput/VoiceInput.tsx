@@ -1,7 +1,12 @@
 import { msToHigherScale } from "../utils";
 import "./VoiceInput.css";
 
-function VoiceInput({ title, seconds }) {
+interface VoiceInputProps {
+  title: string;
+  seconds: number;
+}
+
+function VoiceInput({ title, seconds }: VoiceInputProps) {
   return (
     <div className="voiceinput">
       <h6 $HasTextChildren>{title}</h6>
