@@ -6,7 +6,7 @@ import "./UnsupportedEventItem.css";
 
 interface EventProps {
   children: any;
-  isFocused: Boolean;
+  isFocused: boolean;
 }
 
 function Event({ children, isFocused }: EventProps) {
@@ -18,7 +18,7 @@ function Event({ children, isFocused }: EventProps) {
 }
 
 interface IRCLikeUnsupportedEventItemProps {
-  isFocused: Boolean;
+  isFocused: boolean;
   senderId: string;
   type: string;
 }
@@ -33,7 +33,7 @@ function IRCLikeUnsupportedEventItem({ isFocused, senderId, type }: IRCLikeUnsup
 
 interface RoomEventProps {
   evt: MatrixEvent;
-  isFocused: Boolean;
+  isFocused: boolean;
 }
 
 function MembershipEvent({ evt, isFocused }: RoomEventProps) {

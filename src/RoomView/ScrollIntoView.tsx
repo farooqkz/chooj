@@ -1,7 +1,7 @@
 
 interface ScrollIntoViewProps {
   children: any;
-  shouldScroll: Boolean;
+  shouldScroll: boolean;
 }
 
 function ScrollIntoView({ children, shouldScroll }: ScrollIntoViewProps) {

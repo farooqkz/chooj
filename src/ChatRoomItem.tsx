@@ -21,7 +21,7 @@ export default class ChatRoomItem extends Component<ChatRoomItemProps, ChatRoomI
     });
   };
   
-  onTimelineUpdate = (_evt: MatrixEvent, room: Room | undefined, _toStartOfTimeline: Boolean | undefined, _removed: Boolean, _data: IRoomTimelineData) => {
+  onTimelineUpdate = (_evt: MatrixEvent, room: Room | undefined, _toStartOfTimeline: boolean | undefined, _removed: boolean, _data: IRoomTimelineData) => {
     this.setState((state: ChatRoomItemState) => {
       let lastEvent: MatrixEvent | null = getRoomLastEvent(room);
       state.lastEvent = (lastEvent && makeHumanReadableEvent(lastEvent)) || state.lastEvent;

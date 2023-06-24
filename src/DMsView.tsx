@@ -17,7 +17,7 @@ interface DMsViewProps {
 
 interface DMsViewState {
   cursor: number;
-  showCallSelection: Boolean;
+  showCallSelection: boolean;
   rooms: Array<Room>;
 }
 

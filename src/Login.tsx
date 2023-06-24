@@ -15,7 +15,7 @@ import LoginWithQR from "./LoginWithQR";
 interface LoginState {
   cursor: number;
   stage: number;
-  loginWithQr: Boolean;
+  loginWithQr: boolean;
 }
 
 class Login extends Component<{}, LoginState> {

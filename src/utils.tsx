@@ -32,11 +32,11 @@ function updateState(room: Room, state: RoomsViewState) : RoomsViewState {
   return state;
 }
 
-function isDM(room: Room) : Boolean {
+function isDM(room: Room) : boolean {
   return room.getJoinedMemberCount() === 2 && room.getMyMembership() === "join" && !room.isSpaceRoom();
 }
 
-function isRoom(room: Room) : Boolean {
+function isRoom(room: Room) : boolean {
   return room.getJoinedMemberCount() > 2 && room.getMyMembership() === "join" && !room.isSpaceRoom();
 }
 
@@ -60,7 +60,7 @@ function startDM(client: MatrixClient, userId: string) {
   // TODO
 }
 
-function eventSender(sender: string, myself: string, dm?: Boolean) : string {
+function eventSender(sender: string, myself: string, dm?: boolean) : string {
   if (myself === sender) {
     return "You";
   } else {
@@ -72,14 +72,14 @@ function eventSender(sender: string, myself: string, dm?: Boolean) : string {
   }
 }
 
-function makeHumanReadableEvent(evt: MatrixEvent, dm?: Boolean) : string {
+function makeHumanReadableEvent(evt: MatrixEvent, dm?: boolean) : string {
   if (!(evt instanceof Object)) {
     console.log("BOOO", evt);
   }
   const type: string = evt.getType();
   const content: object = evt.getContent();
   const sender: string = evt.getSender();
-  const myself: Boolean = evt.getSender() === window.mClient.getUserId();
+  const myself: boolean = evt.getSender() === window.mClient.getUserId();
 
   switch (type) {
     case "m.call.hangup":
@@ -141,7 +141,7 @@ function toast(message: string, timeout: number) {
   }, timeout);
 }
 
-function readableTimestamp(ts: number, includeSeconds?: Boolean) : string {
+function readableTimestamp(ts: number, includeSeconds?: boolean) : string {
   let date = new Date(ts);
   let h = date.getHours().toString();
   let m = date.getMinutes().toString();

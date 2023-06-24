@@ -52,7 +52,7 @@ function contactFarooq(contactWay: string) {
 
 
 interface AboutState {
-  showContactScreen: Boolean;
+  showContactScreen: boolean;
 }
 
 class About extends Component<{}, AboutState> {

@@ -15,14 +15,14 @@ function readableDuration(duration?: number) : String {
 
 interface CallScreenState {
   duration: number;
-  hasStarted: Boolean;
-  isAudioMuted: Boolean;
+  hasStarted: boolean;
+  isAudioMuted: boolean;
 }
 
 interface CallProps {
-  type: String;
-  roomId?: String;
-  displayName: String;
+  type: string;
+  roomId?: string;
+  displayName: string;
 }
 
 interface CallScreenProps {

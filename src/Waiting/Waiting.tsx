@@ -12,7 +12,7 @@ function randomTip() {
   return tips[Math.floor(Math.random() * tips.length)];
 }
 
-function Waiting({ noTip }: { noTip?: Boolean }) {
+function Waiting({ noTip }: { noTip?: boolean }) {
   return (
     <>
       <img className="waiting" src={cow} alt="" />

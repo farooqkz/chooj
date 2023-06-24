@@ -17,7 +17,7 @@ class RoomsView extends Component<RoomsViewProps> {
     this.setState({ cursor: cursor });
   };
 
-  handleTimelineUpdate = (_evt: MatrixEvent, room?: Room, toStartOfTimeline?: Boolean, _removed: Boolean, data: IRoomTimelineData) => {
+  handleTimelineUpdate = (_evt: MatrixEvent, room?: Room, toStartOfTimeline?: boolean, _removed: boolean, data: IRoomTimelineData) => {
     if (!room || toStartOfTimeline || !data.liveEvent) {
       return;
     }

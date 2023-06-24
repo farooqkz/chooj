@@ -8,7 +8,7 @@ import { LoginData } from "./types";
 
 interface AppState {
   state: string | null;
-  online: Boolean | null;
+  online: boolean | null;
 }
 
 class App extends Component<{}, AppState> {

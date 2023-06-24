@@ -15,7 +15,7 @@ interface Sender {
 
 interface IRCLikeMessageItemCommonProps {
   readableTs: string;
-  isFocused: Boolean;
+  isFocused: boolean;
   status: string | null;
 }
 

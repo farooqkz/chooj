@@ -1,7 +1,7 @@
 import "./ChatTextInput.css";
 
 interface ChatTextInputProps {
-  isFocused: Boolean;
+  isFocused: boolean;
   message: string;
   onChangeCb: (message: string) => void;
 }
