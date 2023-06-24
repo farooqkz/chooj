@@ -1,38 +1,62 @@
 import { Component } from "inferno";
 import "./CallScreen.css";
 import { SoftKey } from "KaiUI";
+import { MatrixCall, CallFeed } from "matrix-js-sdk";
 import waitingRing from "url:./waiting.ogg";
 import incomingRing from "url:./incoming.ogg";
 
 const personIcon = "/person_icon.png";
 
-function readableDuration(duration) {
+function readableDuration(duration?: number) : String {
   if (!duration) return "--";
   return duration.toString() + "s";
 }
 
-class CallScreen extends Component {
-  handleKeyDown = (evt) => {
+
+interface CallScreenState {
+  duration: number;
+  hasStarted: Boolean;
+  isAudioMuted: Boolean;
+}
+
+interface CallProps {
+  type: String;
+  roomId?: String;
+  displayName: String;
+}
+
+interface CallScreenProps {
+  endOfCallCb: () => void;
+  call: MatrixCall;
+  callProps: CallProps;
+}
+
+class CallScreen extends Component<CallScreenProps, CallScreenState> {
+  public state: CallScreenState;
+  private handleKeyDown: (evt: KeyboardEvent) => void;
+  public call?: MatrixCall;
+  public waitingRing?: HTMLAudioElement;
+  public incomingRing?: HTMLAudioElement;
+  public callAudios?: Array<HTMLAudioElement>;
+  public timer?: number;
+
+  handleKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === "b" || evt.key === "Backspace") {
       evt.preventDefault();
-      this.call.hangup();
+      this.call && this.call.hangup();
     }
     if (evt.key === "Call" || evt.key === "c") {
-      this.call.answer();
+      this.call && this.call.answer();
     }
   };
 
   constructor(props) {
     super(props);
     console.log("CS", props);
-    const { type, call, roomId } = props;
+    const { callProps, call, roomId } = props;
     const baseUrl = window.mClient.baseUrl;
     const AVATAR_D = 64;
     this.call = call || null;
-    this.timer = null;
-    this.waitingRing = null;
-    this.incomingRing = null;
-    this.callAudios = null;
     if (type === "voice") {
       // A voice call must be placed
       this.call = window.mClient.createCall(roomId);
