@@ -25,7 +25,7 @@ class RoomsView extends Component<RoomsViewProps> {
       if (isDM(room)) {
         // update DMsView saved state
         let state = window.stateStores.get("DMsView");
-        state = updateState(room, state;
+        state = updateState(room, state);
         window.stateStores.set("DMsView", state);
       }
       return;
