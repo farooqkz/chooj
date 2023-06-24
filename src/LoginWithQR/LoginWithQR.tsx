@@ -1,46 +1,58 @@
 import { Component } from "inferno";
-import jsQR from "jsqr";
+import jsQR, { QRCode } from "jsqr";
 import { createClient } from "matrix-js-sdk";
 import * as localforage from "localforage";
 
 import "./LoginWithQR.css";
 import { SoftKey } from "KaiUI";
 
-class LoginWithQR extends Component {
+
+interface WellKnown {
+  "m.server": string;
+}
+
+class LoginWithQR extends Component<{}, {}> {
+  private video?: HTMLVideoElement;
+  private takePhoto: () => void;
+
   takePhoto = () => {
     let canvas = document.createElement("canvas");
-    let context2D = canvas.getContext("2d");
+    let context2D: CanvasRenderingContext2D | null = canvas.getContext("2d");
+    if (!this.video || !context2D)  {
+      return;
+    }
     const videoWidth = this.video.videoWidth;
     const videoHeight = this.video.videoHeight;
     canvas.height = videoHeight;
     canvas.width = videoWidth;
     context2D.drawImage(this.video, 0, 0, videoWidth, videoHeight);
-    let data = context2D.getImageData(0, 0, videoWidth, videoHeight).data;
-    let decoded = jsQR(data, videoWidth, videoHeight, {
+    let data: Uint8ClampedArray = context2D.getImageData(0, 0, videoWidth, videoHeight).data;
+    let decodedQR: QRCode | null = jsQR(data, videoWidth, videoHeight, {
       inversionAttempts: "dontInvert",
     });
-    if (decoded === null) {
+    let decoded: string;
+    if (decodedQR === null) {
       window.alert("Scanned nothing... Please retry!");
       return;
     } else {
-      decoded = decoded.data;
+      decoded = decodedQR.data;
     }
-    data = decoded.split(" ", 4);
-    const flow = data[0];
-    const server_name = data[1];
-    const username = data[2];
-    let password = null;
+    let decodedParts: Array<string> = decoded.split(" ", 4);
+    const flow = decodedParts[0];
+    const server_name = decodedParts[1];
+    const username = decodedParts[2];
+    let password: string;
     if (
       window.confirm(
         `Do you confirm? Flow: ${flow} | Server name: ${server_name} | Username: ${username}`
       )
     ) {
-      const start = flow.length + server_name.length + username.length + 3;
+      const start: number = flow.length + server_name.length + username.length + 3;
       password = decoded.substring(start);
-      fetch(`https://${server_name}/.well-known/matrix/server`).then((r) => {
+      fetch(`https://${server_name}/.well-known/matrix/server`).then((r: Response) => {
         if (r.ok) {
-          r.json().then((j) => {
-            const server_url = j["m.server"];
+          r.json().then((j: WellKnown) => {
+            const server_url: string = j["m.server"];
             window.mClient = createClient({
               baseUrl: `https://${server_url}`,
             });
@@ -55,7 +67,7 @@ class LoginWithQR extends Component {
               if (gotPasswordLogin) {
                 window.mClient
                   .loginWithPassword(`@${username}:${server_name}`, password)
-                  .then((result) => {
+                  .then((result: any) => {
                     localforage.setItem("login", result).then(() => {
                       window.alert("Logged in as " + username);
                       // eslint-disable-next-line no-self-assign
@@ -107,8 +119,7 @@ class LoginWithQR extends Component {
 
   constructor(props) {
     super(props);
-    this.video = null;
-    this.state = {};
+    this.state = null;
   }
 
   componentDidMount() {
@@ -117,7 +128,8 @@ class LoginWithQR extends Component {
         video: { facingMode: "environment" },
       })
       .then((stream) => {
-        this.video.srcObject = stream;
+        if (this.video)
+          this.video.srcObject = stream;
       });
   }
 
@@ -128,7 +140,8 @@ class LoginWithQR extends Component {
           <video
             autoplay
             ref={(ref) => {
-              this.video = ref;
+              if (ref)
+                this.video = ref;
             }}
           />
         </div>
