@@ -9,7 +9,8 @@
     "clean": "yarn run clean:parcel",
     "serve": "yarn run devbuild && serve ./build",
     "clean:parcel": "rm -rf .parcel-cache build",
-    "lint": "yarn eslint src"
+    "lint": "tslint -p ./tsconfig.json",
+    "check": "tsc -p ./tsconfig.json --noEmit"
   },
   "author": "Farooq Karimi Zadeh",
   "license": "GPLv3+",
@@ -35,11 +36,6 @@
     "babel-plugin-inferno": "^6.5.0",
     "buffer": "^5.5.0",
     "crypto-browserify": "^3.12.0",
-    "eslint": "5.x",
-    "eslint-config-inferno-app": "^7.0.2",
-    "eslint-plugin-import": "2.x",
-    "eslint-plugin-inferno": "^7",
-    "eslint-plugin-jsx-a11y": "6.x",
     "htmlparser2": "^8.0.1",
     "parcel": "^2.8.2",
     "postcss": "^8.2.1",
