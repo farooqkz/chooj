@@ -1,8 +1,14 @@
 import "./ChatTextInput.css";
 
-function ChatTextInput({ isFocused, message, onChangeCb }) {
-  const onChange = (evt) => {
-    onChangeCb && onChangeCb(evt.target.value);
+interface ChatTextInputProps {
+  isFocused: Boolean;
+  message: string;
+  onChangeCb: (message: string) => void;
+}
+
+function ChatTextInput({ isFocused, message, onChangeCb }: ChatTextInputProps) {
+  const onChange = (evt: Event) => {
+    evt.target && onChangeCb(evt.target.value);
   };
 
   return (
