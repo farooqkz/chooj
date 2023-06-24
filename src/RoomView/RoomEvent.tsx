@@ -1,10 +1,15 @@
 import { createTextVNode } from "inferno";
-
+import { MatrixEvent } from "matrix-js-sdk";
 import { IRCLikeMessageItem } from "../MessageItems";
 import { readableTimestamp, getSomeDisplayName } from "../utils";
 import "./UnsupportedEventItem.css";
 
-function Event({ children, isFocused }) {
+interface EventProps {
+  children: any;
+  isFocused: Boolean;
+}
+
+function Event({ children, isFocused }: EventProps) {
   return (
     <div className={"event" + (isFocused ? "--focused" : "")} tabIndex={0}>
       {children}
@@ -12,7 +17,13 @@ function Event({ children, isFocused }) {
   );
 }
 
-function IRCLikeUnsupportedEventItem({ isFocused, senderId, type }) {
+interface IRCLikeUnsupportedEventItemProps {
+  isFocused: Boolean;
+  senderId: string;
+  type: string;
+}
+
+function IRCLikeUnsupportedEventItem({ isFocused, senderId, type }: IRCLikeUnsupportedEventItemProps) {
   return (
     <Event isFocused={isFocused}>
       <p>Unsupported Event from {createTextVNode(getSomeDisplayName(senderId))}: {type}</p>
@@ -20,15 +31,17 @@ function IRCLikeUnsupportedEventItem({ isFocused, senderId, type }) {
   );
 }
 
-/**
- * @param {{evt: MatrixEvent, isFocused: boolean}} params 
- */
-function MembershipEvent({ evt, isFocused }) {
+interface RoomEventProps {
+  evt: MatrixEvent;
+  isFocused: Boolean;
+}
+
+function MembershipEvent({ evt, isFocused }: RoomEventProps) {
   let content = evt.getContent();
   // const senderId = evt.getSender();
   const ts = evt.getTs();
 
-  const eventType = content.membership.toLowerCase()
+  const eventType = content.membership.toLowerCase();
 
   switch (eventType) {
     case "join":
@@ -57,7 +70,7 @@ function MembershipEvent({ evt, isFocused }) {
   }
 }
 
-export default function RoomEvent({ evt, isFocused }) {
+export default function RoomEvent({ evt, isFocused }: RoomEventProps) {
   const type = evt.getType();
   const senderId = evt.getSender();
   const MessageItem = IRCLikeMessageItem;
@@ -70,7 +83,7 @@ export default function RoomEvent({ evt, isFocused }) {
     case "m.room.message":
       return (
         <MessageItem
-          date={evt.getDate()}
+          readableTs={ts}
           sender={{ userId: senderId }}
           content={evt.getContent()}
           status={status}

@@ -1,6 +1,7 @@
 import { Component } from "inferno";
 import { extensionOf } from "xmimetype";
 import { Header, SoftKey } from "KaiUI";
+import { MatrixEvent, EventTimeline, RoomMember, Room, ISendEventResponse } from "martix-js-sdk";
 import { isDM, isRoom, updateState, mxcMediaToHttp } from "../utils";
 import ChatTextInput from "../ChatTextInput";
 import VoiceInput from "../VoiceInput";
@@ -32,14 +33,52 @@ function CannotSendMessage() {
 }
 
 
-class RoomView extends Component {
-  messageChangeCb = (message) => {
+interface RoomViewState {
+  isRecording: boolean;
+  showMenu: boolean;
+  cursor: number;
+  message: string;
+  textInputFocus: boolean;
+  recordingSeconds: number;
+  imageViewer: boolean;
+}
+
+interface RoomViewProps {
+  roomId: string;
+  closeRoomView: () => void;
+}
+
+class RoomView extends Component<RoomViewProps, RoomViewState> {
+  private messageChangeCb: (message: string) => void;
+  private getVisibleEvents: () => Array<MatrixEvent>;
+  private handleTyping: (_evt: MatrixEvent, member: RoomMember) => void;
+  private handleKeyDown: (evt: KeyboardEvent) => void;
+  private getCenterText: () => string;
+  private getLeftText: () => string;
+  private getRightText: () => string;
+  private centerCb: () => void;
+  private rightCb: () => void;
+  private leftCb: () => void;
+  private eventSentFailCb: (error: any) => void;
+  private eventSentDb: (response: ISendEventResponse) => void;
+  private handleTimelineUpdate: (evt: MatrixEvent, room?: Room, ts?: boolean) => void;
+
+  private timeline: EventTimeline;
+  private room: Room;
+  private dm: boolean;
+  private currentEvent: MatrixEvent | null;
+  private recorder: MediaRecorder | null;
+  private reachedEndOfTimeline: boolean;
+  private recordingInterval: number;
+  private recording: Array<Uint8Array>;
+
+  messageChangeCb = (message: string) => {
     this.setState({ message: message });
     window.mClient.sendTyping(this.room.roomId, true, 75);
   };
   
   getVisibleEvents = () => {
-    return this.timeline.getEvents().filter((evt) => evt.getType() && !HIDDEN_EVENTS.get(evt.getType()));
+    return this.timeline.getEvents().filter((evt: MatrixEvent) => evt.getType() && !HIDDEN_EVENTS.get(evt.getType()));
   };
 
   handleTyping = (_evt, member) => {
