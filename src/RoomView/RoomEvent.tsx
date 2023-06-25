@@ -40,7 +40,9 @@ function MembershipEvent({ evt, isFocused }: RoomEventProps) {
   let content = evt.getContent();
   // const senderId = evt.getSender();
   const ts = evt.getTs();
-
+  if (!content.membership) {
+    throw new Error("content.membership is undefined for a membership event");
+  }
   const eventType = content.membership.toLowerCase();
 
   switch (eventType) {
@@ -72,7 +74,7 @@ function MembershipEvent({ evt, isFocused }: RoomEventProps) {
 
 export default function RoomEvent({ evt, isFocused }: RoomEventProps) {
   const type = evt.getType();
-  const senderId = evt.getSender();
+  const senderId = evt.getSender() || "-@Unknown@-";
   const MessageItem = IRCLikeMessageItem;
   const UnsupportedEventItem = IRCLikeUnsupportedEventItem;
   const displayName = getSomeDisplayName(senderId);
