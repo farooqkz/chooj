@@ -1,6 +1,7 @@
-import { getHttpUriForMxc, Room, MatrixClient, MatrixEvent } from "matrix-js-sdk";
+import { getHttpUriForMxc, Room, MatrixClient, MatrixEvent, IContent } from "matrix-js-sdk";
 import { render } from "inferno";
 import { RoomsViewState } from "./types";
+import { shared } from "./shared";
 
 const defaultAvatarSize = 36;
 
@@ -41,10 +42,13 @@ function isRoom(room: Room) : boolean {
 }
 
 function getAvatarOrDefault(mxcUrl: string, defaultUrl: string, size?: number) : string {
+  if (!shared.mClient) {
+    throw new Error("mClient is null");
+  }
   size = size || defaultAvatarSize;
-  if (mxcUrl) {
+  if (mxcUrl && shared.mClient) {
     return getHttpUriForMxc(
-      window.mClient.baseUrl,
+      shared.mClient.baseUrl,
       mxcUrl,
       size,
       size,
@@ -56,12 +60,12 @@ function getAvatarOrDefault(mxcUrl: string, defaultUrl: string, size?: number) :
   }
 }
 
-function startDM(client: MatrixClient, userId: string) {
+function startDM(_client: MatrixClient, _userId: string) {
   // TODO
 }
 
-function eventSender(sender: string, myself: string, dm?: boolean) : string {
-  if (myself === sender) {
+function eventSender(sender: string, myself: boolean, dm?: boolean) : string {
+  if (myself) {
     return "You";
   } else {
     if (dm) {
@@ -76,10 +80,16 @@ function makeHumanReadableEvent(evt: MatrixEvent, dm?: boolean) : string {
   if (!(evt instanceof Object)) {
     console.log("BOOO", evt);
   }
+  if (!shared.mClient) {
+    throw new Error("mClient is null");
+  }
+  let content: IContent | undefined = evt.getContent();
+  if (!content) {
+    return "";
+  }
   const type: string = evt.getType();
-  const content: object = evt.getContent();
-  const sender: string = evt.getSender();
-  const myself: boolean = evt.getSender() === window.mClient.getUserId();
+  const sender: string = evt.getSender() || "-@UnknownUser@-";
+  const myself: boolean = evt.getSender() === shared.mClient.getUserId();
 
   switch (type) {
     case "m.call.hangup":
@@ -94,6 +104,8 @@ function makeHumanReadableEvent(evt: MatrixEvent, dm?: boolean) : string {
         "ed the room"
       );
     case "m.room.message":
+      if (!content.msgtype)
+        throw new Error("The event is a room message but msgtype is not defined");
       return (
         eventSender(sender, myself, dm) +
         ": " +
@@ -133,11 +145,13 @@ function mxcMediaToHttp(hsUrl: string, mxcUrl: string) : string {
 }
 
 function toast(message: string, timeout: number) {
-  let container: HTMLElement = document.querySelector("#toast");
+  let container: HTMLElement | null = document.querySelector("#toast");
+  if (!container) return;
   container.style.display = "block";
   render(<p $HasTextChildren>{message}</p>, container);
   setTimeout(() => {
-    container.style.display = "none";
+    if (container) 
+      container.style.display = "none";
   }, timeout);
 }
 
@@ -168,7 +182,10 @@ function getRoomLastEvent(room: Room) : MatrixEvent | null {
 }
 
 function getSomeDisplayName(userId: string) : string {
-  let userObj = window.mClient.getUser(userId);
+  if (!shared.mClient) {
+    throw new Error("shared.mClient is null");
+  }
+  let userObj = shared.mClient.getUser(userId);
   if (userObj) {
     return userObj.displayName || userObj.userId.split(":")[0].replace("@", "");
   } else {
