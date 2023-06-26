@@ -8,6 +8,7 @@ import {
   msToHigherScale,
   getSomeDisplayName,
 } from "../../utils";
+import { shared } from "../../shared";
 
 interface Sender {
   userId: string;
@@ -95,6 +96,9 @@ function IRCLikeMessageItemImage({
   isFocused,
   status,
 }: IRCLikeMessageItemTextProps & IRCLikeMessageItemImageProps & IRCLikeMessageItemCommonProps) {
+  if (!shared.mClient) {
+    throw new Error("mClient is null");
+  }
   while (height > (192 * 2) / 3) {
     height *= 0.75;
     width *= 0.75;
@@ -103,14 +107,14 @@ function IRCLikeMessageItemImage({
     height *= 0.75;
     width *= 0.75;
   }
-  url = window.mClient.mxcUrlToHttp(url, width, height, "scale", true);
+  const imageUrl = shared.mClient.mxcUrlToHttp(url, width, height, "scale", true);
   return (
     <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
       <p>
         <b $HasTextChildren>{readableTs}</b>
         <b $HasTextChildren>{`<${sender}>`}</b>
         {createTextVNode(text)}
-        <img width={width} height={height} src={url} alt={text} />
+        <img width={width} height={height} src={imageUrl} alt={text} />
       </p>
     </div>
   );
@@ -126,7 +130,10 @@ function IRCLikeMessageItemAudio({
   text,
   status,
 }: IRCLikeMessageItemCommonProps & IRCLikeMessageItemAudioProps & IRCLikeMessageItemTextProps) {
-  const hsUrl = window.mClient.getHomeserverUrl();
+  if (!shared.mClient) {
+    throw new Error("mClient is null");
+  }
+  const hsUrl = shared.mClient.getHomeserverUrl();
   url = mxcMediaToHttp(hsUrl, url);
   return (
     <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
