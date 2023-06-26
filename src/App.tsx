@@ -14,6 +14,8 @@ interface AppState {
 class App extends Component<{}, AppState> {
   private loginData: null | LoginData;
   private timeout: null | number;
+  public state: AppState;
+
   constructor(props: {}) {
     super(props);
     this.loginData = null;
@@ -57,6 +59,9 @@ class App extends Component<{}, AppState> {
     if (state === "matrix") {
       return <Matrix data={this.loginData} />;
     }
+    alert("Some error occured. This must not happen");
+    window.close();
+    return;
   }
 }
 
