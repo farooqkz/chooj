@@ -1,5 +1,5 @@
 import { Component } from "inferno";
-import ListViewKeyed from "KaiUI";
+import { ListViewKeyed } from "KaiUI";
 import { Room, RoomEvent, MatrixEvent, IRoomTimelineData } from "matrix-js-sdk";
 
 import ChatRoomItem from "./ChatRoomItem";
