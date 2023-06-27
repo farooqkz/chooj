@@ -6,17 +6,21 @@
     "strict": true,
     "jsx": "preserve",
     "baseUrl": "./src",
-    "moduleResolution": "node",
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "lib": ["es2017", "dom"],
     "allowSyntheticDefaultImports": true,
-    "types": ["inferno"]
+    "types": ["inferno"],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "paths": {
+      "KaiUI": ["./node_modules/KaiUI"]
+    }
   },
   "exclude": [
-    "dist",
-    "node_modules"
+    "dist"
   ]
 }
