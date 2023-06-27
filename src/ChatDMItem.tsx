@@ -16,6 +16,7 @@ interface ChatDMItemState {
 
 interface ChatDMItemProps {
   room: Room;
+  isFocused?: boolean;
 }
 
 export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemState> {
@@ -104,6 +105,7 @@ export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemSta
         icon={<Avatar avatar={avatar} online={presence} />}
         secondary={displayName}
         primary={lastEvent}
+        isFocused={Boolean(this.props.isFocused)}
       />
     );
   }

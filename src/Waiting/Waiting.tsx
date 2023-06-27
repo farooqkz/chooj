@@ -1,5 +1,5 @@
 import "./Waiting.css";
-import cow from "./cowsay-pleasewait.png";
+import cow from "url:./cowsay-pleasewait.png";
 
 let tips: Array<string> = [
   "Use call key in People tab to quickly call someone",

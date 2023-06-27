@@ -7,6 +7,7 @@ import { shared } from "./shared";
 
 interface ChatRoomItemProps {
   roomId: string;
+  isFocused?: boolean;
 }
 
 interface ChatRoomItemState {
@@ -84,6 +85,7 @@ export default class ChatRoomItem extends Component<ChatRoomItemProps, ChatRoomI
         icon={<Avatar avatar={avatarUrl} />}
         secondary={displayName || ""}
         primary={lastEvent}
+        isFocused={Boolean(this.props.isFocused)}
       />
     );
   }

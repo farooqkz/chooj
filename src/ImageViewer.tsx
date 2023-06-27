@@ -14,6 +14,7 @@ interface ImageViewerProps {
 }
 
 export default class ImageViewer extends Component<ImageViewerProps, ImageViewerState> {
+  public state: ImageViewerState;
   zoomIn = () => {
     this.setState((state: ImageViewerState) => {
       state.zoom *= 1.5;

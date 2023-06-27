@@ -176,11 +176,6 @@ function readableTimestamp(ts: number, includeSeconds?: boolean) : string {
   return "[" + d + "] ";
 }
 
-function getRoomLastEvent(room: Room) : MatrixEvent | null {
-  let events = room.getLiveTimeline().getEvents();
-  return events[events.length - 1] || null;
-}
-
 function getSomeDisplayName(userId: string) : string {
   if (!shared.mClient) {
     throw new Error("shared.mClient is null");
@@ -206,6 +201,5 @@ export {
   mxcMediaToHttp,
   toast,
   readableTimestamp,
-  getRoomLastEvent,
   getSomeDisplayName,
 };

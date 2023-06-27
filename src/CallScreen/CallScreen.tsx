@@ -1,9 +1,12 @@
 import { Component } from "inferno";
 import "./CallScreen.css";
 import { SoftKey } from "KaiUI";
-import { MatrixCall, CallFeed } from "matrix-js-sdk";
+import { MatrixCall } from "matrix-js-sdk";
 import waitingRing from "url:./waiting.ogg";
 import incomingRing from "url:./incoming.ogg";
+import { CallFeed } from "matrix-js-sdk/src/webrtc/callFeed";
+import { CallEvent } from "matrix-js-sdk/src/webrtc/call";
+import { shared } from "../shared";
 
 const personIcon = "/person_icon.png";
 
@@ -22,7 +25,7 @@ interface CallScreenState {
 interface CallProps {
   type: string;
   roomId?: string;
-  displayName: string;
+  userId?: string;
 }
 
 interface CallScreenProps {
@@ -33,7 +36,6 @@ interface CallScreenProps {
 
 class CallScreen extends Component<CallScreenProps, CallScreenState> {
   public state: CallScreenState;
-  private handleKeyDown: (evt: KeyboardEvent) => void;
   public call?: MatrixCall;
   public waitingRing?: HTMLAudioElement;
   public incomingRing?: HTMLAudioElement;
@@ -50,18 +52,26 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
     }
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     console.log("CS", props);
+    if (!shared.mClient) {
+      throw new Error("mClient is null");
+    }
     const { callProps, call, roomId } = props;
-    const baseUrl = window.mClient.baseUrl;
+    const baseUrl = shared.mClient.baseUrl;
     const AVATAR_D = 64;
     this.call = call || null;
-    if (type === "voice") {
+    if (callProps.type === "voice") {
       // A voice call must be placed
-      this.call = window.mClient.createCall(roomId);
+      let call: MatrixCall | null = shared.mClient.createCall(roomId);
+      if (!call) {
+        alert("Your device does not support calling");
+        return;
+      }
+      this.call = call;
       this.call.placeVoiceCall();
-    } else if (type === "incoming") {
+    } else if (callProps.type === "incoming") {
       this.props.displayName = this.call.getOpponentMember().name;
       this.props.avatar = this.call
         .getOpponentMember()
@@ -69,7 +79,7 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
     } else {
       throw new Error("Invalid call type");
     }
-    this.call.on("feeds_changed", (feeds) => {
+    this.call.on(CallEvent.FeedsChanged, (feeds: Array<CallFeed>) => {
       this.callAudios = feeds
         .filter((feed) => !feed.isLocal())
         .map((feed) => {

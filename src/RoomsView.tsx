@@ -74,7 +74,7 @@ class RoomsView extends Component<RoomsViewProps> {
         // ^ Please don't get tempted to rewrite these two using 
         // logical AND and OR. I think it is more readable this way.
         // -- Farooq
-        return firstTs - secondTs;
+        return secondTs - firstTs;
     });
     let renderedRooms = rooms.map((room: Room) => {
       return (

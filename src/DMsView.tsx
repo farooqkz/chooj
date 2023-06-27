@@ -73,7 +73,7 @@ class DMsView extends Component<DMsViewProps, RoomsViewState & DMsViewState> {
       } else {
         this.props.selectedRoomCb(null);
       }
-      this.setState({ cursor: cursor });
+      //this.setState({ cursor: cursor });
     }
   };
 /*
@@ -124,9 +124,14 @@ class DMsView extends Component<DMsViewProps, RoomsViewState & DMsViewState> {
     const { cursor, rooms, showCallSelection } = this.state;
     rooms.sort(
       (first: Room, second: Room) => {
-        let firstRoomEvent: MatrixEvent | undefined = first.getLastLiveEvent(); 
-        let secondRoomEvent: MatrixEvent | undefined = second.getLastLiveEvent();
-        return (firstRoomEvent && firstRoomEvent.getTs()) || 0 - ((secondRoomEvent && secondRoomEvent.getTs()) || 0);
+        let firstLastEvent: MatrixEvent | undefined = first.getLastLiveEvent(); 
+        let secondLastEvent: MatrixEvent | undefined = second.getLastLiveEvent();
+        let firstTs: number = firstLastEvent ? firstLastEvent.getTs() : 0;
+        let secondTs: number = secondLastEvent ? secondLastEvent.getTs() : 0;
+        // ^ Please don't get tempted to rewrite these two using 
+        // logical AND and OR. I think it is more readable this way.
+        // -- Farooq
+        return secondTs - firstTs;
       });
     let renderedRooms = rooms.map((room: Room) => {
       return (
@@ -142,7 +147,7 @@ class DMsView extends Component<DMsViewProps, RoomsViewState & DMsViewState> {
     }
     return (
       <>
-        <ListViewKeyed cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
+        <ListViewKeyed cursor={0} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
           {renderedRooms}
         </ListViewKeyed>
         { showCallSelection ? createPortal(

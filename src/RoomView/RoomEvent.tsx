@@ -72,7 +72,7 @@ function MembershipEvent({ evt, isFocused }: RoomEventProps) {
   }
 }
 
-export default function RoomEvent({ evt, isFocused }: RoomEventProps) {
+export default function RoomEvent({ evt, isFocused }: RoomEventProps) : JSX.Element {
   const type = evt.getType();
   const senderId = evt.getSender() || "-@Unknown@-";
   const MessageItem = IRCLikeMessageItem;
