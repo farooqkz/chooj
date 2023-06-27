@@ -1,7 +1,17 @@
 import { Component } from "inferno";
 import { extensionOf } from "xmimetype";
 import { Header, SoftKey } from "KaiUI";
-import { MatrixEvent, EventTimeline, RoomMember, Room, ISendEventResponse } from "martix-js-sdk";
+import {
+  MatrixEvent,
+  EventTimeline,
+  RoomMember,
+  RoomMemberEvent,
+  Room,
+  ISendEventResponse,
+  RoomEvent as SDKRoomEvent,
+  UploadResponse,
+  MatrixEventEvent,
+} from "matrix-js-sdk";
 import { isDM, isRoom, updateState, mxcMediaToHttp } from "../utils";
 import ChatTextInput from "../ChatTextInput";
 import VoiceInput from "../VoiceInput";
@@ -9,14 +19,16 @@ import ScrollIntoView from "./ScrollIntoView";
 import "./RoomView.css";
 import RoomEvent from "./RoomEvent";
 import ImageViewer  from "../ImageViewer";
+import { shared } from "../shared";
+import { RoomsViewState } from "../types";
 
 
-let HIDDEN_EVENTS = new Map([
+let HIDDEN_EVENTS: Map<string, boolean> = new Map([
   ["m.call.select_answer", true],
   ["m.call.candidates", true],
 ]); // these events won't be shown to the user.
 
-let EVENT_STATUS_FOR_UPDATE = new Map([
+let EVENT_STATUS_FOR_UPDATE: Map<string | null, boolean> = new Map([
   ["not_sent", true],
   ["sent", true],
   [null, true],
@@ -41,6 +53,7 @@ interface RoomViewState {
   textInputFocus: boolean;
   recordingSeconds: number;
   imageViewer: boolean;
+  typing: boolean;
 }
 
 interface RoomViewProps {
@@ -49,39 +62,27 @@ interface RoomViewProps {
 }
 
 class RoomView extends Component<RoomViewProps, RoomViewState> {
-  private messageChangeCb: (message: string) => void;
-  private getVisibleEvents: () => Array<MatrixEvent>;
-  private handleTyping: (_evt: MatrixEvent, member: RoomMember) => void;
-  private handleKeyDown: (evt: KeyboardEvent) => void;
-  private getCenterText: () => string;
-  private getLeftText: () => string;
-  private getRightText: () => string;
-  private centerCb: () => void;
-  private rightCb: () => void;
-  private leftCb: () => void;
-  private eventSentFailCb: (error: any) => void;
-  private eventSentDb: (response: ISendEventResponse) => void;
-  private handleTimelineUpdate: (evt: MatrixEvent, room?: Room, ts?: boolean) => void;
-
+  public state: RoomViewState;
   private timeline: EventTimeline;
   private room: Room;
   private dm: boolean;
-  private currentEvent: MatrixEvent | null;
+  private currentEvent: MatrixEvent | undefined;
   private recorder: MediaRecorder | null;
   private reachedEndOfTimeline: boolean;
   private recordingInterval: number;
-  private recording: Array<Uint8Array>;
+  private recording: Array<Blob>;
+  private imageViewer: ImageViewer | null;
 
   messageChangeCb = (message: string) => {
     this.setState({ message: message });
-    window.mClient.sendTyping(this.room.roomId, true, 75);
+    shared.mClient && shared.mClient.sendTyping(this.room.roomId, true, 75);
   };
   
   getVisibleEvents = () => {
     return this.timeline.getEvents().filter((evt: MatrixEvent) => evt.getType() && !HIDDEN_EVENTS.get(evt.getType()));
   };
 
-  handleTyping = (_evt, member) => {
+  handleTyping = (_evt: MatrixEvent, member: RoomMember) => {
     if (member.roomId !== this.room.roomId) {
       return;
     }
@@ -89,13 +90,13 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       // currently there is no typing notif for non DM rooms
       return;
     }
-    if (window.mClient.getUserId() === member.userId) {
+    if (shared.mClient && shared.mClient.getUserId() === member.userId) {
       return;
     }
-    this.setState({ typing: member.typing });
+    this.setState({ typing: Boolean(member.typing) });
   };
 
-  handleKeyDown = (evt) => {
+  handleKeyDown = (evt: KeyboardEvent) => {
     const VALID_KEYS = ["b", "Backspace", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
     // Backspace is used on an actual device
     // b is used for testing in desktop browser
@@ -104,11 +105,14 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     }
     const { cursor, textInputFocus, message } = this.state;
     const { closeRoomView } = this.props;
+    if (!shared.mClient) {
+      throw new Error("mClient is null")
+    }
     if (cursor <= 5 && !this.reachedEndOfTimeline) {
       let prev = this.getVisibleEvents().length - 1;
-      window.mClient
+      shared.mClient
         .paginateEventTimeline(this.timeline, { backwards: true, limit: 25 })
-        .then((notReachedEnd) => {
+        .then((notReachedEnd: boolean) => {
           if (notReachedEnd) {
             const current = this.getVisibleEvents().length - 1;
             this.setState({
@@ -121,6 +125,10 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     }
 
     if (this.state.imageViewer) {
+      if (!this.imageViewer) {
+        alert("Image viewer is null! This is a bug. please report it :)");
+        return;
+      }
       if (evt.key.startsWith("Arrow")) {
         let key = evt.key.replace("Arrow", "").toLowerCase();
         this.imageViewer.move(key);
@@ -150,16 +158,26 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     }
   };
 
-  handleTimelineUpdate = (evt, room, ts) => {
+  handleTimelineUpdate = (evt: MatrixEvent, room: Room | undefined) => {
+    if (!room) {
+      return;
+    }
     if (isRoom(room)) {
-      let roomsViewState = window.stateStores.get("RoomsView");
-      roomsViewState = updateState(room, roomsViewState, false);
-      window.stateStores.set("RoomsView", roomsViewState);
+      let roomsViewState: RoomsViewState | undefined = shared.stateStores.get("RoomsView");
+      if (roomsViewState) {
+        roomsViewState = updateState(room, roomsViewState);
+        shared.stateStores.set("RoomsView", roomsViewState);
+      }
     }
     if (isDM(room)) {
-      let roomsViewState = window.stateStores.get("DMsView");
-      roomsViewState = updateState(room, roomsViewState, true);
-      window.stateStores.set("DMsView", roomsViewState);
+      let dmsViewState: RoomsViewState | undefined = shared.stateStores.get("DMsView");
+      if (dmsViewState) {
+        dmsViewState = updateState(room, dmsViewState);
+        shared.stateStores.set("DMsView", dmsViewState);
+      }
+    }
+    if (!shared.mClient) {
+      throw new Error("mClient is null");
     }
     if (room.roomId === this.room.roomId) {
       let events = this.getVisibleEvents();
@@ -167,7 +185,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       const { cursor, textInputFocus } = this.state;
       if (textInputFocus) {
         // partial support
-        window.mClient.sendReadReceipt(evt);
+        shared.mClient.sendReadReceipt(evt);
       }
       this.setState({
         cursor: textInputFocus ? lastEventIndex : cursor,
@@ -175,19 +193,25 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     }
   };
   
-  eventSentCb = (response) => {
-    let evt = this.room.findEventById(response.event_id);
+  eventSentCb = (response: ISendEventResponse) => {
+    let evt: MatrixEvent | undefined = this.room.findEventById(response.event_id);
+    if (!evt) {
+      return;
+    }
     let dis = this;
     function updateFn() {
+      if (!evt) {
+        return;
+      }
       if (EVENT_STATUS_FOR_UPDATE.get(evt.status)) {
         dis.forceUpdate();
-        evt.off("Event.status", updateFn);
+        evt.off(MatrixEventEvent.Status, updateFn);
       }
     }
-    evt.on("Event.status", updateFn);
+    evt.on(MatrixEventEvent.Status, updateFn);
   };
 
-  eventSentFailCb = (error) => {
+  eventSentFailCb = (error: any) => {
     window.alert("Cannot sent message");
     console.log("ERROR", error);
   }
@@ -237,7 +261,14 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       this.setState({ imageViewer: true }); 
     }
     if (this.getLeftText() === "Retry") {
-      window.mClient.resendEvent(this.currentEvent).then(this.eventSentCb).catch(this.eventSentFailCb);
+      if (!shared.mClient) {
+        alert("mClient is null. This is probably a bug. Please report it.");
+        return;
+      }
+      if (!this.currentEvent) {
+        throw new Error("currentEvent is undefined");
+      }
+      shared.mClient.resendEvent(this.currentEvent, this.room).then(this.eventSentCb).catch(this.eventSentFailCb);
     }
   };
   
@@ -246,7 +277,16 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       this.imageViewer.zoomOut();
     }
     if (this.getRightText() === "Delete") {
-      window.mClient.redactEvent(this.room.roomId, this.currentEvent.getId());
+      if (!shared.mClient) {
+        alert("mClient is null. This is probably a bug. Please report it.");
+        return;
+      }
+      let evtId: string | undefined = this.currentEvent && this.currentEvent.getId();
+      if (evtId) {
+        shared.mClient.redactEvent(this.room.roomId, evtId);
+      } else {
+        throw new Error("Cannot get current event ID");
+      }
     }
   };
 
@@ -261,11 +301,19 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
         // TODO: start call or something
         break;
       case "Listen":
-        let audio = document.querySelector(".ircmsg--focused>p>audio");
+        let audio: HTMLAudioElement | null = document.querySelector(".ircmsg--focused>p>audio");
+        if (!audio) {
+          alert("Cannot find the audio. This is probably a bug. Please report it.");
+          return;
+        }
         audio.play();
         break;
       case "Send":
         if (isRecording) {
+          if (!this.recorder) {
+            alert("recorder is null. This is probably a bug. Please report it.");
+            return;
+          }
           this.recorder.stop();
           clearInterval(this.recordingInterval);
           this.setState({
@@ -277,20 +325,31 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
           alert("Not sending empty message!");
           break;
         }
-        window.mClient.sendTextMessage(roomId, message).then(this.eventSentCb).catch(this.eventSentFailCb);
+        if (!shared.mClient) {
+          alert("mClient is null. This is probably a bug. Please report it.");
+          return;
+        }
+        shared.mClient.sendTextMessage(roomId, message).then(this.eventSentCb).catch(this.eventSentFailCb);
         this.setState({ message: "" });
         break;
       case "Download":
+        if (!this.currentEvent) {
+          throw new Error("currentEvent is undefined. This must not happen");
+        }
         let mxcUrl = this.currentEvent.getContent().url;
         if (!mxcUrl) {
           window.alert("Some error occured");
           console.log("REPORT", this.currentEvent);
           break;
         }
-        fetch(mxcMediaToHttp(window.mClient.getHomeserverUrl(), mxcUrl)).then(
-          (r) => {
+        if (!shared.mClient) {
+          alert("mClient is null. This is probably a bug. Please report it.");
+          return;
+        }
+        fetch(mxcMediaToHttp(shared.mClient.getHomeserverUrl(), mxcUrl)).then(
+          (r: Response) => {
             if (r.ok) {
-              r.blob().then((b) => {
+              r.blob().then((b: Blob) => {
                 let picStorage = navigator.getDeviceStorage("pictures");
                 let req = picStorage.addNamed(
                   b,
@@ -318,9 +377,13 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
           isRecording: true,
           recordingSeconds: 0,
         });
+        if (!this.recorder) {
+          alert("recorder is null. This is probably a bug. Please report it.");
+          return;
+        }
         this.recorder.start();
         this.recordingInterval = setInterval(() => {
-          this.setState((state) => {
+          this.setState((state: RoomViewState) => {
             state.recordingSeconds += 0.01;
             return state;
           });
@@ -354,43 +417,52 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       else if (msgtype === "m.image") return "Download";
       else return "";
     }
+    return "";
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     console.log("DIS", this);
-    this.room = window.mClient.getRoom(props.roomId);
-    if (this.room === null) {
-      alert("Cannot retrieve room information");
-      props.closeRoomView();
-      return;
+    if (!shared.mClient) {
+      throw new Error("mClient is null");
     }
+    let room = shared.mClient.getRoom(props.roomId);
+    if (!room) {
+      throw new Error(`Cannot find room with this roomId: ${props.roomId}`);
+    }
+    this.room = room;
     this.dm = isDM(this.room);
-    this.currentEvent = null;
+    this.currentEvent = room.getLastLiveEvent();
     this.timeline = this.room.getLiveTimeline();
     this.recorder = null;
-    this.recording = [];
+    this.recording = new Array();
     this.imageViewer = null;
     this.reachedEndOfTimeline = false;
     this.recordingInterval = 0;
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       this.recorder = new MediaRecorder(stream);
-      this.recorder.ondataavailable = (evt) => {
+      this.recorder.ondataavailable = (evt: BlobEvent) => {
         this.recording.push(evt.data);
       };
       this.recorder.onstop = () => {
         let blob = new Blob(this.recording);
         let size = blob.size;
-        let duration = parseInt(this.state.recordingSeconds * 1000);
+        let duration = Math.floor(this.state.recordingSeconds * 1000);
         let mimetype = blob.type;
-        window.mClient
+        if (!shared.mClient) {
+          throw new Error("mClient is null");
+        }
+        shared.mClient
           .uploadContent(blob, {
             type: mimetype,
           })
-          .then((response) => {
-            const mxcUrl = response;
-            const roomId = this.props.roomId;
-            window.mClient
+          .then((response: UploadResponse) => {
+            if (!shared.mClient) {
+              throw new Error("mClient is null");
+            }
+            const mxcUrl: string = response.content_uri;
+            const roomId: string = this.props.roomId;
+            shared.mClient
               .sendMessage(roomId, {
                 body: this.state.message || "Voice message",
                 info: {
@@ -401,12 +473,12 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
                 url: mxcUrl,
                 msgtype: "m.audio",
               })
-              .catch((err) => console.log(err));
+              .catch((err: any) => console.log(err));
           })
           .catch(() => alert("Cannot send voice"));
       };
     });
-    const lastEventIndex = this.getVisibleEvents().length - 1;
+    const lastEventIndex = this.timeline.getEvents().length - 1;
     this.state = {
       showMenu: false,
       cursor: lastEventIndex,
@@ -415,19 +487,20 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       isRecording: false,
       recordingSeconds: 0,
       imageViewer: false,
+      typing: false,
     };
   }
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown);
-    window.mClient.addListener("Room.timeline", this.handleTimelineUpdate);
-    window.mClient.addListener("RoomMember.typing", this.handleTyping);
+    shared.mClient && shared.mClient.addListener(SDKRoomEvent.Timeline, this.handleTimelineUpdate);
+    shared.mClient && shared.mClient.addListener(RoomMemberEvent.Typing, this.handleTyping);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
-    window.mClient.removeListener("Room.timeline", this.handleTimelineUpdate);
-    window.mClient.removeListener("RoomMember.typing", this.handleTyping);
+    shared.mClient && shared.mClient.removeListener(SDKRoomEvent.Timeline, this.handleTimelineUpdate);
+    shared.mClient && shared.mClient.removeListener(RoomMemberEvent.Typing, this.handleTyping);
   }
 
   render() {
@@ -440,10 +513,14 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       typing,
       imageViewer,
     } = this.state;
+    if (!shared.mClient) {
+      alert("mClient is null. This is probably a bug. Please report it.");
+      return;
+    }
     return (
       <>
-        { imageViewer && this.currentEvent.getContent().msgtype === "m.image" ?
-          <ImageViewer ref={(ref) => { this.imageViewer = ref; }} url={window.mClient.mxcUrlToHttp(this.currentEvent.getContent().url)} height={this.currentEvent.getContent().info.h} width={this.currentEvent.getContent().info.w} /> : null }
+        { imageViewer && this.currentEvent && this.currentEvent.getContent().msgtype === "m.image" ?
+          <ImageViewer ref={(ref) => { this.imageViewer = ref; }} url={shared.mClient.mxcUrlToHttp(this.currentEvent.getContent().url)} height={this.currentEvent.getContent().info.h} width={this.currentEvent.getContent().info.w} /> : null }
         <Header text={typing ? "Typing..." : this.room.name} />
         <div
           className="eventsandtextinput"
@@ -451,14 +528,11 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
           <div
             className={"kai-list-view"}
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
-            ref={(r) => {
-              this.r = r;
-            }}
           >
-            {this.getVisibleEvents().map((evt, index, arr) => {
+            {this.getVisibleEvents().map((evt: MatrixEvent, index: number) => {
               let item = <RoomEvent evt={evt} isFocused={index === cursor && !textInputFocus}/>;
 
-              if (item.props.isFocused) {
+              if (item && item.props && item.props.isFocused) {
                 this.currentEvent = evt;
               }
 
