@@ -1,10 +1,12 @@
 import { Component } from "inferno";
 import jsQR, { QRCode } from "jsqr";
 import { createClient } from "matrix-js-sdk";
+import { ILoginFlowsResponse } from "matrix-js-sdk/src/@types/auth";
 import * as localforage from "localforage";
 
 import "./LoginWithQR.css";
 import { SoftKey } from "KaiUI";
+import { shared } from "../shared";
 
 
 interface WellKnown {
@@ -13,7 +15,6 @@ interface WellKnown {
 
 class LoginWithQR extends Component<{}, {}> {
   private video?: HTMLVideoElement;
-  private takePhoto: () => void;
 
   takePhoto = () => {
     let canvas = document.createElement("canvas");
@@ -49,14 +50,14 @@ class LoginWithQR extends Component<{}, {}> {
     ) {
       const start: number = flow.length + server_name.length + username.length + 3;
       password = decoded.substring(start);
-      fetch(`https://${server_name}/.well-known/matrix/server`).then((r: Response) => {
+      fetch(`https://${server_name}/.well-known/matrix/client`).then((r: Response) => {
         if (r.ok) {
           r.json().then((j: WellKnown) => {
             const server_url: string = j["m.server"];
-            window.mClient = createClient({
+            shared.mClient = createClient({
               baseUrl: `https://${server_url}`,
             });
-            window.mClient.loginFlows().then((result) => {
+            shared.mClient.loginFlows().then((result: ILoginFlowsResponse) => {
               let gotPasswordLogin = false;
               for (let flow of result.flows) {
                 if ("m.login.password" === flow.type) {
@@ -65,7 +66,7 @@ class LoginWithQR extends Component<{}, {}> {
                 }
               }
               if (gotPasswordLogin) {
-                window.mClient
+                shared.mClient
                   .loginWithPassword(`@${username}:${server_name}`, password)
                   .then((result: any) => {
                     localforage.setItem("login", result).then(() => {
@@ -74,7 +75,7 @@ class LoginWithQR extends Component<{}, {}> {
                       window.location = window.location;
                     });
                   })
-                  .catch((err) => {
+                  .catch((err: any) => {
                     switch (err.errcode) {
                       case "M_FORBIDDEN":
                         alert("Incorrect login credentials");
@@ -117,7 +118,7 @@ class LoginWithQR extends Component<{}, {}> {
     }
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = null;
   }
@@ -138,7 +139,7 @@ class LoginWithQR extends Component<{}, {}> {
       <>
         <div className="videodiv">
           <video
-            autoplay
+            autoPlay
             ref={(ref) => {
               if (ref)
                 this.video = ref;
