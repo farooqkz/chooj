@@ -5,7 +5,7 @@ import { MatrixCall } from "matrix-js-sdk";
 import waitingRing from "url:./waiting.ogg";
 import incomingRing from "url:./incoming.ogg";
 import { CallFeed } from "matrix-js-sdk/src/webrtc/callFeed";
-import { CallEvent } from "matrix-js-sdk/src/webrtc/call";
+import { CallEvent, CallErrorCode } from "matrix-js-sdk/src/webrtc/call";
 import { shared } from "../shared";
 
 const personIcon = "/person_icon.png";
@@ -39,13 +39,15 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
   public call?: MatrixCall;
   public waitingRing?: HTMLAudioElement;
   public incomingRing?: HTMLAudioElement;
-  public callAudios?: Array<HTMLAudioElement>;
+  public callAudios: Array<HTMLAudioElement>;
   public timer?: number;
+  public avatarUrl?: string;
+  public displayName?: string;
 
   handleKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === "b" || evt.key === "Backspace") {
       evt.preventDefault();
-      this.call && this.call.hangup();
+      this.call && this.call.hangup(CallErrorCode.UserHangup, true);
     }
     if (evt.key === "Call" || evt.key === "c") {
       this.call && this.call.answer();
@@ -72,12 +74,19 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
       this.call = call;
       this.call.placeVoiceCall();
     } else if (callProps.type === "incoming") {
-      this.props.displayName = this.call.getOpponentMember().name;
-      this.props.avatar = this.call
-        .getOpponentMember()
-        .getAvatarUrl(baseUrl, AVATAR_D, "scale");
+      if (!this.call) {
+        throw new Error("call is null");
+      }
+      let opponent: User | undefined = this.call.getOpponentMember();
+      if (opponent) {
+        this.displayName = opponent.name;
+        this.avatarUrl = opponent.getAvatarUrl(baseUrl, AVATAR_D, "scale");
+      }
     } else {
       throw new Error("Invalid call type");
+    }
+    if (!this.call) {
+      throw new Error("call is null");
     }
     this.call.on(CallEvent.FeedsChanged, (feeds: Array<CallFeed>) => {
       this.callAudios = feeds
@@ -90,11 +99,11 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
           return audio;
         });
     });
-    this.call.on("error", (error) => {
+    this.call.on(CallEvent.Error, (error: any) => {
       console.error("CALL ERROR", error);
-      this.call.hangup();
+      this.call && this.call.hangup(CallErrorCode.UserHangup, true);
     });
-    this.call.on("hangup", () => {
+    this.call.on(CallEvent.Hangup, () => {
       this.callAudios.map((audio) => audio.pause());
       if (this.waitingRing) this.waitingRing.pause();
       if (this.incomingRing) this.incomingRing.pause();
@@ -116,21 +125,21 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
       }
       if (newCallState === "connected") {
         this.timer = window.setInterval(() => {
-          this.setState((prevState) => {
+          this.setState((prevState: CallScreenState) => {
             prevState.duration++;
             return prevState;
           });
         }, 1000);
         this.setState({ hasStarted: true });
       }
-      if (this.props.type === "incoming") {
+      if (this.props.callProps.type === "incoming") {
         console.log("CS", newCallState);
         if (newCallState === "ended") {
-          this.call.hangup();
+          this.call && this.call.hangup(CallErrorCode.UserHangup, true);
         }
         if (newCallState === "connected") {
           this.incomingRing.pause();
-          this.incomingRing = null;
+          this.incomingRing = undefined;
         }
         if (newCallState === "ringing") {
           this.incomingRing = new Audio(incomingRing);
@@ -139,7 +148,7 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
         }
       }
     });
-
+    this.callAudios = [];
     this.state = {
       duration: 0,
       hasStarted: false,
