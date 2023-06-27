@@ -1,5 +1,7 @@
 import { Component, createPortal } from "inferno";
-import { createClient, MatrixCall } from "matrix-js-sdk";
+import { createClient, MatrixCall, Room, ClientEvent } from "matrix-js-sdk";
+import { CallEvent } from "matrix-js-sdk/src/webrtc/call";
+import { CallEventHandlerEvent } from "matrix-js-sdk/src/webrtc/callEventHandler";
 import * as localforage from "localforage";
 
 import { TabView, TextListItem, SoftKey, DropDownMenu } from "KaiUI";
@@ -11,7 +13,8 @@ import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
 import Settings from "./Settings";
 import InvitesView from "./InvitesView";
-import { urlBase64ToUint8Array, toast, updateState } from "./utils";
+import { urlBase64ToUint8Array, toast } from "./utils";
+import { shared } from "./shared";
 
 const vapidPublicKey =
   "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
@@ -22,8 +25,8 @@ interface MatrixProps {
 
 interface Call {
   type: string;
-  userId: string;
-  roomId: string;
+  userId?: string;
+  roomId?: string;
 }
 
 interface MatrixState {
@@ -35,28 +38,17 @@ interface MatrixState {
 }
 
 class Matrix extends Component<MatrixProps, MatrixState> {
-  private pushNotification: (device_id: string) => void;
-  private onTabChange: (index: number) => void;
-  private softLeftText: () => string;
-  private softRightText: () => string;
-  private softCenterText: () => string;
-  private openRoom: () => void;
-  private startCall: (roomId: string, type: string, userId: string) => void;
-  private softRightCb: () => void;
-  private softCenterCb: () => void;
-  private softLeftCb: () => void;
-  private onKeyDown: (evt: KeyboardEvent) => void;
-  private optionsSelectCb: (item: number) => void;
-  
   private tabs: Array<string>;
   private roomId: string;
   private call: MatrixCall | null;
-  private roomsViewRef: null | HTMLElement;
+  //private roomsViewRef: null | RoomsView;
   private invite: Room | null;
+  public state: MatrixState;
 
   pushNotification = (device_id: string) => {
     if (!window.navigator.serviceWorker) return;
     if (!window.PushManager) return;
+    if (!shared.mClient) return;
     window.navigator.serviceWorker.register("/sw.js").then((swReg) => {
       swReg.pushManager
         .getSubscription()
@@ -72,13 +64,13 @@ class Matrix extends Component<MatrixProps, MatrixState> {
         })
         .then((sub) => {
           let pushkey = JSON.stringify(sub.toJSON());
-          window.mClient.setPusher({
-            app_display_name: "Chooj",
+          shared.mClient && shared.mClient.setPusher({
+            app_display_name: "chooj",
             app_id: "net.bananahackers.chooj",
             pushkey: pushkey,
             kind: "http",
             lang: "en",
-            device_display_name: "KaiOS " + device_id,
+            device_display_name: "KaiOS chooj " + device_id,
             data: {
               url: "https://farooqkz.de1.hashbang.sh/_matrix/push/v1/notify",
             },
@@ -149,23 +141,20 @@ class Matrix extends Component<MatrixProps, MatrixState> {
 
   startCall = (roomId: string, type: string, userId: string) => {
     this.setState({
-      call: { type: type, roomId: roomId, displayName: userId },
+      call: { type: type, roomId: roomId, userId: userId },
     });
   };
 
   softRightCb = () => {
-    if (document.querySelector("#menu").innerHTML) return;
-    if (this.softRightText() === "Toast") {
-      toast("Hello", 1000);
-      return;
-    }
+    let menu: HTMLElement | null = document.querySelector("#menu");
+    if (!menu || (menu && menu.innerHTML)) return;
     if (this.softRightText() === "Options") {
       this.setState({ optionsMenu: true });
       document.addEventListener("keydown", this.onKeyDown);
     }
-    if (this.softRightText() === "Log out") {
-      window.mClient.logout(true).then(() => {
-        localforage.removeItem("login", null).then(() => {
+    if (this.softRightText() === "Log out" && shared.mClient) {
+      shared.mClient.logout(true).then(() => {
+        localforage.removeItem("login").then(() => {
           window.alert("Logged out");
           window.location = window.location; // eslint-disable-line no-self-assign
         }).catch((e) => {
@@ -176,26 +165,29 @@ class Matrix extends Component<MatrixProps, MatrixState> {
   };
 
   softLeftCb = () => {
-    if (document.querySelector("#menu").innerHTML) return;
+    let menu: HTMLElement | null = document.querySelector("#menu");
+    if (!menu || menu && menu.innerHTML) return;
     if (this.softLeftText() === "Join") {
       let roomAlias = window.prompt("Enter room name or Id");
       if (!roomAlias) {
         return;
       }
       toast("Joining", 1000);
-      window.mClient
+      shared.mClient && shared.mClient
         .joinRoom(roomAlias)
-        .then((room) => {
+        .then((_room: Room) => {
           // syncing must be done and the joined room must be immediately opened
           // however matrix-js-sdk v23.0.0 currently does not support it,
-          window.mClient.syncApi
+          /*
+          shared.mClient && shared.mClient.syncApi
             .sync()
             .then(() =>
               this.roomsViewRef.setState((state) =>
                 updateState(room, state, false)
               )
             )
-            .then(() => toast("Joined", 1750));
+            .then(() => toast("Joined", 1750));*/
+            toast("Joined", 1750);
         })
         .catch((e) => {
           window.alert("Some error occured during joining:" + e);
@@ -205,7 +197,8 @@ class Matrix extends Component<MatrixProps, MatrixState> {
   };
 
   softCenterCb = () => {
-    if (document.querySelector("#menu").innerHTML) return;
+    let menu: HTMLElement | null = document.querySelector("#menu");
+    if (!menu || (menu && menu.innerHTML)) return;
     switch (this.tabs[this.state.currentTab]) {
       case "About":
         window.open("https://github.com/farooqkz/chooj", "_blank");
@@ -234,8 +227,10 @@ class Matrix extends Component<MatrixProps, MatrixState> {
   };
 
   optionsSelectCb = (item: number) => {
-    /** @type {MatrixClient} */
-    const matrix = window.mClient
+    const matrix = shared.mClient;
+    if (!matrix) {
+      throw new Error("mClient is null");
+    }
     if (item === 0) {
       // leave
       const room = matrix.getRoom(this.roomId)
@@ -257,10 +252,10 @@ class Matrix extends Component<MatrixProps, MatrixState> {
     this.setState({ optionsMenu: false });
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     console.log("LOGIN DATA", props.data);
-    window.mClient = createClient({
+    shared.mClient = createClient({
       userId: props.data.user_id,
       accessToken: props.data.access_token,
       deviceId: props.data.device_id,
@@ -270,10 +265,10 @@ class Matrix extends Component<MatrixProps, MatrixState> {
         props.data.well_known["m.identity_server"].base_url,
 //      store: new matrixcs.IndexedDBStore({ indexedDB: window.indexedDB, localStorage: window.localStorage }),
     });
-    const client = window.mClient;
-    client.on("Call.incoming", (call) => {
+    const client = shared.mClient;
+    client.on(CallEventHandlerEvent.Incoming, (call: MatrixCall) => {
       if (this.state.call) {
-        call.once("state", (state) => {
+        call.once(CallEvent.State, (state: string) => {
           if (state === "ringing") {
             call.reject();
           }
@@ -285,7 +280,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
         });
       }
     });
-    client.once("sync", () => {
+    client.once(ClientEvent.Sync, () => {
       this.setState({ syncDone: true });
     });
     client.startClient({ lazyLoadMembers: true });
@@ -293,7 +288,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
     this.roomId = "";
     this.invite = null;
     this.call = null;
-    this.roomsViewRef = null;
+    //this.roomsViewRef = null;
     this.state = {
       currentTab: 0,
       call: null,
@@ -313,10 +308,10 @@ class Matrix extends Component<MatrixProps, MatrixState> {
         </>
       );
     }
-    if (call) {
+    if (call && this.call) {
       return (
         <CallScreen
-          {...call}
+          callProps={call}
           endOfCallCb={() => {
             this.call = null;
             this.setState({ call: null });
@@ -336,15 +331,15 @@ class Matrix extends Component<MatrixProps, MatrixState> {
             <DMsView
               startCall={this.startCall}
               selectedRoomCb={(roomId) => {
-                this.roomId = roomId;
+                this.roomId = roomId || "";
               }}
             />
             <RoomsView
               selectedRoomCb={(roomId) => {
-                this.roomId = roomId;
+                this.roomId = roomId || "";
               }}
-              ref={(r) => {
-                this.roomsViewRef = r;
+              ref={(_r) => {
+                //this.roomsViewRef = r;
               }}
             />
             <InvitesView selectedInviteCb={(invite) => { this.invite = invite }} />
