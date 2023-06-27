@@ -1,4 +1,4 @@
-import { Component, createPortal, VNode } from "inferno";
+import { Component, createPortal } from "inferno";
 import {
   ListViewKeyed,
   IconListItem,
@@ -8,13 +8,12 @@ import {
 } from "KaiUI";
 
 import FarooqAvatar from "./FarooqAvatar.png";
-import { startDM } from "./utils"; // eslint-disable-line no-unused-vars
 
 interface ContactSelectionMenuProps {
   selectCb: (label: string) => void;
 }
 
-function ContactSelectionMenu({ selectCb }: ContactSelectionMenuProps) : JSX.Element {
+function ContactSelectionMenu({ selectCb }: ContactSelectionMenuProps) : DropDownMenu {
   return (
     <DropDownMenu
       title="Contact Farooq"
@@ -40,9 +39,10 @@ function contactFarooq(contactWay: string) {
           url: myEmailAddr,
         },
       });
-      mail.onerror = (error) =>
-        console.log("MozActivity", error) &&
+      mail.onerror = (error: any) => {
+        console.log("MozActivity", error);
         window.alert("Cannot start Email app :(");
+      }
       break;
     default:
       window.alert("Not implemented yet...");
@@ -56,6 +56,7 @@ interface AboutState {
 }
 
 class About extends Component<{}, AboutState> {
+  public state: AboutState;
   handleKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === "Call" || evt.key === "c") {
       console.log("Okay they want to contact Farooq...");
@@ -100,7 +101,6 @@ class About extends Component<{}, AboutState> {
       <TextListItem key="lib-kaiuing" primary="KaiUIng" />,
       <TextListItem key="lib-inferno" primary="InfernoJS" />,
       <TextListItem key="lib-localforage" primary="localforage" />,
-
     ];
     return (
       <>
