@@ -1,9 +1,11 @@
 import { Component } from "inferno";
 import { Room } from "matrix-js-sdk";
+/*
 import {
   ListView,
   TextListItem,
 } from "KaiUI";
+*/
 import NoItem from "./NoItem";
 
 
