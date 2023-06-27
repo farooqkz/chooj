@@ -9,7 +9,7 @@ import {
   ListViewKeyed
 } from "KaiUI";
 import { ILoginFlowsResponse, LoginFlow } from "matrix-js-sdk/src/@types/auth";
-import { shared } from "./shared";
+import shared from "./shared";
 
 import LoginWithQR from "./LoginWithQR";
 

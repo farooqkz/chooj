@@ -6,7 +6,7 @@ import * as localforage from "localforage";
 
 import "./LoginWithQR.css";
 import { SoftKey } from "KaiUI";
-import { shared } from "../shared";
+import shared from "../shared";
 
 
 interface WellKnown {

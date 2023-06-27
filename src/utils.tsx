@@ -1,7 +1,7 @@
 import { getHttpUriForMxc, Room, MatrixClient, MatrixEvent, IContent } from "matrix-js-sdk";
 import { render } from "inferno";
 import { RoomsViewState } from "./types";
-import { shared } from "./shared";
+import shared from "./shared";
 
 const defaultAvatarSize = 36;
 
@@ -42,9 +42,6 @@ function isRoom(room: Room) : boolean {
 }
 
 function getAvatarOrDefault(mxcUrl: string, defaultUrl: string, size?: number) : string {
-  if (!shared.mClient) {
-    throw new Error("mClient is null");
-  }
   size = size || defaultAvatarSize;
   if (mxcUrl && shared.mClient) {
     return getHttpUriForMxc(
@@ -79,9 +76,6 @@ function eventSender(sender: string, myself: boolean, dm?: boolean) : string {
 function makeHumanReadableEvent(evt: MatrixEvent, dm?: boolean) : string {
   if (!(evt instanceof Object)) {
     console.log("BOOO", evt);
-  }
-  if (!shared.mClient) {
-    throw new Error("mClient is null");
   }
   let content: IContent | undefined = evt.getContent();
   if (!content) {
@@ -177,9 +171,6 @@ function readableTimestamp(ts: number, includeSeconds?: boolean) : string {
 }
 
 function getSomeDisplayName(userId: string) : string {
-  if (!shared.mClient) {
-    throw new Error("shared.mClient is null");
-  }
   let userObj = shared.mClient.getUser(userId);
   if (userObj) {
     return userObj.displayName || userObj.userId.split(":")[0].replace("@", "");

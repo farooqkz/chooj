@@ -5,7 +5,7 @@ import { Room, RoomEvent, MatrixEvent, IRoomTimelineData } from "matrix-js-sdk";
 import ChatRoomItem from "./ChatRoomItem";
 import { updateState, isRoom, isDM } from "./utils";
 import NoItem from "./NoItem";
-import { shared } from "./shared";
+import shared from "./shared";
 import { RoomsViewState, RoomsViewProps } from "./types";
 
 class RoomsView extends Component<RoomsViewProps> {

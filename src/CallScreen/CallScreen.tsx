@@ -6,7 +6,7 @@ import waitingRing from "url:./waiting.ogg";
 import incomingRing from "url:./incoming.ogg";
 import { CallFeed } from "matrix-js-sdk/src/webrtc/callFeed";
 import { CallEvent, CallErrorCode } from "matrix-js-sdk/src/webrtc/call";
-import { shared } from "../shared";
+import shared from "../shared";
 
 const personIcon = "/person_icon.png";
 
@@ -57,9 +57,6 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
   constructor(props: any) {
     super(props);
     console.log("CS", props);
-    if (!shared.mClient) {
-      throw new Error("mClient is null");
-    }
     const { callProps, call, roomId } = props;
     const baseUrl = shared.mClient.baseUrl;
     const AVATAR_D = 64;

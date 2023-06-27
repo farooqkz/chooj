@@ -16,6 +16,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "target": "es2022",
     "paths": {
       "KaiUI": ["./node_modules/KaiUI"]
     }

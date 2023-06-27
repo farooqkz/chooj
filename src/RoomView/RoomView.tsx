@@ -19,7 +19,7 @@ import ScrollIntoView from "./ScrollIntoView";
 import "./RoomView.css";
 import RoomEvent from "./RoomEvent";
 import ImageViewer  from "../ImageViewer";
-import { shared } from "../shared";
+import shared from "../shared";
 import { RoomsViewState } from "../types";
 
 
@@ -105,9 +105,6 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     }
     const { cursor, textInputFocus, message } = this.state;
     const { closeRoomView } = this.props;
-    if (!shared.mClient) {
-      throw new Error("mClient is null")
-    }
     if (cursor <= 5 && !this.reachedEndOfTimeline) {
       let prev = this.getVisibleEvents().length - 1;
       shared.mClient
@@ -175,9 +172,6 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
         dmsViewState = updateState(room, dmsViewState);
         shared.stateStores.set("DMsView", dmsViewState);
       }
-    }
-    if (!shared.mClient) {
-      throw new Error("mClient is null");
     }
     if (room.roomId === this.room.roomId) {
       let events = this.getVisibleEvents();
@@ -261,10 +255,6 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       this.setState({ imageViewer: true }); 
     }
     if (this.getLeftText() === "Retry") {
-      if (!shared.mClient) {
-        alert("mClient is null. This is probably a bug. Please report it.");
-        return;
-      }
       if (!this.currentEvent) {
         throw new Error("currentEvent is undefined");
       }
@@ -277,10 +267,6 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       this.imageViewer.zoomOut();
     }
     if (this.getRightText() === "Delete") {
-      if (!shared.mClient) {
-        alert("mClient is null. This is probably a bug. Please report it.");
-        return;
-      }
       let evtId: string | undefined = this.currentEvent && this.currentEvent.getId();
       if (evtId) {
         shared.mClient.redactEvent(this.room.roomId, evtId);
@@ -325,10 +311,6 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
           alert("Not sending empty message!");
           break;
         }
-        if (!shared.mClient) {
-          alert("mClient is null. This is probably a bug. Please report it.");
-          return;
-        }
         shared.mClient.sendTextMessage(roomId, message).then(this.eventSentCb).catch(this.eventSentFailCb);
         this.setState({ message: "" });
         break;
@@ -341,10 +323,6 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
           window.alert("Some error occured");
           console.log("REPORT", this.currentEvent);
           break;
-        }
-        if (!shared.mClient) {
-          alert("mClient is null. This is probably a bug. Please report it.");
-          return;
         }
         fetch(mxcMediaToHttp(shared.mClient.getHomeserverUrl(), mxcUrl)).then(
           (r: Response) => {
@@ -423,9 +401,6 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
   constructor(props: any) {
     super(props);
     console.log("DIS", this);
-    if (!shared.mClient) {
-      throw new Error("mClient is null");
-    }
     let room = shared.mClient.getRoom(props.roomId);
     if (!room) {
       throw new Error(`Cannot find room with this roomId: ${props.roomId}`);
@@ -449,17 +424,11 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
         let size = blob.size;
         let duration = Math.floor(this.state.recordingSeconds * 1000);
         let mimetype = blob.type;
-        if (!shared.mClient) {
-          throw new Error("mClient is null");
-        }
         shared.mClient
           .uploadContent(blob, {
             type: mimetype,
           })
           .then((response: UploadResponse) => {
-            if (!shared.mClient) {
-              throw new Error("mClient is null");
-            }
             const mxcUrl: string = response.content_uri;
             const roomId: string = this.props.roomId;
             shared.mClient
@@ -513,10 +482,6 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       typing,
       imageViewer,
     } = this.state;
-    if (!shared.mClient) {
-      alert("mClient is null. This is probably a bug. Please report it.");
-      return;
-    }
     return (
       <>
         { imageViewer && this.currentEvent && this.currentEvent.getContent().msgtype === "m.image" ?

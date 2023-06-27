@@ -9,7 +9,7 @@ import ChatDMItem from "./ChatDMItem";
 import { isDM } from "./utils";
 import NoItem from "./NoItem";
 import { startCall } from "./types";
-import { shared } from "./shared";
+import shared from "./shared";
 import { RoomsViewState } from "./types";
 
 interface DMsViewProps {

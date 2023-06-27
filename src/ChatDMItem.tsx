@@ -3,7 +3,7 @@ import { Avatar, IconListItem } from "KaiUI";
 import { Room, RoomEvent, User, UserEvent, MatrixEvent } from "matrix-js-sdk";
 import personIcon from "./person_icon.png";
 import { makeHumanReadableEvent, getAvatarOrDefault } from "./utils";
-import { shared } from "./shared";
+import shared from "./shared";
 
 
 interface ChatDMItemState {
@@ -52,9 +52,6 @@ export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemSta
 
   constructor(props: ChatDMItemProps) {
     super(props);
-    if (!shared.mClient) {
-      throw new Error("mClient is null");
-    }
     let user: User | null = shared.mClient.getUser(props.room.guessDMUserId());
     if (!user) {
       throw Error("User not found");
@@ -70,9 +67,6 @@ export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemSta
   }
 
   componentDidMount() {
-    if (!shared.mClient) {
-      throw new Error("mClient is null");
-    }
     let user: User | null = shared.mClient.getUser(this.props.room.guessDMUserId());
     if (!user) {
       return;

@@ -14,7 +14,7 @@ import CallScreen from "./CallScreen";
 import Settings from "./Settings";
 import InvitesView from "./InvitesView";
 import { urlBase64ToUint8Array, toast } from "./utils";
-import { shared } from "./shared";
+import shared from "./shared";
 
 const vapidPublicKey =
   "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
@@ -48,7 +48,6 @@ class Matrix extends Component<MatrixProps, MatrixState> {
   pushNotification = (device_id: string) => {
     if (!window.navigator.serviceWorker) return;
     if (!window.PushManager) return;
-    if (!shared.mClient) return;
     window.navigator.serviceWorker.register("/sw.js").then((swReg) => {
       swReg.pushManager
         .getSubscription()
@@ -64,7 +63,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
         })
         .then((sub) => {
           let pushkey = JSON.stringify(sub.toJSON());
-          shared.mClient && shared.mClient.setPusher({
+          shared.mClient.setPusher({
             app_display_name: "chooj",
             app_id: "net.bananahackers.chooj",
             pushkey: pushkey,
@@ -152,7 +151,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       this.setState({ optionsMenu: true });
       document.addEventListener("keydown", this.onKeyDown);
     }
-    if (this.softRightText() === "Log out" && shared.mClient) {
+    if (this.softRightText() === "Log out") {
       shared.mClient.logout(true).then(() => {
         localforage.removeItem("login").then(() => {
           window.alert("Logged out");
@@ -173,7 +172,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
         return;
       }
       toast("Joining", 1000);
-      shared.mClient && shared.mClient
+      shared.mClient
         .joinRoom(roomAlias)
         .then((_room: Room) => {
           // syncing must be done and the joined room must be immediately opened
@@ -228,9 +227,6 @@ class Matrix extends Component<MatrixProps, MatrixState> {
 
   optionsSelectCb = (item: number) => {
     const matrix = shared.mClient;
-    if (!matrix) {
-      throw new Error("mClient is null");
-    }
     if (item === 0) {
       // leave
       const room = matrix.getRoom(this.roomId)

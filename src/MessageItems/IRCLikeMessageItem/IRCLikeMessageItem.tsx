@@ -8,7 +8,7 @@ import {
   msToHigherScale,
   getSomeDisplayName,
 } from "../../utils";
-import { shared } from "../../shared";
+import shared from "../../shared";
 
 interface Sender {
   userId: string;
@@ -96,9 +96,6 @@ function IRCLikeMessageItemImage({
   isFocused,
   status,
 }: IRCLikeMessageItemTextProps & IRCLikeMessageItemImageProps & IRCLikeMessageItemCommonProps) {
-  if (!shared.mClient) {
-    throw new Error("mClient is null");
-  }
   while (height > (192 * 2) / 3) {
     height *= 0.75;
     width *= 0.75;
@@ -130,9 +127,6 @@ function IRCLikeMessageItemAudio({
   text,
   status,
 }: IRCLikeMessageItemCommonProps & IRCLikeMessageItemAudioProps & IRCLikeMessageItemTextProps) {
-  if (!shared.mClient) {
-    throw new Error("mClient is null");
-  }
   const hsUrl = shared.mClient.getHomeserverUrl();
   url = mxcMediaToHttp(hsUrl, url);
   return (

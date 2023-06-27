@@ -3,7 +3,7 @@ import { IRoomTimelineData, MatrixEvent, Room, RoomEvent } from "matrix-js-sdk";
 import { IconListItem, Avatar } from "KaiUI";
 import { makeHumanReadableEvent } from "./utils";
 import roomIcon from "url:./hash_icon.png";
-import { shared } from "./shared";
+import shared from "./shared";
 
 interface ChatRoomItemProps {
   roomId: string;
@@ -36,10 +36,6 @@ export default class ChatRoomItem extends Component<ChatRoomItemProps, ChatRoomI
 
   constructor(props: ChatRoomItemProps) {
     super(props);
-    if (!shared.mClient) {
-      alert("mClient is null. This is probably a bug");
-      throw new Error("mClient is null");
-    }
     let room: Room | null = shared.mClient.getRoom(props.roomId);
     if (room) {
       let lastEvent: MatrixEvent | undefined = room.getLastLiveEvent();
@@ -59,7 +55,6 @@ export default class ChatRoomItem extends Component<ChatRoomItemProps, ChatRoomI
   }
 
   componentDidMount() {
-    if (!shared.mClient) { return; }
     let room: Room | null = shared.mClient.getRoom(this.props.roomId);
     if (!room) { return; } 
     room.on(RoomEvent.Name, this.onRoomNameUpdate);
@@ -67,7 +62,6 @@ export default class ChatRoomItem extends Component<ChatRoomItemProps, ChatRoomI
   }
   
   componentWillUnmount() {
-    if (!shared.mClient) { return; }
     let room: Room | null = shared.mClient.getRoom(this.props.roomId);
     if (!room) { return; } 
     room.off(RoomEvent.Name, this.onRoomNameUpdate);
