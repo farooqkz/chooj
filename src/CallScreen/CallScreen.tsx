@@ -1,7 +1,7 @@
 import { Component } from "inferno";
 import "./CallScreen.css";
 import { SoftKey } from "KaiUI";
-import { MatrixCall } from "matrix-js-sdk";
+import { MatrixCall, User } from "matrix-js-sdk";
 import waitingRing from "url:./waiting.ogg";
 import incomingRing from "url:./incoming.ogg";
 import { CallFeed } from "matrix-js-sdk/src/webrtc/callFeed";
