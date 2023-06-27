@@ -8,7 +8,8 @@ import {
   SoftKey,
   ListViewKeyed
 } from "KaiUI";
-import { ILoginFlowsResponse, ILoginFlow } from "matrix-js-sdk";
+import { ILoginFlowsResponse, LoginFlow } from "matrix-js-sdk/src/@types/auth";
+import { shared } from "./shared";
 
 import LoginWithQR from "./LoginWithQR";
 
@@ -21,9 +22,9 @@ interface LoginState {
 class Login extends Component<{}, LoginState> {
   private homeserverUrl: string;
   private homeserverName: string;
-  private loginFlows: ILoginFlow;
+  private loginFlows: Array<LoginFlow>;
   private readonly stageNames: Array<string>;
-  private selectedLoginFlow: ILoginFlow;
+  private selectedLoginFlow?: LoginFlow;
   private username: string;
   private password: string;
   public state: LoginState;
@@ -64,9 +65,12 @@ class Login extends Component<{}, LoginState> {
   };
 
   doLogin = () => {
+    if (!this.selectedLoginFlow) {
+      throw new Error("selectedLoginFlow is not defined");
+    }
     switch (this.selectedLoginFlow.type) {
       case "m.login.password":
-        window.mClient
+        shared.mClient
           .loginWithPassword(
             `@${this.username}:${this.homeserverName}`,
             this.password
@@ -112,10 +116,10 @@ class Login extends Component<{}, LoginState> {
             if (r.ok) {
               r.json().then((j) => {
                 this.homeserverUrl = "https://" + j["m.server"];
-                window.mClient = createClient({
+                shared.mClient = createClient({
                   baseUrl: this.homeserverUrl,
                 });
-                window.mClient
+                shared.mClient
                   .loginFlows()
                   .then((result: ILoginFlowsResponse) => {
                     this.loginFlows = result.flows;
@@ -154,11 +158,10 @@ class Login extends Component<{}, LoginState> {
     }
   };
 
-  constructor() {
-    super();
+  constructor(props: any) {
+    super(props);
     this.stageNames = ["Login Info", "Login method", "Login"];
     this.loginFlows = [];
-    this.selectedLoginFlow = "";
     this.username = "";
     this.password = "";
     this.homeserverName = "";
@@ -216,11 +219,14 @@ class Login extends Component<{}, LoginState> {
         });
         break;
       case 1:
-        listViewChildren = this.loginFlows.map((flow: ILoginFlowsResponse) => {
+        listViewChildren = this.loginFlows.map((flow: LoginFlow) => {
           return <TextListItem key={"flow"+flow.type} primary={flow.type} />;
         });
         break;
       case 2:
+        if (!this.selectedLoginFlow) {
+          throw new Error("selectedLoginFlow is not defined");
+        }
         if (this.selectedLoginFlow.type === "m.login.password") {
           listViewChildren = (
             <TextInput
