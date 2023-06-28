@@ -106,7 +106,7 @@ Because depth of pockets of different people varies, I haven't specified how muc
 
 #### Donating money
 
-You can make donations by sending an amount to my Bitcoin Cash address:
+You can make donations by sending an amount to my Bitcoin Cash address(check total donated [here](https://explorer.bitcoinunlimited.info/address/bitcoincash:qpxy55al8k3mux7j58taxt88jukmqur5ruv6tz7mkc)):
 
 ```
 bitcoincash:qpxy55al8k3mux7j58taxt88jukmqur5ruv6tz7mkc
