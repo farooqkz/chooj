@@ -20,6 +20,8 @@ interface ChatDMItemProps {
 }
 
 export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemState> {
+  public state: ChatDMItemState;
+
   updateDisplayName = (_evt: MatrixEvent | undefined, user: User) => {
     this.setState((state: ChatDMItemState) => {
       state.displayName = user.displayName || state.displayName;
@@ -90,7 +92,11 @@ export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemSta
 
   render() {
     const { presence, displayName, avatarUrl } = this.state;
-    let avatar = getAvatarOrDefault(avatarUrl, personIcon);
+    let avatar: string;
+    if (avatarUrl)
+      avatar = getAvatarOrDefault(avatarUrl, personIcon);
+    else
+      avatar = personIcon;
     let lastEvent = this.state.lastEvent;
     if (lastEvent.length >= 33) lastEvent = lastEvent.slice(0, 33) + "...";
 
