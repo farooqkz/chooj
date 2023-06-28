@@ -1,25 +1,28 @@
-/* eslint-disable */
 console.log("[Chooj SW] Hello Chooj's service worker is alive");
 
-self.onpushsubscriptionchange = (evt) => {
+self.onpushsubscriptionchange = (evt: Event) => {
   console.log("[Chooj SW] PushSubscriptionChange");
   console.log(evt);
 };
 
-self.oninstall = (evt) => {
+self.oninstall = (evt: ExtendableEvent) => {
   console.log("[Chooj SW] Install");
   self.skipWaiting();
 };
 
-self.onactivate = (evt) => {
+self.onactivate = (evt: ExtendableEvent) => {
   console.log("[Chooj SW] Activate");
   evt.waitUntil(self.clients.claim());
 };
 
-self.onpush = (evt) => {
+self.onpush = (evt: PushEvent) => {
   console.log("[Chooj SW] got PUSHY");
+  if (!evt.data) {
+    console.log("[Chooj SW] evt.data is null");
+    return;
+  }
   console.log("[Chooj SW] Push ", evt.data.text());
-  let data = evt.data.json();
+  let data: any = evt.data.json();
   const content = data.content;
   const senderDisplayName = data.sender_display_name;
   if (content && content.body && content.msgtype === "m.text") {
@@ -39,10 +42,10 @@ self.onpush = (evt) => {
   }
 };
 
-self.onnotificationclick = (evt) => {
+self.onnotificationclick = (evt: NotificationEvent) => {
   evt.notification.close();
   evt.waitUntil(
-    self.clients.matchAll().then((clients) => {
+    self.clients.matchAll().then((clients: Array<Client>) => {
       if (clients.length === 0) {
         self.clients.openApp();
       }

@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "lib": ["WebWorker", "ES2017"]
+  },
+  "files": ["src/sw.ts"]
+}

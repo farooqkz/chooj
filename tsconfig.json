@@ -22,6 +22,7 @@
     }
   },
   "exclude": [
-    "dist"
+    "dist",
+    "src/sw.ts"
   ]
 }

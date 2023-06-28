@@ -10,7 +10,9 @@
     "serve": "yarn run devbuild && serve ./build",
     "clean:parcel": "rm -rf .parcel-cache build",
     "lint": "tslint -p ./tsconfig.json",
-    "check": "tsc -p ./tsconfig.json --noEmit"
+    "checkBase": "tsc -p ./tsconfig.json --noEmit",
+    "checkSw": "tsc -p ./tsconfig.service-worker.json --noEmit",
+    "check": "yarn run checkBase && yarn run checkSw"
   },
   "author": "Farooq Karimi Zadeh",
   "license": "GPLv3+",
@@ -33,6 +35,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.19.6",
     "@parcel/transformer-babel": "^2.8.2",
     "@parcel/transformer-sass": "^2.8.2",
+    "@parcel/transformer-typescript-tsc": "^2.9.3",
     "babel-plugin-inferno": "^6.5.0",
     "buffer": "^5.5.0",
     "crypto-browserify": "^3.12.0",
@@ -55,7 +58,7 @@
       "source": [
         "src/index.html",
         "src/manifest.webapp",
-        "src/sw.js",
+        "src/sw.ts",
         "src/chooj.png"
       ]
     }
