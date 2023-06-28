@@ -7,16 +7,10 @@ import * as localforage from "localforage";
 import "./LoginWithQR.css";
 import { SoftKey } from "KaiUI";
 import shared from "../shared";
+import { fetch as customFetch } from "../fetch";
+import { WellKnown } from "../types";
 
 
-interface WellKnown {
-  "m.homeserver": Server;
-  "m.identity_server": Server | undefined;
-}
-
-interface Server {
-  base_url: string;
-}
 
 class LoginWithQR extends Component<{}, {}> {
   private video?: HTMLVideoElement;
@@ -52,6 +46,7 @@ class LoginWithQR extends Component<{}, {}> {
             const server_url: string = j["m.homeserver"].base_url;
             shared.mClient = createClient({
               baseUrl: server_url,
+              fetchFn: customFetch,
             });
             shared.mClient.loginFlows().then((result: ILoginFlowsResponse) => {
               let gotPasswordLogin = false;

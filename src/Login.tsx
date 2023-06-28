@@ -10,7 +10,8 @@ import {
 } from "KaiUI";
 import { ILoginFlowsResponse, LoginFlow } from "matrix-js-sdk/src/@types/auth";
 import shared from "./shared";
-
+import { fetch as customFetch } from "./fetch";
+import { WellKnown } from "./types";
 import LoginWithQR from "./LoginWithQR";
 
 interface LoginState {
@@ -75,10 +76,9 @@ class Login extends Component<{}, LoginState> {
             `@${this.username}:${this.homeserverName}`,
             this.password
           )
-          .then((result: unknown) => {
+          .then((result: any) => {
             localforage.setItem("login", result).then(() => {
               alert("Logged in as " + this.username);
-              // eslint-disable-next-line no-self-assign
               window.location = window.location;
             });
           })
@@ -112,12 +112,13 @@ class Login extends Component<{}, LoginState> {
         this.homeserverName = this.homeserverName.replace("https://", "");
         this.homeserverName = this.homeserverName.replace("http://", "");
         fetch(`https://${this.homeserverName}/.well-known/matrix/client`)
-          .then((r) => {
+          .then((r: Response) => {
             if (r.ok) {
-              r.json().then((j) => {
-                this.homeserverUrl = "https://" + j["m.server"];
+              r.json().then((j: WellKnown) => {
+                this.homeserverUrl = j["m.homeserver"].base_url;
                 shared.mClient = createClient({
                   baseUrl: this.homeserverUrl,
+                  fetchFn: customFetch,
                 });
                 shared.mClient
                   .loginFlows()
