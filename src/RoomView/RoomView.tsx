@@ -493,6 +493,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
           <div
             className={"kai-list-view"}
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
+            $HasKeyedChildren
           >
             {this.getVisibleEvents().map((evt: MatrixEvent, index: number) => {
               let item = <RoomEvent key={evt.getId()} evt={evt} isFocused={index === cursor && !textInputFocus}/>;
@@ -506,7 +507,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
               }
 
               return (
-                <ScrollIntoView shouldScroll={index === cursor}>
+                <ScrollIntoView shouldScroll={index === cursor} key={evt.getId()}>
                   {item}
                 </ScrollIntoView>
               );
