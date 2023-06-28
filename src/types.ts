@@ -2,7 +2,7 @@ import { Room } from "matrix-js-sdk";
 
 interface RoomsViewState {
   cursor: number;
-  rooms: Array<Room>;
+  rooms: Room[];
 }
 
 interface RoomsViewProps {

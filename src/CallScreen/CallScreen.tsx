@@ -39,7 +39,7 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
   public call?: MatrixCall;
   public waitingRing?: HTMLAudioElement;
   public incomingRing?: HTMLAudioElement;
-  public callAudios: Array<HTMLAudioElement>;
+  public callAudios: HTMLAudioElement[];
   public timer?: number;
   public avatarUrl?: string;
   public displayName?: string;
@@ -85,7 +85,7 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
     if (!this.call) {
       throw new Error("call is null");
     }
-    this.call.on(CallEvent.FeedsChanged, (feeds: Array<CallFeed>) => {
+    this.call.on(CallEvent.FeedsChanged, (feeds: CallFeed[]) => {
       this.callAudios = feeds
         .filter((feed) => !feed.isLocal())
         .map((feed) => {

@@ -71,7 +71,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
   private recorder: MediaRecorder | null;
   private reachedEndOfTimeline: boolean;
   private recordingInterval: number;
-  private recording: Array<Blob>;
+  private recording: Blob[];
   private imageViewer: ImageViewer | null;
   
   getCurrentEvent = () => {

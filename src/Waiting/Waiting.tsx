@@ -1,7 +1,7 @@
 import "./Waiting.css";
 import cow from "url:./cowsay-pleasewait.png";
 
-let tips: Array<string> = [
+let tips: string[] = [
   "Use call key in People tab to quickly call someone",
   "In About tab, you can see credits",
   "Contact developer by pressing Call key in About tab",

@@ -113,7 +113,7 @@ function makeHumanReadableEvent(evt: MatrixEvent, dm?: boolean) : string {
 }
 
 function bytesToHigherScale(b: number) : string {
-  let units: Array<string> = ["B", "KiB", "MiB", "GiB"];
+  let units: string[] = ["B", "KiB", "MiB", "GiB"];
   let unit: number = 0;
   while (b >= 512 && unit < 3) {
     b /= 1024;
@@ -123,7 +123,7 @@ function bytesToHigherScale(b: number) : string {
 }
 
 function msToHigherScale(ms: number) : string {
-  let units: Array<string> = ["s", "m", "h"];
+  let units: string[] = ["s", "m", "h"];
   let unit: number = 0;
   ms /= 1000;
   while (ms >= 60) {

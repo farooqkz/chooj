@@ -23,8 +23,8 @@ interface LoginState {
 class Login extends Component<{}, LoginState> {
   private homeserverUrl: string;
   private homeserverName: string;
-  private loginFlows: Array<LoginFlow>;
-  private readonly stageNames: Array<string>;
+  private loginFlows: LoginFlow[];
+  private readonly stageNames: string[];
   private selectedLoginFlow?: LoginFlow;
   private username: string;
   private password: string;

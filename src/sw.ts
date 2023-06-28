@@ -45,7 +45,7 @@ self.onpush = (evt: PushEvent) => {
 self.onnotificationclick = (evt: NotificationEvent) => {
   evt.notification.close();
   evt.waitUntil(
-    self.clients.matchAll().then((clients: Array<Client>) => {
+    self.clients.matchAll().then((clients: Client[]) => {
       if (clients.length === 0) {
         self.clients.openApp();
       }

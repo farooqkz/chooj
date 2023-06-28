@@ -28,7 +28,7 @@ class LoginWithQR extends Component<{}, {}> {
   }
 
   doLogin = (data: string) => {
-    let decodedParts: Array<string> = data.split(" ", 4);
+    let decodedParts: string[] = data.split(" ", 4);
     const flow = decodedParts[0];
     const server_name = decodedParts[1];
     const username = decodedParts[2];

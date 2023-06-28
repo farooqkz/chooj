@@ -38,7 +38,7 @@ interface MatrixState {
 }
 
 class Matrix extends Component<MatrixProps, MatrixState> {
-  private tabs: Array<string>;
+  private readonly tabs: string[];
   private roomId: string;
   private call: MatrixCall | null;
   //private roomsViewRef: null | RoomsView;
