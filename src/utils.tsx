@@ -41,7 +41,7 @@ function isRoom(room: Room) : boolean {
   return room.getJoinedMemberCount() > 2 && room.getMyMembership() === "join" && !room.isSpaceRoom();
 }
 
-function getAvatarOrDefault(mxcUrl: string, defaultUrl: string, size?: number) : string {
+function getAvatarOrDefault(mxcUrl: string | undefined, defaultUrl: string, size?: number) : string {
   size = size || defaultAvatarSize;
   if (mxcUrl && shared.mClient) {
     return getHttpUriForMxc(

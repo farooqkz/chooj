@@ -1,8 +1,3 @@
-declare module "*.png";
-declare module "*.svg";
-declare module "*.ogg";
-declare module "xmimetype";
-
 declare global {
   interface Navigator {
     volumeManager: VolumeManager; 
@@ -24,5 +19,10 @@ declare global {
     name: string;
     data?: any;
   }
+  
   type ValidDeviceStorages = "apps" | "music" | "pictures" | "videos" | "sdcard";
+
+  type DeviceStorage = any
 }
+
+export {};

@@ -91,6 +91,10 @@ export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemSta
   }
 
   render() {
+    if(!this.state){
+      console.log("no state for ChatDMItem");
+      return
+    }
     const { presence, displayName, avatarUrl } = this.state;
     let avatar: string;
     if (avatarUrl)
