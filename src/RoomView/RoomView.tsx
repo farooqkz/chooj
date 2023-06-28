@@ -72,6 +72,13 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
   private recordingInterval: number;
   private recording: Array<Blob>;
   private imageViewer: ImageViewer | null;
+  
+  getCurrentEvent = () => {
+    if (!this.currentEvent) {
+      throw new Error("currentEvent is undefined");
+    }
+    return this.currentEvent;
+  }
 
   messageChangeCb = (message: string) => {
     this.setState({ message: message });
@@ -105,7 +112,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     }
     const { cursor, textInputFocus, message } = this.state;
     const { closeRoomView } = this.props;
-    if (cursor <= 5 && !this.reachedEndOfTimeline) {
+    if (cursor <= 15 && !this.reachedEndOfTimeline) {
       let prev = this.getVisibleEvents().length - 1;
       shared.mClient
         .paginateEventTimeline(this.timeline, { backwards: true, limit: 25 })
@@ -215,8 +222,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     if (imageViewer) {
       return "-";
     }
-    const currentEvt = this.currentEvent;
-    if (!textInputFocus && currentEvt && currentEvt.status === "not_sent") {
+    if (!textInputFocus && this.getCurrentEvent().status === "not_sent") {
       return "Delete";
     }
     return "";
@@ -227,15 +233,13 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       return "+";
     }
     if (this.state.textInputFocus) return "+";
-    const currentEvt = this.currentEvent;
-    if (currentEvt) {
-      if (currentEvt.status === "not_sent") {
-        return "Retry";
-      }
-      let msgtype = currentEvt.getContent().msgtype;
-      if (msgtype === "m.audio") return "Vol.";
-      if (msgtype === "m.image") return "View";
+    let currentEvt: MatrixEvent = this.getCurrentEvent();
+    if (currentEvt.status === "not_sent") {
+      return "Retry";
     }
+    let msgtype = currentEvt.getContent().msgtype;
+    if (msgtype === "m.audio") return "Vol.";
+    if (msgtype === "m.image") return "View";
     return "";
   };
   
@@ -255,10 +259,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       this.setState({ imageViewer: true }); 
     }
     if (this.getLeftText() === "Retry") {
-      if (!this.currentEvent) {
-        throw new Error("currentEvent is undefined");
-      }
-      shared.mClient.resendEvent(this.currentEvent, this.room).then(this.eventSentCb).catch(this.eventSentFailCb);
+      shared.mClient.resendEvent(this.getCurrentEvent(), this.room).then(this.eventSentCb).catch(this.eventSentFailCb);
     }
   };
   
@@ -267,7 +268,8 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       this.imageViewer.zoomOut();
     }
     if (this.getRightText() === "Delete") {
-      let evtId: string | undefined = this.currentEvent && this.currentEvent.getId();
+      let currentEvent: MatrixEvent = this.getCurrentEvent();
+      let evtId: string | undefined = currentEvent.getId();
       if (evtId) {
         shared.mClient.redactEvent(this.room.roomId, evtId);
       } else {
@@ -315,13 +317,10 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
         this.setState({ message: "" });
         break;
       case "Download":
-        if (!this.currentEvent) {
-          throw new Error("currentEvent is undefined. This must not happen");
-        }
-        let mxcUrl = this.currentEvent.getContent().url;
+        let mxcUrl = this.getCurrentEvent().getContent().url;
         if (!mxcUrl) {
           window.alert("Some error occured");
-          console.log("REPORT", this.currentEvent);
+          console.log("REPORT", this.getCurrentEvent());
           break;
         }
         fetch(mxcMediaToHttp(shared.mClient.getHomeserverUrl(), mxcUrl)).then(
@@ -331,7 +330,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
                 let picStorage = navigator.getDeviceStorage("pictures");
                 let req = picStorage.addNamed(
                   b,
-                  this.currentEvent.getContent().body ||
+                  this.getCurrentEvent().getContent().body ||
                     "image." + extensionOf(b.type)
                 );
                 req.onsuccess = () => {
@@ -377,7 +376,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     if (imageViewer) {
       return "Reset";
     }
-    const currentEvt = this.currentEvent;
+    const currentEvt = this.getCurrentEvent();
     if (isRecording) {
       return "Send";
     }
@@ -484,8 +483,8 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     } = this.state;
     return (
       <>
-        { imageViewer && this.currentEvent && this.currentEvent.getContent().msgtype === "m.image" ?
-          <ImageViewer ref={(ref) => { this.imageViewer = ref; }} url={shared.mClient.mxcUrlToHttp(this.currentEvent.getContent().url)} height={this.currentEvent.getContent().info.h} width={this.currentEvent.getContent().info.w} /> : null }
+        { imageViewer && this.getCurrentEvent().getContent().msgtype === "m.image" ?
+          <ImageViewer ref={(ref) => { this.imageViewer = ref; }} url={shared.mClient.mxcUrlToHttp(this.getCurrentEvent().getContent().url)} height={this.getCurrentEvent().getContent().info.h} width={this.getCurrentEvent().getContent().info.w} /> : null }
         <Header text={typing ? "Typing..." : this.room.name} />
         <div
           className="eventsandtextinput"
@@ -495,7 +494,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
           >
             {this.getVisibleEvents().map((evt: MatrixEvent, index: number) => {
-              let item = <RoomEvent evt={evt} isFocused={index === cursor && !textInputFocus}/>;
+              let item = <RoomEvent key={evt.getId()} evt={evt} isFocused={index === cursor && !textInputFocus}/>;
 
               if (item && item.props && item.props.isFocused) {
                 this.currentEvent = evt;
