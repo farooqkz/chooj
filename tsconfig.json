@@ -23,6 +23,7 @@
   },
   "exclude": [
     "dist",
-    "src/sw.ts"
+    "src/sw.ts",
+    "node_modules"
   ]
 }
