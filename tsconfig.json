@@ -22,7 +22,7 @@
     }
   },
   "exclude": [
-    "dist",
+    "build",
     "src/sw.ts",
     "/node_modules"
   ]
