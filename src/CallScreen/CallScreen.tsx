@@ -4,8 +4,8 @@ import { SoftKey } from "KaiUI";
 import { MatrixCall, RoomMember } from "matrix-js-sdk";
 import waitingRing from "url:./waiting.ogg";
 import incomingRing from "url:./incoming.ogg";
-import { CallEvent, CallErrorCode } from "matrix-js-sdk/src/webrtc/call";
 import shared from "../shared";
+import { CallErrorCode, CallEvent } from "matrix-js-sdk/lib/webrtc/call";
 
 const personIcon = "/person_icon.png";
 

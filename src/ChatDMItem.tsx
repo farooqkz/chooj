@@ -1,6 +1,5 @@
 import { Component } from "inferno";
 import { Avatar, IconListItem } from "KaiUI";
-import { Room, RoomEvent, User, UserEvent, MatrixEvent } from "matrix-js-sdk";
 import personIcon from "./person_icon.png";
 import { makeHumanReadableEvent, getAvatarOrDefault } from "./utils";
 import shared from "./shared";
