@@ -1,0 +1,11 @@
+.cannotsendmessage {
+  background-color: var(--color-blue-mid-dark);
+  height: 8vh;
+  text-align: center;
+  margin-top: auto;
+}
+
+.cannotsendmessage > p {
+  font-size: 14px;
+  margin: auto;
+}

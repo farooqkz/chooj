@@ -21,6 +21,7 @@ import RoomEvent from "./RoomEvent";
 import ImageViewer  from "../ImageViewer";
 import shared from "../shared";
 import { RoomsViewState } from "../types";
+import "./CannotSendMessage.css";
 
 
 let HIDDEN_EVENTS: Map<string, boolean> = new Map([
@@ -38,8 +39,8 @@ let EVENT_STATUS_FOR_UPDATE: Map<string | null, boolean> = new Map([
 
 function CannotSendMessage() {
   return (
-    <div style={{ "background-color": "gray" }}>
-      <h5>Cannot send message to this room</h5>
+    <div className="cannotsendmessage">
+      <p>Cannot send message to this room</p>
     </div>
   );
 }
