@@ -1,5 +1,5 @@
 import { Component } from "inferno";
-import jsQR, { QRCode } from "jsqr";
+import QrScanner from "qr-scanner";
 import { createClient } from "matrix-js-sdk";
 import { ILoginFlowsResponse } from "matrix-js-sdk/src/@types/auth";
 import * as localforage from "localforage";
@@ -10,35 +10,31 @@ import shared from "../shared";
 
 
 interface WellKnown {
-  "m.server": string;
+  "m.homeserver": Server;
+  "m.identity_server": Server | undefined;
+}
+
+interface Server {
+  base_url: string;
 }
 
 class LoginWithQR extends Component<{}, {}> {
   private video?: HTMLVideoElement;
 
-  takePhoto = () => {
-    let canvas = document.createElement("canvas");
-    let context2D: CanvasRenderingContext2D | null = canvas.getContext("2d");
-    if (!this.video || !context2D)  {
+  startScanning = () => {
+    if (!this.video)  {
       return;
     }
-    const videoWidth = this.video.videoWidth;
-    const videoHeight = this.video.videoHeight;
-    canvas.height = videoHeight;
-    canvas.width = videoWidth;
-    context2D.drawImage(this.video, 0, 0, videoWidth, videoHeight);
-    let data: Uint8ClampedArray = context2D.getImageData(0, 0, videoWidth, videoHeight).data;
-    let decodedQR: QRCode | null = jsQR(data, videoWidth, videoHeight, {
-      inversionAttempts: "dontInvert",
+    let scanner: QrScanner = new QrScanner(this.video, (result: QrScanner.ScanResult) => this.doLogin(result.data),
+        {
+      maxScansPerSecond: 10,
+      highlightScanRegion: true,
     });
-    let decoded: string;
-    if (decodedQR === null) {
-      window.alert("Scanned nothing... Please retry!");
-      return;
-    } else {
-      decoded = decodedQR.data;
-    }
-    let decodedParts: Array<string> = decoded.split(" ", 4);
+    scanner.start();
+  }
+
+  doLogin = (data: string) => {
+    let decodedParts: Array<string> = data.split(" ", 4);
     const flow = decodedParts[0];
     const server_name = decodedParts[1];
     const username = decodedParts[2];
@@ -49,13 +45,13 @@ class LoginWithQR extends Component<{}, {}> {
       )
     ) {
       const start: number = flow.length + server_name.length + username.length + 3;
-      password = decoded.substring(start);
+      password = data.substring(start);
       fetch(`https://${server_name}/.well-known/matrix/client`).then((r: Response) => {
         if (r.ok) {
           r.json().then((j: WellKnown) => {
-            const server_url: string = j["m.server"];
+            const server_url: string = j["m.homeserver"].base_url;
             shared.mClient = createClient({
-              baseUrl: `https://${server_url}`,
+              baseUrl: server_url,
             });
             shared.mClient.loginFlows().then((result: ILoginFlowsResponse) => {
               let gotPasswordLogin = false;
@@ -71,7 +67,6 @@ class LoginWithQR extends Component<{}, {}> {
                   .then((result: any) => {
                     localforage.setItem("login", result).then(() => {
                       window.alert("Logged in as " + username);
-                      // eslint-disable-next-line no-self-assign
                       window.location = window.location;
                     });
                   })
@@ -129,8 +124,10 @@ class LoginWithQR extends Component<{}, {}> {
         video: { facingMode: "environment" },
       })
       .then((stream) => {
-        if (this.video)
+        if (this.video) {
           this.video.srcObject = stream;
+          this.startScanning();
+        }
       });
   }
 
@@ -146,7 +143,7 @@ class LoginWithQR extends Component<{}, {}> {
             }}
           />
         </div>
-        <SoftKey centerText="Scan" centerCb={this.takePhoto} />
+        <SoftKey />
       </>
     );
   }
