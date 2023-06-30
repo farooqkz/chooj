@@ -113,8 +113,8 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
         .then((notReachedEnd: boolean) => {
           if (notReachedEnd) {
             const current = this.getVisibleEvents().length - 1;
-            this.setState({
-              cursor: current - prev,
+            this.setState((state: RoomViewState) => {
+              state.cursor += current - prev;
             });
           } else {
             this.reachedEndOfTimeline = true;
