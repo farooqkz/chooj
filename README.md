@@ -25,7 +25,7 @@ This is a free(open source) software Matrix client for KaiOS which is going to s
  - Chatting works in all rooms. Sending text and voice is supported. You can view incoming text and photos and listen to voice messages.
  - Voice call might work.
  - Very experimental and unreliable push notification support which you can enable it in Settings
- - You can join public rooms. But there is [a bug](https://github.com/farooqkz/chooj/issues/66) which you must restart the app after joining. You can also leave rooms but the same bug exists.
+ - You can join public rooms or leave joined rooms.
  - The Cow says "Please wait" to you kindly :))
 
 ### How to help?
