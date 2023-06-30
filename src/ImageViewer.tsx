@@ -34,11 +34,7 @@ export default class ImageViewer extends Component<ImageViewerProps, ImageViewer
   }
 
   move = (direction: string) => {
-    /*
     const { height, width } = this.props;
-    const SCREEN_WIDTH = 240;
-    const SCREEN_HEIGHT = 320;
-    */
     this.setState((state: ImageViewerState) => {
       switch (direction) {
         case "right":
@@ -56,12 +52,10 @@ export default class ImageViewer extends Component<ImageViewerProps, ImageViewer
         default:
           console.log("[ImageViewer] Invalid direction for move:", direction);
       }
-      /*
-      state.offsetTop = Math.min(0, state.offsetTop);
-      state.offsetTop = Math.max(SCREEN_HEIGHT, state.offsetTop);
-      state.offsetLeft = Math.min(0, state.offsetLeft);
-      state.offsetLeft = Math.max(SCREEN_WIDTH, state.offsetLeft);
-      */
+      state.offsetTop = Math.max(-height + 10, state.offsetTop);
+      state.offsetTop = Math.min(window.innerHeight - 10, state.offsetTop);
+      state.offsetLeft = Math.max(-width + 10, state.offsetLeft);
+      state.offsetLeft = Math.min(window.innerWidth - 10, state.offsetLeft);
       return state;
     });
   };
@@ -73,6 +67,7 @@ export default class ImageViewer extends Component<ImageViewerProps, ImageViewer
       offsetTop: 0,
       offsetLeft: 0,
     };
+    console.log("IV", this);
   }
 
   render() {
