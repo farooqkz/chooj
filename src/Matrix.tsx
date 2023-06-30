@@ -15,6 +15,7 @@ import Settings from "./Settings";
 import InvitesView from "./InvitesView";
 import { urlBase64ToUint8Array, toast } from "./utils";
 import shared from "./shared";
+import { RoomsViewState } from "./types";
 
 const vapidPublicKey =
   "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
@@ -41,7 +42,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
   private readonly tabs: string[];
   private roomId: string;
   private call: MatrixCall | null;
-  //private roomsViewRef: null | RoomsView;
+  private roomsViewRef?: RoomsView;
   private invite: Room | null;
   public state: MatrixState;
 
@@ -174,19 +175,14 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       toast("Joining", 1000);
       shared.mClient
         .joinRoom(roomAlias)
-        .then((_room: Room) => {
-          // syncing must be done and the joined room must be immediately opened
-          // however matrix-js-sdk v23.0.0 currently does not support it,
-          /*
-          shared.mClient && shared.mClient.syncApi
-            .sync()
-            .then(() =>
-              this.roomsViewRef.setState((state) =>
-                updateState(room, state, false)
-              )
-            )
-            .then(() => toast("Joined", 1750));*/
+        .then((room: Room) => {
+          shared.mClient.once(ClientEvent.Sync, () => {
+            this.roomsViewRef?.setState((state: RoomsViewState) => {
+              state.rooms.push(room);
+              return state;
+            });
             toast("Joined", 1750);
+          });
         })
         .catch((e) => {
           window.alert("Some error occured during joining:" + e);
@@ -225,15 +221,20 @@ class Matrix extends Component<MatrixProps, MatrixState> {
     }
   };
 
-  optionsSelectCb = (item: number) => {
-    const matrix = shared.mClient;
-    if (item === 0) {
+  optionsSelectCb = (item: string) => {
+    if (item === "leave") {
       // leave
-      const room = matrix.getRoom(this.roomId)
-      if (!room) {
+      const roomToLeave = shared.mClient.getRoom(this.roomId);
+      if (!roomToLeave) {
         alert("Error: no room selected")
-      } else if (window.confirm(`Are you sure to leave '${room.name}'?`)) {
-        matrix.leave(room.roomId)
+      } else if (window.confirm(`Are you sure to leave '${roomToLeave.name}'?`)) {
+        shared.mClient.leave(this.roomId).then(() => {
+          this.roomsViewRef?.setState((state: RoomsViewState) => {
+            state.rooms = state.rooms.filter((room) => room.roomId != this.roomId);
+            return state;
+          });
+          toast("Left the room", 1500);
+        });
       }
     }
     // forget is currently not nessary, leaving already removes the room from the list
@@ -293,6 +294,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       optionsMenu: false,
     };
     console.log("MATRIX", this);
+    console.log("Shared", shared);
   }
 
   render() {
@@ -334,8 +336,8 @@ class Matrix extends Component<MatrixProps, MatrixState> {
               selectedRoomCb={(roomId) => {
                 this.roomId = roomId || "";
               }}
-              ref={(_r) => {
-                //this.roomsViewRef = r;
+              ref={(r: RoomsView) => {
+                this.roomsViewRef = r;
               }}
             />
             <InvitesView selectedInviteCb={(invite) => { this.invite = invite }} />
@@ -354,7 +356,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
           </footer>
           {optionsMenu
             ? createPortal(
-              <DropDownMenu title="Options" selectCb={this.optionsSelectCb}>
+              <DropDownMenu title="Options" selectCb={this.optionsSelectCb} labels={["leave"]}>
                 <TextListItem primary="Leave" />
                 {/* forget is currently not nessary, leaving already removes the room from the list */}
                 {/* <TextListItem primary="Forget Room" /> */}
