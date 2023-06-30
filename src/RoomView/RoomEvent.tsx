@@ -38,7 +38,8 @@ interface RoomEventProps {
 
 function MembershipEvent({ evt, isFocused }: RoomEventProps) {
   let content = evt.getContent();
-  // const senderId = evt.getSender();
+  const sender: string | undefined = evt.getSender();
+  let displayName: string = sender ? getSomeDisplayName(sender) : "-@UnknownUser@-";
   const ts = evt.getTs();
   if (!content.membership) {
     throw new Error("content.membership is undefined for a membership event");
@@ -62,6 +63,14 @@ function MembershipEvent({ evt, isFocused }: RoomEventProps) {
           </p>
         </Event>
       );
+    case "invite":
+      return (
+        <Event isFocused={isFocused}>
+          <p $HasTextChildren>
+            {readableTimestamp(ts) + displayName + " invited " + content.displayname}
+          </p>
+        </Event>
+      );
     default:
       if (isFocused) console.log("REPORT", evt);
       return (
@@ -74,10 +83,10 @@ function MembershipEvent({ evt, isFocused }: RoomEventProps) {
 
 export default function RoomEvent({ evt, isFocused }: RoomEventProps) : JSX.Element {
   const type = evt.getType();
-  const senderId = evt.getSender() || "-@Unknown@-";
+  const senderId = evt.getSender();
   const MessageItem = IRCLikeMessageItem;
   const UnsupportedEventItem = IRCLikeUnsupportedEventItem;
-  const displayName = getSomeDisplayName(senderId);
+  const displayName = senderId ? getSomeDisplayName(senderId) : "-@UnknownUser@-";
   const ts = readableTimestamp(evt.getTs());
   const status = evt.status;
 
@@ -129,6 +138,17 @@ export default function RoomEvent({ evt, isFocused }: RoomEventProps) : JSX.Elem
               {ts}
             </b>
             {createTextVNode(`${displayName} created this room.`)}
+          </p>
+        </Event>
+      );
+    case "m.room.power_levels":
+      return (
+        <Event isFocused={isFocused}>
+          <p>
+            <b $HasTextChildren>
+              {ts}
+            </b>
+            {createTextVNode(`${displayName} changed this room's power levels`)}
           </p>
         </Event>
       );
