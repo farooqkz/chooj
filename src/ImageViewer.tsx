@@ -41,16 +41,16 @@ export default class ImageViewer extends Component<ImageViewerProps, ImageViewer
     */
     this.setState((state: ImageViewerState) => {
       switch (direction) {
-        case "left":
+        case "right":
           state.offsetLeft += Math.floor(state.zoom * 50);
           break;
-        case "right":
+        case "left":
           state.offsetLeft -= Math.floor(state.zoom * 50);
           break;
-        case "up":
+        case "down":
           state.offsetTop += Math.floor(state.zoom * 50);
           break;
-        case "down":
+        case "up":
           state.offsetTop -= Math.floor(state.zoom * 50);
           break;
         default:
@@ -79,8 +79,8 @@ export default class ImageViewer extends Component<ImageViewerProps, ImageViewer
     const { zoom, offsetTop, offsetLeft } = this.state;
     const { url, height, width } = this.props;
     return (
-      <div className="imageviewer" style={{ "margin-top": `${offsetTop}px`, "margin-left": `${offsetLeft}px` }}>
-        <img height={height * zoom} width={width * zoom}  src={url} alt="" />
+      <div className="imageviewer">
+        <img style={{ "margin-top": `${offsetTop}px`, "margin-left": `${offsetLeft}px` }} height={height * zoom} width={width * zoom}  src={url} alt="" />
       </div>
     );
   }
