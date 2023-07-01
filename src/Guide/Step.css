@@ -1,0 +1,12 @@
+.step {
+  text-align: center;
+  margin-top: 12vh;
+}
+
+.step > div {
+  margin-top: 10vh;
+}
+
+.step > div > img {
+  position: relative;
+}
