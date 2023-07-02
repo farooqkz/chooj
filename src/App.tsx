@@ -4,11 +4,13 @@ import Waiting from "./Waiting";
 import * as localforage from "localforage";
 import Matrix from "./Matrix";
 import Login from "./Login";
+import Guide from "./Guide";
 import { LoginData } from "./types";
 
 interface AppState {
   state: string | null;
   online: boolean | null;
+  guide: boolean | null;
 }
 
 class App extends Component<{}, AppState> {
@@ -22,6 +24,7 @@ class App extends Component<{}, AppState> {
     this.timeout = null;
     this.state = {
       state: null,
+      guide: null,
       online: navigator.onLine ? null : false,
     };
     localforage.getItem("login").then((login: unknown) => {
@@ -31,6 +34,9 @@ class App extends Component<{}, AppState> {
       } else {
         this.setState({ state: "login" });
       }
+    });
+    localforage.getItem("guide").then((value: unknown) => {
+      this.setState({ guide: Boolean(value) });
     });
     if (this.state.online === null) {
       let xhr = new XMLHttpRequest({ mozSystem: true });
@@ -42,18 +48,25 @@ class App extends Component<{}, AppState> {
   }
 
   render() {
-    const { state, online } = this.state;
+    const { state, online, guide } = this.state;
     if (online === false) {
       window.alert("You don't seem to have a working Internet connection. chooj will close now.");
       window.close();
     }
 
-    if (state === null || online === null) {
+    if (state === null || online === null || guide === null) {
       return <Waiting noTip />;
     }
 
     if (state === "login") {
-      return <Login />;
+      if (guide) {
+        return <Login />;
+      } else {
+        return <Guide endCb={() => {
+          this.setState({ guide: true }); 
+          localforage.setItem("guide", true);
+        }} />;
+      }
     }
 
     if (state === "matrix") {
