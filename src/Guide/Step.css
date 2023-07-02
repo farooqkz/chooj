@@ -3,10 +3,19 @@
   margin-top: 12vh;
 }
 
+.step > p {
+  margin-top: -6vh;
+}
+
 .step > div {
   margin-top: 10vh;
 }
 
 .step > div > img {
   position: relative;
+}
+
+.step > div > svg {
+  left: 0;
+  position: absolute;
 }

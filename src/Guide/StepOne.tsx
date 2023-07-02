@@ -10,7 +10,7 @@ function StepOne() {
       </p>
       <div>
         <img style={{ left: "12vw" }} src={serverIcon} height={42} width={42} alt="" />
-        <svg viewBox="0 0 100vw calc(30vh-2.6rem)" stroke="black" style={{ left: "0", top: "66vh", position: "absolute" }}>
+        <svg viewBox="0 0 240 80" stroke="black" style={{ top: "64vh" }}>
           <line x1="75" x2="95" y1="10" y2="8"/>
           <line x1="122" x2="122" y1="34" y2="14" />
           <line x1="150" x2="175" y1="8" y2="10" />

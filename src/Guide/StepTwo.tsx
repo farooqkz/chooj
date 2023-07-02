@@ -10,7 +10,7 @@ function StepTwo() {
       </p>
       <div>
         <img src={serverIcon} height={24} width={24} alt="" style={{ bottom: "6vh", left: "28vw" }} />
-        <svg viewBox="0 0 100vw 20vh" stroke="black" style={{ left: "0", top: "55vh", position: "absolute" }}>
+        <svg viewBox="0 0 240 140" stroke="black" style={{ top: "52vh" }}>
           <line x1="90" x2="105" y1="18" y2="24"/>
           <line x1="150" x2="135" y1="18" y2="24" />
           { /* these two lines belong to the users of the top homeserver */ } 
