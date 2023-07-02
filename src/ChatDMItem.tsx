@@ -1,6 +1,5 @@
 import { Component } from "inferno";
 import { Avatar, IconListItem } from "KaiUI";
-import { Room, RoomEvent, User, UserEvent, MatrixEvent } from "matrix-js-sdk";
 import personIcon from "./person_icon.png";
 import { makeHumanReadableEvent, getAvatarOrDefault } from "./utils";
 import shared from "./shared";
@@ -91,6 +90,10 @@ export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemSta
   }
 
   render() {
+    if(!this.state){
+      console.log("no state for ChatDMItem");
+      return
+    }
     const { presence, displayName, avatarUrl } = this.state;
     let avatar: string;
     if (avatarUrl)

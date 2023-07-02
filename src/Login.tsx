@@ -8,11 +8,11 @@ import {
   SoftKey,
   ListViewKeyed
 } from "KaiUI";
-import { ILoginFlowsResponse, LoginFlow } from "matrix-js-sdk/src/@types/auth";
 import shared from "./shared";
 import { fetch as customFetch } from "./fetch";
 import { WellKnown } from "./types";
 import LoginWithQR from "./LoginWithQR";
+import { LoginFlow } from "matrix-js-sdk/lib/@types/auth";
 
 interface LoginState {
   cursor: number;
@@ -122,7 +122,7 @@ class Login extends Component<{}, LoginState> {
                 });
                 shared.mClient
                   .loginFlows()
-                  .then((result: ILoginFlowsResponse) => {
+                  .then((result) => {
                     this.loginFlows = result.flows;
                     this.setState({ cursor: 0, stage: 1 });
                   })

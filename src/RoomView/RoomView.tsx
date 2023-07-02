@@ -488,9 +488,10 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
             $HasKeyedChildren
           >
             {this.getVisibleEvents().map((evt: MatrixEvent, index: number) => {
-              let item = <RoomEvent key={evt.getId()} evt={evt} isFocused={index === cursor && !textInputFocus}/>;
+              const isFocused = index === cursor && !textInputFocus
+              let item = <RoomEvent key={evt.getId()} evt={evt} isFocused={isFocused}/>;
 
-              if (item && item.props && item.props.isFocused) {
+              if (isFocused) {
                 this.currentEvent = evt;
               }
 

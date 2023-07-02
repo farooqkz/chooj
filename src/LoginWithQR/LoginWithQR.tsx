@@ -1,7 +1,6 @@
 import { Component } from "inferno";
 import QrScanner from "qr-scanner";
 import { createClient } from "matrix-js-sdk";
-import { ILoginFlowsResponse } from "matrix-js-sdk/src/@types/auth";
 import * as localforage from "localforage";
 
 import "./LoginWithQR.css";
@@ -48,7 +47,7 @@ class LoginWithQR extends Component<{}, {}> {
               baseUrl: server_url,
               fetchFn: customFetch,
             });
-            shared.mClient.loginFlows().then((result: ILoginFlowsResponse) => {
+            shared.mClient.loginFlows().then((result) => {
               let gotPasswordLogin = false;
               for (let flow of result.flows) {
                 if ("m.login.password" === flow.type) {

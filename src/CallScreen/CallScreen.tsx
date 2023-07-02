@@ -1,12 +1,11 @@
 import { Component } from "inferno";
 import "./CallScreen.css";
 import { SoftKey } from "KaiUI";
-import { MatrixCall, User } from "matrix-js-sdk";
+import { MatrixCall, RoomMember } from "matrix-js-sdk";
 import waitingRing from "url:./waiting.ogg";
 import incomingRing from "url:./incoming.ogg";
-import { CallFeed } from "matrix-js-sdk/src/webrtc/callFeed";
-import { CallEvent, CallErrorCode } from "matrix-js-sdk/src/webrtc/call";
 import shared from "../shared";
+import { CallErrorCode, CallEvent } from "matrix-js-sdk/lib/webrtc/call";
 
 const personIcon = "/person_icon.png";
 
@@ -35,13 +34,17 @@ interface CallScreenProps {
 }
 
 class CallScreen extends Component<CallScreenProps, CallScreenState> {
-  public state: CallScreenState;
+  public state: CallScreenState = {
+    duration: 0,
+    hasStarted: false,
+    isAudioMuted: false,
+  }
   public call?: MatrixCall;
   public waitingRing?: HTMLAudioElement;
   public incomingRing?: HTMLAudioElement;
-  public callAudios: HTMLAudioElement[];
+  public callAudios: HTMLAudioElement[] = [];
   public timer?: number;
-  public avatarUrl?: string;
+  public avatarUrl: string | null = null;
   public displayName?: string;
 
   handleKeyDown = (evt: KeyboardEvent) => {
@@ -74,10 +77,10 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
       if (!this.call) {
         throw new Error("call is null");
       }
-      let opponent: User | undefined = this.call.getOpponentMember();
+      let opponent: RoomMember | undefined = this.call.getOpponentMember();
       if (opponent) {
         this.displayName = opponent.name;
-        this.avatarUrl = opponent.getAvatarUrl(baseUrl, AVATAR_D, "scale");
+        this.avatarUrl = opponent.getAvatarUrl(baseUrl, AVATAR_D, AVATAR_D, "scale", true, false);
       }
     } else {
       throw new Error("Invalid call type");
@@ -85,7 +88,7 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
     if (!this.call) {
       throw new Error("call is null");
     }
-    this.call.on(CallEvent.FeedsChanged, (feeds: CallFeed[]) => {
+    this.call.on(CallEvent.FeedsChanged, (feeds) => {
       this.callAudios = feeds
         .filter((feed) => !feed.isLocal())
         .map((feed) => {
@@ -107,7 +110,7 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
       window.clearInterval(this.timer);
       this.props.endOfCallCb();
     });
-    this.call.on("state", (newCallState) => {
+    this.call.on(CallEvent.State, (newCallState) => {
       if (["voice", "video"].includes(this.props.type)) {
         if (newCallState === "invite_sent") {
           this.waitingRing = new Audio(waitingRing);
@@ -116,8 +119,8 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
           this.waitingRing.play();
         }
         if (newCallState === "connected") {
-          this.waitingRing.pause();
-          this.waitingRing = null;
+          this.waitingRing?.pause();
+          this.waitingRing = undefined;
         }
       }
       if (newCallState === "connected") {
@@ -135,7 +138,7 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
           this.call && this.call.hangup(CallErrorCode.UserHangup, true);
         }
         if (newCallState === "connected") {
-          this.incomingRing.pause();
+          this.incomingRing?.pause();
           this.incomingRing = undefined;
         }
         if (newCallState === "ringing") {
@@ -145,12 +148,6 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
         }
       }
     });
-    this.callAudios = [];
-    this.state = {
-      duration: 0,
-      hasStarted: false,
-      isAudioMuted: false,
-    };
   }
 
   componentDidMount() {

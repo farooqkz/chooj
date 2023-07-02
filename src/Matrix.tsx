@@ -1,7 +1,5 @@
 import { Component, createPortal } from "inferno";
 import { createClient, MatrixCall, Room, ClientEvent } from "matrix-js-sdk";
-import { CallEvent } from "matrix-js-sdk/src/webrtc/call";
-import { CallEventHandlerEvent } from "matrix-js-sdk/src/webrtc/callEventHandler";
 import * as localforage from "localforage";
 
 import { TabView, TextListItem, SoftKey, DropDownMenu } from "KaiUI";
@@ -16,6 +14,8 @@ import InvitesView from "./InvitesView";
 import { urlBase64ToUint8Array, toast } from "./utils";
 import shared from "./shared";
 import { RoomsViewState } from "./types";
+import { CallEventHandlerEvent } from "matrix-js-sdk/lib/webrtc/callEventHandler";
+import { CallEvent } from "matrix-js-sdk/lib/webrtc/call";
 
 const vapidPublicKey =
   "BJ1E-DznkVbMLGoBxRw1dZWQnRKCaS4K8KaOKbijeBeu4FaVMB00L_WYd6yx91SNVNhKKT8f0DEZ9lqNs50OhFs";
