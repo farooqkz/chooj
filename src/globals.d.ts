@@ -23,6 +23,10 @@ declare global {
   type ValidDeviceStorages = "apps" | "music" | "pictures" | "videos" | "sdcard";
 
   type DeviceStorage = any
+
+  class XMLHttpRequest {
+    constructor(options: undefined | { mozSystem?: boolean }): XMLHttpRequest;
+  }
 }
 
 export { };
