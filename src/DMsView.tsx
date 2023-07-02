@@ -121,7 +121,7 @@ class DMsView extends Component<DMsViewProps, RoomsViewState & DMsViewState> {
   }
 
   render() {
-    const { cursor, rooms, showCallSelection } = this.state;
+    const { rooms, showCallSelection } = this.state;
     rooms.sort(
       (first: Room, second: Room) => {
         let firstLastEvent: MatrixEvent | undefined = first.getLastLiveEvent(); 
