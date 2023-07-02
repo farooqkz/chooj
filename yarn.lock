@@ -1192,18 +1192,18 @@
   resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.21.0.tgz#cd242c6551ffb51830049d68d9743ab65b45b820"
   integrity sha512-/J4WBTpWtQ4itN1rb3ao8LfClmVcmz2pO6oYb7Qd4h7VSqUhIbJIvrykz9Ew1WMg6eFWsKdsMHc5uPbFxqlCpg==
 
-"KaiUI@npm:kaiuing-inferno@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/kaiuing-inferno/-/kaiuing-inferno-3.0.0.tgz#73d38c2c4c5929e3cf877d25be0f9c685f1a02d0"
-  integrity sha512-za+1PZSLaGWV/hE31jlwwhmuLHDOhc3bB71eoB29m4BWVH+PvmTp/sxMnOzcFRyww7IeI14/iUrZGhMYAEd2lg==
+"KaiUI@npm:kaiuing-inferno@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/kaiuing-inferno/-/kaiuing-inferno-3.1.0.tgz#b0f9249bad6c3efa6dde2d2932081edfd73acaeb"
+  integrity sha512-H/K+AWhfiOFJpYzFRhrB700zM/ma0X4/NdApJyfaWULofEH5p3+vX1wyYRBj9fIBvE89vONFaXMJgLKDJlkohQ==
   dependencies:
     "@swc/helpers" "^0.4.14"
-    KaiUI "npm:kaiuing@^2.0.0"
+    KaiUI "npm:kaiuing@^2.1.0"
 
-"KaiUI@npm:kaiuing@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/kaiuing/-/kaiuing-2.0.0.tgz#a45639c1f7eca1aab3f856c46128cd1f6ac51446"
-  integrity sha512-2Rh2dqjE1NK7rc04Fkb1RlHM3o1SQAAs9usbZoxxe3aU7Wwb8lVP+sHJgbYO0OfWkIAlQWLt+Nxb49p8NSdeuQ==
+"KaiUI@npm:kaiuing@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/kaiuing/-/kaiuing-2.1.0.tgz#342f73f6f8ae7acb53e89f2780c6b5ecea2f1552"
+  integrity sha512-5eYChfPJ/ZeTsuDmlC0Z/BDs/csl1eaYOYWs4cd0S97fSeY0u6f65ksLrvx71BCTgoyxaHRnk2wORgTiy7ei2w==
 
 abortcontroller-polyfill@^1.1.9, abortcontroller-polyfill@^1.7.5:
   version "1.7.5"
@@ -2714,11 +2714,6 @@ jsonify@~0.0.0:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.1.tgz#2aa3111dae3d34a0f151c63f3a45d995d9420978"
   integrity sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==
-
-jsqr@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/jsqr/-/jsqr-1.4.0.tgz#8efb8d0a7cc6863cb6d95116b9069123ce9eb2d1"
-  integrity sha512-dxLob7q65Xg2DvstYkRpkYtmKm2sPJ9oFhrhmudT1dZvNFFTlroai3AWSpLey/w5vMcLBXRgOJsbXpdN9HzU/A==
 
 lie@3.1.1:
   version "3.1.1"
