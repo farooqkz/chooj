@@ -111,7 +111,7 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
       this.props.endOfCallCb();
     });
     this.call.on(CallEvent.State, (newCallState) => {
-      if (["voice", "video"].includes(this.props.type)) {
+      if (["voice", "video"].includes(this.props.callProps.type)) {
         if (newCallState === "invite_sent") {
           this.waitingRing = new Audio(waitingRing);
           this.waitingRing.loop = true;
