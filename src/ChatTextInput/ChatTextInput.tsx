@@ -7,7 +7,7 @@ interface ChatTextInputProps {
 }
 
 function ChatTextInput({ isFocused, message, onChangeCb }: ChatTextInputProps) {
-  const onChange = (evt: Event) => {
+  const onChange = (evt: ClipboardEvent | Event) => {
     evt.target && onChangeCb(evt.target.value);
   };
 
