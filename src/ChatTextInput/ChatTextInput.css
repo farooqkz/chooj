@@ -2,22 +2,26 @@
   display: flex;
   justify-content: center;
   flex-direction: center;
-  background-color: #2196f3;
+  background-color: var(--color-blue);
 }
 
 .chattextinput > input {
-  width: 96%;
+  width: 100%;
   font-size: 15px;
+  margin: 2px;
+  border-radius: 4px;
 }
 
 .chattextinput--focused {
   display: flex;
   justify-content: center;
   flex-direction: center;
-  background-color: #1b5e20;
+  background-color: var(--color-carrotorange);
 }
 
 .chattextinput--focused > input {
-  width: 96%;
+  width: 100%;
   font-size: 15px;
+  margin: 2px;
+  border-radius: 4px;
 }
