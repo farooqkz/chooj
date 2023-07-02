@@ -6,11 +6,13 @@ import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
 import StepFour from "./StepFour";
 import StepFive from "./StepFive";
+import StepSix from "./StepSix";
+import StepSeven from "./StepSeven";
 import StepFinal from "./StepFinal";
 import "./Step.css";
 
 
-const NUMBER_OF_STEPS = 6;
+const NUMBER_OF_STEPS = 8;
 
 interface GuideState {
   step: number;
@@ -94,6 +96,12 @@ class Guide extends Component<GuideProps, GuideState> {
         break;
       case 5:
         Step = StepFive;
+        break;
+      case 6:
+        Step = StepSix;
+        break;
+      case 7:
+        Step = StepSeven;
         break;
       default:
         Step = StepFinal;
