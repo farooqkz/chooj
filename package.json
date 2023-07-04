@@ -12,7 +12,8 @@
     "lint": "tslint -p ./tsconfig.json",
     "checkBase": "tsc -p ./tsconfig.json --noEmit",
     "checkSw": "tsc -p ./tsconfig.service-worker.json --noEmit",
-    "check": "yarn run checkBase && yarn run checkSw"
+    "check": "yarn run checkBase && yarn run checkSw",
+    "pretty": "yarn run prettier -w src"
   },
   "author": "Farooq Karimi Zadeh",
   "license": "GPLv3+",
