@@ -1,37 +1,20 @@
-import { Component, createPortal } from "inferno";
+import { Component } from "inferno";
 import {
   ListViewKeyed,
   IconListItem,
   TextListItem,
   Separator,
-  DropDownMenu
 } from "KaiUI";
 
 import FarooqAvatar from "./FarooqAvatar.png";
 
-interface ContactSelectionMenuProps {
-  selectCb: (label: string) => void;
-}
 
-function ContactSelectionMenu({ selectCb }: ContactSelectionMenuProps) : DropDownMenu {
-  return (
-    <DropDownMenu
-      title="Contact Farooq"
-      selectCb={selectCb}
-      labels={["email", "matrix"]}
-    >
-      <TextListItem primary="Email" />
-      <TextListItem primary="Matrix" />
-    </DropDownMenu>
-  );
-}
-
-function contactFarooq(contactWay: string) {
-  // eslint-disable-next-line no-useless-concat
-  let myEmailAddr = "mailto:" + "f" + "kz" + "@" + "riseup.net";
-  switch (contactWay) {
-    case "email":
-      // eslint-disable-next-line no-undef
+class About extends Component<{}, {}> {
+  public state: null = null;
+  handleKeyDown = (evt: KeyboardEvent) => {
+    if (evt.key === "Call" || evt.key === "c") {
+      console.log("Okay they want to contact Farooq...");
+      let myEmailAddr = "mailto:" + "f" + "kz" + "@" + "riseup.net";
       let mail = new MozActivity({
         name: "view",
         data: {
@@ -43,24 +26,6 @@ function contactFarooq(contactWay: string) {
         console.log("MozActivity", error);
         window.alert("Cannot start Email app :(");
       }
-      break;
-    default:
-      window.alert("Not implemented yet...");
-      break;
-  }
-}
-
-
-interface AboutState {
-  showContactScreen: boolean;
-}
-
-class About extends Component<{}, AboutState> {
-  public state: AboutState;
-  handleKeyDown = (evt: KeyboardEvent) => {
-    if (evt.key === "Call" || evt.key === "c") {
-      console.log("Okay they want to contact Farooq...");
-      this.setState({ showContactScreen: true });
     }
     if (evt.key === "Backspace" || evt.key === "b") {
       if (this.state.showContactScreen) {
@@ -78,21 +43,18 @@ class About extends Component<{}, AboutState> {
     document.removeEventListener("keydown", this.handleKeyDown);
   }
 
-  constructor() {
-    super();
-    this.state = {
-      showContactScreen: false,
-    };
+  constructor(props: any) {
+    super(props);
   }
 
   render() {
     let items = [
-      <TextListItem key="call-Farooq" tertiary="Press Call button while in this Tab to contact Farooq the developer of this app" />,
+      <TextListItem key="call-Farooq" tertiary="Press Call button while in this tab to contact Farooq the developer of this app" />,
       <IconListItem
         key="dev-Farooq"
         iconSrc={FarooqAvatar}
-        primary="Farooq Karimi Zadeh"
-        secondary="Main app developer"
+        secondary="Farooq Karimi Zadeh"
+        primary="Main app developer"
       />,
       <TextListItem key="dev-Affe" primary="Affe Null" secondary="Contributor" />,
       <TextListItem key="dev-slaux" primary="Simon Laux" secondary="Contributor" />,
@@ -110,17 +72,6 @@ class About extends Component<{}, AboutState> {
         >
           {items}
         </ListViewKeyed>
-        {this.state.showContactScreen
-          ? createPortal(
-              <ContactSelectionMenu
-                selectCb={(selection) => {
-                  this.setState({ showContactScreen: false });
-                  contactFarooq(selection);
-                }}
-              />,
-              document.querySelector("#menu")
-            )
-          : null}
       </>
     );
   }
