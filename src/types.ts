@@ -30,10 +30,4 @@ interface LoginData {
   well_known: WellKnown;
 }
 
-export {
-  RoomsViewState,
-  RoomsViewProps,
-  startCall,
-  LoginData,
-  WellKnown,
-};
+export { RoomsViewState, RoomsViewProps, startCall, LoginData, WellKnown };

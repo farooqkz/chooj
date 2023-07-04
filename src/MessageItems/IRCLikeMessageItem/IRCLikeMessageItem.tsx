@@ -26,7 +26,7 @@ interface IRCLkeMessageItemProps {
 }
 
 interface IRCLikeMessageItemTextProps {
-  text: string; 
+  text: string;
   sender: string;
 }
 
@@ -49,7 +49,7 @@ interface IRCLikeMessageItemUnknownProps {
   sender: string;
 }
 
-function getClassNameFromStatus(status: null | string) : string {
+function getClassNameFromStatus(status: null | string): string {
   if (status === null) return "";
   if (status === "not_sent") {
     return "not_sent";
@@ -60,9 +60,21 @@ function getClassNameFromStatus(status: null | string) : string {
   }
 }
 
-function IRCLikeMessageItemText({ readableTs, text, sender, isFocused, status }: IRCLikeMessageItemCommonProps & IRCLikeMessageItemTextProps) {
+function IRCLikeMessageItemText({
+  readableTs,
+  text,
+  sender,
+  isFocused,
+  status,
+}: IRCLikeMessageItemCommonProps & IRCLikeMessageItemTextProps) {
   return (
-    <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
+    <div
+      className={classNames(
+        "ircmsg" + (isFocused ? "--focused" : ""),
+        getClassNameFromStatus(status)
+      )}
+      tabIndex={0}
+    >
       <p>
         <b $HasTextChildren>{readableTs}</b>
         <b $HasTextChildren>{`<${sender}>`}</b>
@@ -72,9 +84,21 @@ function IRCLikeMessageItemText({ readableTs, text, sender, isFocused, status }:
   );
 }
 
-function IRCLikeMessageItemNotice({ readableTs, isFocused, text, sender, status }: IRCLikeMessageItemCommonProps & IRCLikeMessageItemTextProps) {
+function IRCLikeMessageItemNotice({
+  readableTs,
+  isFocused,
+  text,
+  sender,
+  status,
+}: IRCLikeMessageItemCommonProps & IRCLikeMessageItemTextProps) {
   return (
-    <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
+    <div
+      className={classNames(
+        "ircmsg" + (isFocused ? "--focused" : ""),
+        getClassNameFromStatus(status)
+      )}
+      tabIndex={0}
+    >
       <p>
         <i>
           <b $HasTextChildren>{readableTs}</b>
@@ -95,7 +119,9 @@ function IRCLikeMessageItemImage({
   url,
   isFocused,
   status,
-}: IRCLikeMessageItemTextProps & IRCLikeMessageItemImageProps & IRCLikeMessageItemCommonProps) {
+}: IRCLikeMessageItemTextProps &
+  IRCLikeMessageItemImageProps &
+  IRCLikeMessageItemCommonProps) {
   while (height > (192 * 2) / 3) {
     height *= 0.75;
     width *= 0.75;
@@ -104,9 +130,21 @@ function IRCLikeMessageItemImage({
     height *= 0.75;
     width *= 0.75;
   }
-  const imageUrl = shared.mClient.mxcUrlToHttp(url, width, height, "scale", true);
+  const imageUrl = shared.mClient.mxcUrlToHttp(
+    url,
+    width,
+    height,
+    "scale",
+    true
+  );
   return (
-    <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
+    <div
+      className={classNames(
+        "ircmsg" + (isFocused ? "--focused" : ""),
+        getClassNameFromStatus(status)
+      )}
+      tabIndex={0}
+    >
       <p>
         <b $HasTextChildren>{readableTs}</b>
         <b $HasTextChildren>{`<${sender}>`}</b>
@@ -126,11 +164,19 @@ function IRCLikeMessageItemAudio({
   url,
   text,
   status,
-}: IRCLikeMessageItemCommonProps & IRCLikeMessageItemAudioProps & IRCLikeMessageItemTextProps) {
+}: IRCLikeMessageItemCommonProps &
+  IRCLikeMessageItemAudioProps &
+  IRCLikeMessageItemTextProps) {
   const hsUrl = shared.mClient.getHomeserverUrl();
   url = mxcMediaToHttp(hsUrl, url);
   return (
-    <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
+    <div
+      className={classNames(
+        "ircmsg" + (isFocused ? "--focused" : ""),
+        getClassNameFromStatus(status)
+      )}
+      tabIndex={0}
+    >
       <p>
         <b $HasTextChildren>{readableTs}</b>
         <b $HasTextChildren>{`${sender} has sent an audio clip.`}</b>
@@ -146,16 +192,33 @@ function IRCLikeMessageItemAudio({
   );
 }
 
-function IRCLikeMessageItemUnknown({ readableTs, isFocused, sender, status }: IRCLikeMessageItemCommonProps & IRCLikeMessageItemUnknownProps) {
+function IRCLikeMessageItemUnknown({
+  readableTs,
+  isFocused,
+  sender,
+  status,
+}: IRCLikeMessageItemCommonProps & IRCLikeMessageItemUnknownProps) {
   return (
-    <div className={classNames("ircmsg" + (isFocused ? "--focused" : ""), getClassNameFromStatus(status))} tabIndex={0}>
+    <div
+      className={classNames(
+        "ircmsg" + (isFocused ? "--focused" : ""),
+        getClassNameFromStatus(status)
+      )}
+      tabIndex={0}
+    >
       <b $HasTextChildren>{readableTs}</b>
       <p $HasTextChildren>Unsupported message type was sent from {sender}</p>
     </div>
   );
 }
 
-function IRCLikeMessageItem({ readableTs, sender, content, isFocused, status }: IRCLikeMessageItemCommonProps & IRCLkeMessageItemProps) {
+function IRCLikeMessageItem({
+  readableTs,
+  sender,
+  content,
+  isFocused,
+  status,
+}: IRCLikeMessageItemCommonProps & IRCLkeMessageItemProps) {
   const userId = sender.userId;
   let displayName = getSomeDisplayName(userId);
   // In matrix-js-sdk 15.1.1 sometimes getUser(...) returns null. This is a temporary workaround.

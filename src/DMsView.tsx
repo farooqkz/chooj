@@ -1,9 +1,5 @@
 import { Component, createPortal } from "inferno";
-import {
-  ListViewKeyed,
-  TextListItem,
-  DropDownMenu,
-} from "KaiUI";
+import { ListViewKeyed, TextListItem, DropDownMenu } from "KaiUI";
 import { Room, MatrixEvent } from "matrix-js-sdk";
 import ChatDMItem from "./ChatDMItem";
 import { isDM } from "./utils";
@@ -76,7 +72,7 @@ class DMsView extends Component<DMsViewProps, RoomsViewState & DMsViewState> {
       //this.setState({ cursor: cursor });
     }
   };
-/*
+  /*
   handleTimelineUpdate = (evt, room, toStartOfTimeline, removed, data) => {
     if (!room || toStartOfTimeline || !data.liveEvent) {
       return;
@@ -106,9 +102,7 @@ class DMsView extends Component<DMsViewProps, RoomsViewState & DMsViewState> {
     if (this.state.rooms.length !== 0) {
       return;
     }
-    this.state.rooms = client
-      .getVisibleRooms()
-      .filter(isDM);
+    this.state.rooms = client.getVisibleRooms().filter(isDM);
   }
 
   componentWillMount() {
@@ -122,24 +116,18 @@ class DMsView extends Component<DMsViewProps, RoomsViewState & DMsViewState> {
 
   render() {
     const { rooms, showCallSelection } = this.state;
-    rooms.sort(
-      (first: Room, second: Room) => {
-        let firstLastEvent: MatrixEvent | undefined = first.getLastLiveEvent(); 
-        let secondLastEvent: MatrixEvent | undefined = second.getLastLiveEvent();
-        let firstTs: number = firstLastEvent ? firstLastEvent.getTs() : 0;
-        let secondTs: number = secondLastEvent ? secondLastEvent.getTs() : 0;
-        // ^ Please don't get tempted to rewrite these two using 
-        // logical AND and OR. I think it is more readable this way.
-        // -- Farooq
-        return secondTs - firstTs;
-      });
+    rooms.sort((first: Room, second: Room) => {
+      let firstLastEvent: MatrixEvent | undefined = first.getLastLiveEvent();
+      let secondLastEvent: MatrixEvent | undefined = second.getLastLiveEvent();
+      let firstTs: number = firstLastEvent ? firstLastEvent.getTs() : 0;
+      let secondTs: number = secondLastEvent ? secondLastEvent.getTs() : 0;
+      // ^ Please don't get tempted to rewrite these two using
+      // logical AND and OR. I think it is more readable this way.
+      // -- Farooq
+      return secondTs - firstTs;
+    });
     let renderedRooms = rooms.map((room: Room) => {
-      return (
-        <ChatDMItem
-          room={room}
-          key={room.roomId}
-        />
-      );
+      return <ChatDMItem room={room} key={room.roomId} />;
     });
 
     if (renderedRooms.length === 0) {
@@ -147,13 +135,19 @@ class DMsView extends Component<DMsViewProps, RoomsViewState & DMsViewState> {
     }
     return (
       <>
-        <ListViewKeyed cursor={0} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
+        <ListViewKeyed
+          cursor={0}
+          cursorChangeCb={this.cursorChangeCb}
+          $HasKeyedChildren
+        >
           {renderedRooms}
         </ListViewKeyed>
-        { showCallSelection ? createPortal(
-          <CallSelectionMenu selectCb={this.startCall} />,
-          document.getElementById("menu")
-        ) : null}
+        {showCallSelection
+          ? createPortal(
+              <CallSelectionMenu selectCb={this.startCall} />,
+              document.getElementById("menu")
+            )
+          : null}
       </>
     );
   }

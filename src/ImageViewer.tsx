@@ -13,7 +13,10 @@ interface ImageViewerProps {
   width: number;
 }
 
-export default class ImageViewer extends Component<ImageViewerProps, ImageViewerState> {
+export default class ImageViewer extends Component<
+  ImageViewerProps,
+  ImageViewerState
+> {
   public state: ImageViewerState;
   zoomIn = () => {
     this.setState((state: ImageViewerState) => {
@@ -28,10 +31,10 @@ export default class ImageViewer extends Component<ImageViewerProps, ImageViewer
       return state;
     });
   };
-  
+
   resetZoom = () => {
     this.setState({ zoom: 1 });
-  }
+  };
 
   move = (direction: string) => {
     const { height, width } = this.props;
@@ -75,7 +78,16 @@ export default class ImageViewer extends Component<ImageViewerProps, ImageViewer
     const { url, height, width } = this.props;
     return (
       <div className="imageviewer">
-        <img style={{ "margin-top": `${offsetTop}px`, "margin-left": `${offsetLeft}px` }} height={height * zoom} width={width * zoom}  src={url} alt="" />
+        <img
+          style={{
+            "margin-top": `${offsetTop}px`,
+            "margin-left": `${offsetLeft}px`,
+          }}
+          height={height * zoom}
+          width={width * zoom}
+          src={url}
+          alt=""
+        />
       </div>
     );
   }

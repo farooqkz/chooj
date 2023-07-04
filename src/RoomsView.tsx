@@ -18,14 +18,21 @@ class RoomsView extends Component<RoomsViewProps> {
     this.setState({ cursor: cursor });
   };
 
-  handleTimelineUpdate = (_evt: MatrixEvent, room: Room | undefined, toStartOfTimeline: boolean | undefined, _removed: boolean, data: IRoomTimelineData) => {
+  handleTimelineUpdate = (
+    _evt: MatrixEvent,
+    room: Room | undefined,
+    toStartOfTimeline: boolean | undefined,
+    _removed: boolean,
+    data: IRoomTimelineData
+  ) => {
     if (!room || toStartOfTimeline || !data.liveEvent) {
       return;
     }
     if (!isRoom(room)) {
       if (isDM(room)) {
         // update DMsView saved state
-        let state: RoomsViewState | undefined = shared.stateStores.get("DMsView");
+        let state: RoomsViewState | undefined =
+          shared.stateStores.get("DMsView");
         if (state) {
           state = updateState(room, state);
           shared.stateStores.set("DMsView", state);
@@ -49,46 +56,44 @@ class RoomsView extends Component<RoomsViewProps> {
     if (this.state.rooms.length !== 0) {
       return;
     }
-    this.state.rooms = client
-      .getVisibleRooms()
-      .filter(isRoom);
+    this.state.rooms = client.getVisibleRooms().filter(isRoom);
   }
-  
+
   componentDidMount() {
-    shared.mClient && shared.mClient.on(RoomEvent.Timeline, this.handleTimelineUpdate);
+    shared.mClient &&
+      shared.mClient.on(RoomEvent.Timeline, this.handleTimelineUpdate);
   }
 
   componentWillUnmount() {
-    shared.mClient && shared.mClient.off(RoomEvent.Timeline, this.handleTimelineUpdate);
+    shared.mClient &&
+      shared.mClient.off(RoomEvent.Timeline, this.handleTimelineUpdate);
     shared.stateStores.set("RoomsView", this.state);
   }
 
   render() {
     const { cursor, rooms } = this.state;
-    rooms.sort(
-      (first: Room, second: Room) => {
-        let firstLastEvent: MatrixEvent | undefined = first.getLastLiveEvent();
-        let secondLastEvent: MatrixEvent | undefined = second.getLastLiveEvent();
-        let firstTs: number = firstLastEvent ? firstLastEvent.getTs() : 0;
-        let secondTs: number = secondLastEvent ? secondLastEvent.getTs() : 0;
-        // ^ Please don't get tempted to rewrite these two using 
-        // logical AND and OR. I think it is more readable this way.
-        // -- Farooq
-        return secondTs - firstTs;
+    rooms.sort((first: Room, second: Room) => {
+      let firstLastEvent: MatrixEvent | undefined = first.getLastLiveEvent();
+      let secondLastEvent: MatrixEvent | undefined = second.getLastLiveEvent();
+      let firstTs: number = firstLastEvent ? firstLastEvent.getTs() : 0;
+      let secondTs: number = secondLastEvent ? secondLastEvent.getTs() : 0;
+      // ^ Please don't get tempted to rewrite these two using
+      // logical AND and OR. I think it is more readable this way.
+      // -- Farooq
+      return secondTs - firstTs;
     });
     let renderedRooms = rooms.map((room: Room) => {
-      return (
-        <ChatRoomItem
-          roomId={room.roomId}
-          key={room.roomId}
-        />
-      );
+      return <ChatRoomItem roomId={room.roomId} key={room.roomId} />;
     });
     if (renderedRooms.length === 0) {
       return <NoItem text="You are not in any room" />;
     }
     return (
-      <ListViewKeyed cursor={cursor} cursorChangeCb={this.cursorChangeCb} $HasKeyedChildren>
+      <ListViewKeyed
+        cursor={cursor}
+        cursorChangeCb={this.cursorChangeCb}
+        $HasKeyedChildren
+      >
         {renderedRooms}
       </ListViewKeyed>
     );

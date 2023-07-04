@@ -3,7 +3,7 @@ import { RoomsViewState } from "./types";
 
 class Shared {
   public stateStores: Map<string, RoomsViewState> = new Map();
-  // This is used to save state of components 
+  // This is used to save state of components
   // on unmount and later retrieve it when
   // the component is constructed.
   private _mClient: MatrixClient | null;
@@ -12,7 +12,7 @@ class Shared {
     this._mClient = null;
   }
 
-  get mClient() : MatrixClient {
+  get mClient(): MatrixClient {
     if (!this._mClient) {
       throw new Error("mClient is null!");
     }

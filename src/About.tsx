@@ -1,13 +1,7 @@
 import { Component } from "inferno";
-import {
-  ListViewKeyed,
-  IconListItem,
-  TextListItem,
-  Separator,
-} from "KaiUI";
+import { ListViewKeyed, IconListItem, TextListItem, Separator } from "KaiUI";
 
 import FarooqAvatar from "./FarooqAvatar.png";
-
 
 class About extends Component<{}, {}> {
   public state: null = null;
@@ -25,7 +19,7 @@ class About extends Component<{}, {}> {
       mail.onerror = (error: any) => {
         console.log("MozActivity", error);
         window.alert("Cannot start Email app :(");
-      }
+      };
     }
     if (evt.key === "Backspace" || evt.key === "b") {
       if (this.state.showContactScreen) {
@@ -49,15 +43,26 @@ class About extends Component<{}, {}> {
 
   render() {
     let items = [
-      <TextListItem key="call-Farooq" tertiary="Press Call button while in this tab to contact Farooq the developer of this app" />,
+      <TextListItem
+        key="call-Farooq"
+        tertiary="Press Call button while in this tab to contact Farooq the developer of this app"
+      />,
       <IconListItem
         key="dev-Farooq"
         iconSrc={FarooqAvatar}
         secondary="Farooq Karimi Zadeh"
         primary="Main app developer"
       />,
-      <TextListItem key="dev-Affe" primary="Affe Null" secondary="Contributor" />,
-      <TextListItem key="dev-slaux" primary="Simon Laux" secondary="Contributor" />,
+      <TextListItem
+        key="dev-Affe"
+        primary="Affe Null"
+        secondary="Contributor"
+      />,
+      <TextListItem
+        key="dev-slaux"
+        primary="Simon Laux"
+        secondary="Contributor"
+      />,
       <Separator key="sep-lib" text="Major libraries" />,
       <TextListItem key="lib-matrix" primary="matrix-js-sdk" />,
       <TextListItem key="lib-kaiuing" primary="KaiUIng" />,
@@ -66,10 +71,7 @@ class About extends Component<{}, {}> {
     ];
     return (
       <>
-        <ListViewKeyed
-          cursor={0}
-          $HasKeyedChildren
-        >
+        <ListViewKeyed cursor={0} $HasKeyedChildren>
           {items}
         </ListViewKeyed>
       </>

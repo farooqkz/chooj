@@ -18,11 +18,10 @@ import VoiceInput from "../VoiceInput";
 import ScrollIntoView from "./ScrollIntoView";
 import "./RoomView.css";
 import RoomEvent from "./RoomEvent";
-import ImageViewer  from "../ImageViewer";
+import ImageViewer from "../ImageViewer";
 import shared from "../shared";
 import { RoomsViewState } from "../types";
 import "./CannotSendMessage.css";
-
 
 let HIDDEN_EVENTS: Map<string, boolean> = new Map([
   ["m.call.select_answer", true],
@@ -34,8 +33,7 @@ let EVENT_STATUS_FOR_UPDATE: Map<string | null, boolean> = new Map([
   ["sent", true],
   [null, true],
 ]); // if status for the sent event by user converts to any of these,
-    // we won't go for re-render anymore.
-
+// we won't go for re-render anymore.
 
 function CannotSendMessage() {
   return (
@@ -44,7 +42,6 @@ function CannotSendMessage() {
     </div>
   );
 }
-
 
 interface RoomViewState {
   isRecording: boolean;
@@ -73,14 +70,18 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
   private recordingInterval: number;
   private recording: Blob[];
   private imageViewer: ImageViewer | null;
-  
+
   messageChangeCb = (message: string) => {
     this.setState({ message: message });
     shared.mClient && shared.mClient.sendTyping(this.room.roomId, true, 75);
   };
-  
+
   getVisibleEvents = () => {
-    return this.timeline.getEvents().filter((evt: MatrixEvent) => evt.getType() && !HIDDEN_EVENTS.get(evt.getType()));
+    return this.timeline
+      .getEvents()
+      .filter(
+        (evt: MatrixEvent) => evt.getType() && !HIDDEN_EVENTS.get(evt.getType())
+      );
   };
 
   handleTyping = (_evt: MatrixEvent, member: RoomMember) => {
@@ -98,7 +99,14 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
   };
 
   handleKeyDown = (evt: KeyboardEvent) => {
-    const VALID_KEYS = ["b", "Backspace", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
+    const VALID_KEYS = [
+      "b",
+      "Backspace",
+      "ArrowDown",
+      "ArrowUp",
+      "ArrowLeft",
+      "ArrowRight",
+    ];
     // Backspace is used on an actual device
     // b is used for testing in desktop browser
     if (!VALID_KEYS.includes(evt.key)) {
@@ -119,7 +127,8 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
           } else {
             this.reachedEndOfTimeline = true;
           }
-        }).catch((err: any) => {
+        })
+        .catch((err: any) => {
           console.log("error while paginating", err, this);
         });
     }
@@ -132,7 +141,8 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       if (evt.key.startsWith("Arrow")) {
         let key = evt.key.replace("Arrow", "").toLowerCase();
         this.imageViewer.move(key);
-      } else if (VALID_KEYS.slice(0, 2).includes(evt.key)) { // if it is backspace
+      } else if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
+        // if it is backspace
         evt.preventDefault();
         this.setState({ imageViewer: false });
       }
@@ -163,14 +173,16 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       return;
     }
     if (isRoom(room)) {
-      let roomsViewState: RoomsViewState | undefined = shared.stateStores.get("RoomsView");
+      let roomsViewState: RoomsViewState | undefined =
+        shared.stateStores.get("RoomsView");
       if (roomsViewState) {
         roomsViewState = updateState(room, roomsViewState);
         shared.stateStores.set("RoomsView", roomsViewState);
       }
     }
     if (isDM(room)) {
-      let dmsViewState: RoomsViewState | undefined = shared.stateStores.get("DMsView");
+      let dmsViewState: RoomsViewState | undefined =
+        shared.stateStores.get("DMsView");
       if (dmsViewState) {
         dmsViewState = updateState(room, dmsViewState);
         shared.stateStores.set("DMsView", dmsViewState);
@@ -189,9 +201,11 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       });
     }
   };
-  
+
   eventSentCb = (response: ISendEventResponse) => {
-    let evt: MatrixEvent | undefined = this.room.findEventById(response.event_id);
+    let evt: MatrixEvent | undefined = this.room.findEventById(
+      response.event_id
+    );
     if (!evt) {
       return;
     }
@@ -211,7 +225,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
   eventSentFailCb = (error: any) => {
     window.alert("Cannot sent message");
     console.log("ERROR", error);
-  }
+  };
 
   getRightText = () => {
     const { imageViewer, textInputFocus } = this.state;
@@ -237,7 +251,6 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     if (msgtype === "m.image") return "View";
     return "";
   };
-  
 
   leftCb = () => {
     if (this.getLeftText() === "+") {
@@ -251,15 +264,22 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       navigator.volumeManager.requestShow();
     }
     if (this.getLeftText() === "View") {
-      this.setState({ imageViewer: true }); 
+      this.setState({ imageViewer: true });
     }
     if (this.getLeftText() === "Retry" && this.currentEvent) {
-      shared.mClient.resendEvent(this.currentEvent, this.room).then(this.eventSentCb).catch(this.eventSentFailCb);
+      shared.mClient
+        .resendEvent(this.currentEvent, this.room)
+        .then(this.eventSentCb)
+        .catch(this.eventSentFailCb);
     }
   };
-  
+
   rightCb = () => {
-    if (this.state.imageViewer && this.imageViewer && this.getRightText() === "-") {
+    if (
+      this.state.imageViewer &&
+      this.imageViewer &&
+      this.getRightText() === "-"
+    ) {
       this.imageViewer.zoomOut();
     }
     if (this.getRightText() === "Delete") {
@@ -283,9 +303,13 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
         // TODO: start call or something
         break;
       case "Listen":
-        let audio: HTMLAudioElement | null = document.querySelector(".ircmsg--focused>p>audio");
+        let audio: HTMLAudioElement | null = document.querySelector(
+          ".ircmsg--focused>p>audio"
+        );
         if (!audio) {
-          alert("Cannot find the audio. This is probably a bug. Please report it.");
+          alert(
+            "Cannot find the audio. This is probably a bug. Please report it."
+          );
           return;
         }
         audio.play();
@@ -293,7 +317,9 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       case "Send":
         if (isRecording) {
           if (!this.recorder) {
-            alert("recorder is null. This is probably a bug. Please report it.");
+            alert(
+              "recorder is null. This is probably a bug. Please report it."
+            );
             return;
           }
           this.recorder.stop();
@@ -307,7 +333,10 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
           alert("Not sending empty message!");
           break;
         }
-        shared.mClient.sendTextMessage(roomId, message).then(this.eventSentCb).catch(this.eventSentFailCb);
+        shared.mClient
+          .sendTextMessage(roomId, message)
+          .then(this.eventSentCb)
+          .catch(this.eventSentFailCb);
         this.setState({ message: "" });
         break;
       case "Download":
@@ -325,7 +354,9 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
                 let req = picStorage.addNamed(
                   b,
                   this.currentEvent?.getContent().body ||
-                    `image${Math.floor(Math.random() * 10000)}.${extensionOf(b.type)}`
+                    `image${Math.floor(Math.random() * 10000)}.${extensionOf(
+                      b.type
+                    )}`
                 );
                 req.onsuccess = () => {
                   window.alert("Successfully saved the image to gallery");
@@ -366,7 +397,8 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
   };
 
   getCenterText = () => {
-    const { isRecording, showMenu, textInputFocus, message, imageViewer } = this.state;
+    const { isRecording, showMenu, textInputFocus, message, imageViewer } =
+      this.state;
     if (imageViewer) {
       return "Reset";
     }
@@ -454,14 +486,24 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown);
-    shared.mClient && shared.mClient.addListener(SDKRoomEvent.Timeline, this.handleTimelineUpdate);
-    shared.mClient && shared.mClient.addListener(RoomMemberEvent.Typing, this.handleTyping);
+    shared.mClient &&
+      shared.mClient.addListener(
+        SDKRoomEvent.Timeline,
+        this.handleTimelineUpdate
+      );
+    shared.mClient &&
+      shared.mClient.addListener(RoomMemberEvent.Typing, this.handleTyping);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
-    shared.mClient && shared.mClient.removeListener(SDKRoomEvent.Timeline, this.handleTimelineUpdate);
-    shared.mClient && shared.mClient.removeListener(RoomMemberEvent.Typing, this.handleTyping);
+    shared.mClient &&
+      shared.mClient.removeListener(
+        SDKRoomEvent.Timeline,
+        this.handleTimelineUpdate
+      );
+    shared.mClient &&
+      shared.mClient.removeListener(RoomMemberEvent.Typing, this.handleTyping);
   }
 
   render() {
@@ -476,20 +518,31 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     } = this.state;
     return (
       <>
-        { imageViewer && this.currentEvent?.getContent().msgtype === "m.image" ?
-          <ImageViewer ref={(ref) => { this.imageViewer = ref; }} url={shared.mClient.mxcUrlToHttp(this.currentEvent?.getContent().url)} height={this.currentEvent?.getContent().info.h} width={this.currentEvent?.getContent().info.w} /> : null }
+        {imageViewer &&
+        this.currentEvent?.getContent().msgtype === "m.image" ? (
+          <ImageViewer
+            ref={(ref) => {
+              this.imageViewer = ref;
+            }}
+            url={shared.mClient.mxcUrlToHttp(
+              this.currentEvent?.getContent().url
+            )}
+            height={this.currentEvent?.getContent().info.h}
+            width={this.currentEvent?.getContent().info.w}
+          />
+        ) : null}
         <Header text={typing ? "Typing..." : this.room.name} />
-        <div
-          className="eventsandtextinput"
-        >
+        <div className="eventsandtextinput">
           <div
             className={"kai-list-view"}
             style={{ height: "calc(100vh - 2.8rem - 40px - 32px)" }}
             $HasKeyedChildren
           >
             {this.getVisibleEvents().map((evt: MatrixEvent, index: number) => {
-              const isFocused = index === cursor && !textInputFocus
-              let item = <RoomEvent key={evt.getId()} evt={evt} isFocused={isFocused}/>;
+              const isFocused = index === cursor && !textInputFocus;
+              let item = (
+                <RoomEvent key={evt.getId()} evt={evt} isFocused={isFocused} />
+              );
 
               if (isFocused) {
                 this.currentEvent = evt;
@@ -500,21 +553,28 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
               }
 
               return (
-                <ScrollIntoView shouldScroll={index === cursor} key={evt.getId()}>
+                <ScrollIntoView
+                  shouldScroll={index === cursor}
+                  key={evt.getId()}
+                >
                   {item}
                 </ScrollIntoView>
               );
             })}
           </div>
-          {this.room.maySendMessage() ? (isRecording ? (
-            <VoiceInput seconds={recordingSeconds} title={message} />
+          {this.room.maySendMessage() ? (
+            isRecording ? (
+              <VoiceInput seconds={recordingSeconds} title={message} />
+            ) : (
+              <ChatTextInput
+                message={message}
+                onChangeCb={this.messageChangeCb}
+                isFocused={textInputFocus}
+              />
+            )
           ) : (
-            <ChatTextInput
-              message={message}
-              onChangeCb={this.messageChangeCb}
-              isFocused={textInputFocus}
-            />
-          )) : (<CannotSendMessage />)}
+            <CannotSendMessage />
+          )}
         </div>
         <footer>
           <SoftKey

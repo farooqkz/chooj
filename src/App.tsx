@@ -42,7 +42,9 @@ class App extends Component<{}, AppState> {
       let xhr = new XMLHttpRequest({ mozSystem: true });
       xhr.open("HEAD", "https://example.com");
       this.timeout = setTimeout(() => this.setState({ online: false }), 5000);
-      xhr.onload = () => this.timeout && clearTimeout(this.timeout) || this.setState({ online: true });
+      xhr.onload = () =>
+        (this.timeout && clearTimeout(this.timeout)) ||
+        this.setState({ online: true });
       xhr.send();
     }
   }
@@ -50,7 +52,9 @@ class App extends Component<{}, AppState> {
   render() {
     const { state, online, guide } = this.state;
     if (online === false) {
-      window.alert("You don't seem to have a working Internet connection. chooj will close now.");
+      window.alert(
+        "You don't seem to have a working Internet connection. chooj will close now."
+      );
       window.close();
     }
 
@@ -62,10 +66,14 @@ class App extends Component<{}, AppState> {
       if (guide) {
         return <Login />;
       } else {
-        return <Guide endCb={() => {
-          this.setState({ guide: true }); 
-          localforage.setItem("guide", true);
-        }} />;
+        return (
+          <Guide
+            endCb={() => {
+              this.setState({ guide: true });
+              localforage.setItem("guide", true);
+            }}
+          />
+        );
       }
     }
 

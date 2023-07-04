@@ -1,9 +1,7 @@
 function StepFinal() {
   return (
     <div className="step">
-      <p>
-        Have fun!
-      </p>
+      <p>Have fun!</p>
     </div>
   );
 }

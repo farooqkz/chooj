@@ -9,11 +9,10 @@ import { CallErrorCode, CallEvent } from "matrix-js-sdk/lib/webrtc/call";
 
 const personIcon = "/person_icon.png";
 
-function readableDuration(duration?: number) : String {
+function readableDuration(duration?: number): String {
   if (!duration) return "--";
   return duration.toString() + "s";
 }
-
 
 interface CallScreenState {
   duration: number;
@@ -38,7 +37,7 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
     duration: 0,
     hasStarted: false,
     isAudioMuted: false,
-  }
+  };
   public call?: MatrixCall;
   public waitingRing?: HTMLAudioElement;
   public incomingRing?: HTMLAudioElement;
@@ -80,7 +79,14 @@ class CallScreen extends Component<CallScreenProps, CallScreenState> {
       let opponent: RoomMember | undefined = this.call.getOpponentMember();
       if (opponent) {
         this.displayName = opponent.name;
-        this.avatarUrl = opponent.getAvatarUrl(baseUrl, AVATAR_D, AVATAR_D, "scale", true, false);
+        this.avatarUrl = opponent.getAvatarUrl(
+          baseUrl,
+          AVATAR_D,
+          AVATAR_D,
+          "scale",
+          true,
+          false
+        );
       }
     } else {
       throw new Error("Invalid call type");

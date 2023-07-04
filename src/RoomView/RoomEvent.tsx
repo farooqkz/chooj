@@ -23,10 +23,17 @@ interface IRCLikeUnsupportedEventItemProps {
   type: string;
 }
 
-function IRCLikeUnsupportedEventItem({ isFocused, senderId, type }: IRCLikeUnsupportedEventItemProps) {
+function IRCLikeUnsupportedEventItem({
+  isFocused,
+  senderId,
+  type,
+}: IRCLikeUnsupportedEventItemProps) {
   return (
     <Event isFocused={isFocused}>
-      <p>Unsupported Event from {createTextVNode(getSomeDisplayName(senderId))}: {type}</p>
+      <p>
+        Unsupported Event from {createTextVNode(getSomeDisplayName(senderId))}:{" "}
+        {type}
+      </p>
     </Event>
   );
 }
@@ -39,7 +46,9 @@ interface RoomEventProps {
 function MembershipEvent({ evt, isFocused }: RoomEventProps) {
   let content = evt.getContent();
   const sender: string | undefined = evt.getSender();
-  let displayName: string = sender ? getSomeDisplayName(sender) : "-@UnknownUser@-";
+  let displayName: string = sender
+    ? getSomeDisplayName(sender)
+    : "-@UnknownUser@-";
   const ts = evt.getTs();
   if (!content.membership) {
     throw new Error("content.membership is undefined for a membership event");
@@ -67,7 +76,10 @@ function MembershipEvent({ evt, isFocused }: RoomEventProps) {
       return (
         <Event isFocused={isFocused}>
           <p $HasTextChildren>
-            {readableTimestamp(ts) + displayName + " invited " + content.displayname}
+            {readableTimestamp(ts) +
+              displayName +
+              " invited " +
+              content.displayname}
           </p>
         </Event>
       );
@@ -75,18 +87,25 @@ function MembershipEvent({ evt, isFocused }: RoomEventProps) {
       if (isFocused) console.log("REPORT", evt);
       return (
         <Event isFocused={isFocused}>
-          <p $HasTextChildren>{`Unknown membership event from ${content.displayname}: ${eventType}`}</p>
+          <p
+            $HasTextChildren
+          >{`Unknown membership event from ${content.displayname}: ${eventType}`}</p>
         </Event>
       );
   }
 }
 
-export default function RoomEvent({ evt, isFocused }: RoomEventProps) : JSX.Element {
+export default function RoomEvent({
+  evt,
+  isFocused,
+}: RoomEventProps): JSX.Element {
   const type = evt.getType();
   const senderId = evt.getSender();
   const MessageItem = IRCLikeMessageItem;
   const UnsupportedEventItem = IRCLikeUnsupportedEventItem;
-  const displayName = senderId ? getSomeDisplayName(senderId) : "-@UnknownUser@-";
+  const displayName = senderId
+    ? getSomeDisplayName(senderId)
+    : "-@UnknownUser@-";
   const ts = readableTimestamp(evt.getTs());
   const status = evt.status;
 
@@ -102,19 +121,12 @@ export default function RoomEvent({ evt, isFocused }: RoomEventProps) : JSX.Elem
         />
       );
     case "m.room.member":
-      return (
-        <MembershipEvent
-          evt={evt}
-          isFocused={isFocused}
-        />
-      );
+      return <MembershipEvent evt={evt} isFocused={isFocused} />;
     case "m.call.hangup":
       return (
         <Event isFocused={isFocused}>
           <p>
-            <b $HasTextChildren>
-              {ts}
-            </b>
+            <b $HasTextChildren>{ts}</b>
             {createTextVNode(`${displayName} has ended the call.`)}
           </p>
         </Event>
@@ -123,9 +135,7 @@ export default function RoomEvent({ evt, isFocused }: RoomEventProps) : JSX.Elem
       return (
         <Event isFocused={isFocused}>
           <p>
-            <b $HasTextChildren>
-              {ts}
-            </b>
+            <b $HasTextChildren>{ts}</b>
             {createTextVNode(`${displayName} has started a call.`)}
           </p>
         </Event>
@@ -134,9 +144,7 @@ export default function RoomEvent({ evt, isFocused }: RoomEventProps) : JSX.Elem
       return (
         <Event isFocused={isFocused}>
           <p>
-            <b $HasTextChildren>
-              {ts}
-            </b>
+            <b $HasTextChildren>{ts}</b>
             {createTextVNode(`${displayName} created this room.`)}
           </p>
         </Event>
@@ -145,15 +153,19 @@ export default function RoomEvent({ evt, isFocused }: RoomEventProps) : JSX.Elem
       return (
         <Event isFocused={isFocused}>
           <p>
-            <b $HasTextChildren>
-              {ts}
-            </b>
+            <b $HasTextChildren>{ts}</b>
             {createTextVNode(`${displayName} changed this room's power levels`)}
           </p>
         </Event>
       );
     default:
       if (isFocused) console.log(evt);
-      return <UnsupportedEventItem senderId={senderId} isFocused={isFocused} type={type} />;
+      return (
+        <UnsupportedEventItem
+          senderId={senderId}
+          isFocused={isFocused}
+          type={type}
+        />
+      );
   }
 }

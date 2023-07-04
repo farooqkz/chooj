@@ -1,13 +1,7 @@
 import { Component } from "inferno";
 import { createClient } from "matrix-js-sdk";
 import * as localforage from "localforage";
-import {
-  TextListItem,
-  TextInput,
-  Header,
-  SoftKey,
-  ListViewKeyed
-} from "KaiUI";
+import { TextListItem, TextInput, Header, SoftKey, ListViewKeyed } from "KaiUI";
 import shared from "./shared";
 import { fetch as customFetch } from "./fetch";
 import { WellKnown } from "./types";
@@ -197,7 +191,7 @@ class Login extends Component<{}, LoginState> {
             },
             label: "Homeserver name",
             type: "input",
-            key: "homeserver"
+            key: "homeserver",
           },
           {
             placeholder: "mrpotato",
@@ -206,13 +200,13 @@ class Login extends Component<{}, LoginState> {
             },
             label: "Username",
             type: "input",
-            key: "username"
+            key: "username",
           },
           {
             tertiary:
               "Press Call button and scan a QR in the following format to login with QR code instead of typing all these(PASS = password authentication): PASS server_name username password",
             type: "text",
-            key: "qrHint"
+            key: "qrHint",
           },
         ].map((attrs) => {
           const C = attrs.type === "input" ? TextInput : TextListItem;
@@ -221,7 +215,7 @@ class Login extends Component<{}, LoginState> {
         break;
       case 1:
         listViewChildren = this.loginFlows.map((flow: LoginFlow) => {
-          return <TextListItem key={"flow"+flow.type} primary={flow.type} />;
+          return <TextListItem key={"flow" + flow.type} primary={flow.type} />;
         });
         break;
       case 2:
@@ -252,7 +246,7 @@ class Login extends Component<{}, LoginState> {
     return (
       <div>
         <Header text={this.stageNames[this.state.stage]} />
-        <ListViewKeyed  
+        <ListViewKeyed
           cursorChangeCb={this.cursorChangeCb}
           cursor={this.state.cursor}
           $HasKeyedChildren

@@ -24,8 +24,12 @@
 }
 
 @keyframes being_sent {
-  from { background-color: black; }
-  to { background-color: red; }
+  from {
+    background-color: black;
+  }
+  to {
+    background-color: red;
+  }
 }
 
 .sending {

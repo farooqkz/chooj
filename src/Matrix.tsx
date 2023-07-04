@@ -154,19 +154,22 @@ class Matrix extends Component<MatrixProps, MatrixState> {
     }
     if (this.softRightText() === "Log out") {
       shared.mClient.logout(true).then(() => {
-        localforage.removeItem("login").then(() => {
-          window.alert("Logged out");
-          window.location = window.location; // eslint-disable-line no-self-assign
-        }).catch((e) => {
-          console.log("REPORT", e);
-        });
+        localforage
+          .removeItem("login")
+          .then(() => {
+            window.alert("Logged out");
+            window.location = window.location; // eslint-disable-line no-self-assign
+          })
+          .catch((e) => {
+            console.log("REPORT", e);
+          });
       });
     }
   };
 
   softLeftCb = () => {
     let menu: HTMLElement | null = document.querySelector("#menu");
-    if (!menu || menu && menu.innerHTML) return;
+    if (!menu || (menu && menu.innerHTML)) return;
     if (this.softLeftText() === "Join") {
       let roomAlias = window.prompt("Enter room name or Id");
       if (!roomAlias) {
@@ -226,11 +229,15 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       // leave
       const roomToLeave = shared.mClient.getRoom(this.roomId);
       if (!roomToLeave) {
-        alert("Error: no room selected")
-      } else if (window.confirm(`Are you sure to leave '${roomToLeave.name}'?`)) {
+        alert("Error: no room selected");
+      } else if (
+        window.confirm(`Are you sure to leave '${roomToLeave.name}'?`)
+      ) {
         shared.mClient.leave(this.roomId).then(() => {
           this.roomsViewRef?.setState((state: RoomsViewState) => {
-            state.rooms = state.rooms.filter((room) => room.roomId != this.roomId);
+            state.rooms = state.rooms.filter(
+              (room) => room.roomId != this.roomId
+            );
             return state;
           });
           toast("Left the room", 1500);
@@ -260,7 +267,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       identityServer:
         props.data.well_known["m.identity_server"] &&
         props.data.well_known["m.identity_server"].base_url,
-//      store: new matrixcs.IndexedDBStore({ indexedDB: window.indexedDB, localStorage: window.localStorage }),
+      //      store: new matrixcs.IndexedDBStore({ indexedDB: window.indexedDB, localStorage: window.localStorage }),
     });
     const client = shared.mClient;
     client.on(CallEventHandlerEvent.Incoming, (call: MatrixCall) => {
@@ -340,7 +347,11 @@ class Matrix extends Component<MatrixProps, MatrixState> {
                 this.roomsViewRef = r;
               }}
             />
-            <InvitesView selectedInviteCb={(invite) => { this.invite = invite }} />
+            <InvitesView
+              selectedInviteCb={(invite) => {
+                this.invite = invite;
+              }}
+            />
             <Settings />
             <About />
           </TabView>
@@ -356,13 +367,17 @@ class Matrix extends Component<MatrixProps, MatrixState> {
           </footer>
           {optionsMenu
             ? createPortal(
-              <DropDownMenu title="Options" selectCb={this.optionsSelectCb} labels={["leave"]}>
-                <TextListItem primary="Leave" />
-                {/* forget is currently not nessary, leaving already removes the room from the list */}
-                {/* <TextListItem primary="Forget Room" /> */}
-              </DropDownMenu>,
-              document.querySelector("#menu")
-            )
+                <DropDownMenu
+                  title="Options"
+                  selectCb={this.optionsSelectCb}
+                  labels={["leave"]}
+                >
+                  <TextListItem primary="Leave" />
+                  {/* forget is currently not nessary, leaving already removes the room from the list */}
+                  {/* <TextListItem primary="Forget Room" /> */}
+                </DropDownMenu>,
+                document.querySelector("#menu")
+              )
             : null}
         </>
       );

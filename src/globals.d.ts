@@ -20,13 +20,18 @@ declare global {
     data?: any;
   }
 
-  type ValidDeviceStorages = "apps" | "music" | "pictures" | "videos" | "sdcard";
+  type ValidDeviceStorages =
+    | "apps"
+    | "music"
+    | "pictures"
+    | "videos"
+    | "sdcard";
 
-  type DeviceStorage = any
+  type DeviceStorage = any;
 
   class XMLHttpRequest {
     constructor(options: undefined | { mozSystem?: boolean }): XMLHttpRequest;
   }
 }
 
-export { };
+export {};

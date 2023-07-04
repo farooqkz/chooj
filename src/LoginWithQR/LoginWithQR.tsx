@@ -9,22 +9,23 @@ import shared from "../shared";
 import { fetch as customFetch } from "../fetch";
 import { WellKnown } from "../types";
 
-
-
 class LoginWithQR extends Component<{}, {}> {
   private video?: HTMLVideoElement;
 
   startScanning = () => {
-    if (!this.video)  {
+    if (!this.video) {
       return;
     }
-    let scanner: QrScanner = new QrScanner(this.video, (result: QrScanner.ScanResult) => this.doLogin(result.data),
-        {
-      maxScansPerSecond: 10,
-      highlightScanRegion: true,
-    });
+    let scanner: QrScanner = new QrScanner(
+      this.video,
+      (result: QrScanner.ScanResult) => this.doLogin(result.data),
+      {
+        maxScansPerSecond: 10,
+        highlightScanRegion: true,
+      }
+    );
     scanner.start();
-  }
+  };
 
   doLogin = (data: string) => {
     let decodedParts: string[] = data.split(" ", 4);
@@ -37,73 +38,87 @@ class LoginWithQR extends Component<{}, {}> {
         `Do you confirm? Flow: ${flow} | Server name: ${server_name} | Username: ${username}`
       )
     ) {
-      const start: number = flow.length + server_name.length + username.length + 3;
+      const start: number =
+        flow.length + server_name.length + username.length + 3;
       password = data.substring(start);
-      fetch(`https://${server_name}/.well-known/matrix/client`).then((r: Response) => {
-        if (r.ok) {
-          r.json().then((j: WellKnown) => {
-            const server_url: string = j["m.homeserver"].base_url;
-            shared.mClient = createClient({
-              baseUrl: server_url,
-              fetchFn: customFetch,
-            });
-            shared.mClient.loginFlows().then((result) => {
-              let gotPasswordLogin = false;
-              for (let flow of result.flows) {
-                if ("m.login.password" === flow.type) {
-                  gotPasswordLogin = true;
-                  break;
-                }
-              }
-              if (gotPasswordLogin) {
+      fetch(`https://${server_name}/.well-known/matrix/client`).then(
+        (r: Response) => {
+          if (r.ok) {
+            r.json()
+              .then((j: WellKnown) => {
+                const server_url: string = j["m.homeserver"].base_url;
+                shared.mClient = createClient({
+                  baseUrl: server_url,
+                  fetchFn: customFetch,
+                });
                 shared.mClient
-                  .loginWithPassword(`@${username}:${server_name}`, password)
-                  .then((result: any) => {
-                    localforage.setItem("login", result).then(() => {
-                      window.alert("Logged in as " + username);
-                      window.location = window.location;
-                    });
-                  })
-                  .catch((err: any) => {
-                    switch (err.errcode) {
-                      case "M_FORBIDDEN":
-                        alert("Incorrect login credentials");
+                  .loginFlows()
+                  .then((result) => {
+                    let gotPasswordLogin = false;
+                    for (let flow of result.flows) {
+                      if ("m.login.password" === flow.type) {
+                        gotPasswordLogin = true;
                         break;
-                      case "M_USER_DEACTIVATED":
-                        alert("This account has been deactivated");
-                        break;
-                      case "M_LIMIT_EXCEEDED":
-                        const retry = Math.ceil(err.retry_after_ms / 1000);
-                        alert(
-                          "Too many requests! Retry after" + retry.toString()
-                        );
-                        break;
-                      default:
-                        alert("Login failed! Unknown reason");
-                        break;
+                      }
                     }
-                    // eslint-disable-next-line no-self-assign
-                    window.location = window.location;
+                    if (gotPasswordLogin) {
+                      shared.mClient
+                        .loginWithPassword(
+                          `@${username}:${server_name}`,
+                          password
+                        )
+                        .then((result: any) => {
+                          localforage.setItem("login", result).then(() => {
+                            window.alert("Logged in as " + username);
+                            window.location = window.location;
+                          });
+                        })
+                        .catch((err: any) => {
+                          switch (err.errcode) {
+                            case "M_FORBIDDEN":
+                              alert("Incorrect login credentials");
+                              break;
+                            case "M_USER_DEACTIVATED":
+                              alert("This account has been deactivated");
+                              break;
+                            case "M_LIMIT_EXCEEDED":
+                              const retry = Math.ceil(
+                                err.retry_after_ms / 1000
+                              );
+                              alert(
+                                "Too many requests! Retry after" +
+                                  retry.toString()
+                              );
+                              break;
+                            default:
+                              alert("Login failed! Unknown reason");
+                              break;
+                          }
+                          // eslint-disable-next-line no-self-assign
+                          window.location = window.location;
+                        });
+                    } else {
+                      window.alert(
+                        "This homeserver does not support authentication with password"
+                      );
+                    }
+                  })
+                  .catch((e) => {
+                    window.alert("Error getting login flows from the server");
+                    console.log(e);
                   });
-              } else {
-                window.alert(
-                  "This homeserver does not support authentication with password"
-                );
-              }
-            }).catch((e) => {
-              window.alert("Error getting login flows from the server");
-              console.log(e);
-            });
-          }).catch((e) => {
-            window.alert("Error getting information about the server");
-            console.log("REPORT", e);
-          });
-        } else {
-          alert(
-            "Cannot connect to homeserver. Are you sure the address is correct?"
-          );
+              })
+              .catch((e) => {
+                window.alert("Error getting information about the server");
+                console.log("REPORT", e);
+              });
+          } else {
+            alert(
+              "Cannot connect to homeserver. Are you sure the address is correct?"
+            );
+          }
         }
-      });
+      );
     }
   };
 
@@ -132,8 +147,7 @@ class LoginWithQR extends Component<{}, {}> {
           <video
             autoPlay
             ref={(ref) => {
-              if (ref)
-                this.video = ref;
+              if (ref) this.video = ref;
             }}
           />
         </div>

@@ -5,7 +5,6 @@ import { makeHumanReadableEvent, getAvatarOrDefault } from "./utils";
 import { Room, MatrixEvent, User, UserEvent, RoomEvent } from "matrix-js-sdk";
 import shared from "./shared";
 
-
 interface ChatDMItemState {
   displayName: string;
   avatarUrl?: string;
@@ -19,7 +18,10 @@ interface ChatDMItemProps {
   isFocused?: boolean;
 }
 
-export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemState> {
+export default class ChatDMItem extends Component<
+  ChatDMItemProps,
+  ChatDMItemState
+> {
   public state: ChatDMItemState;
 
   updateDisplayName = (_evt: MatrixEvent | undefined, user: User) => {
@@ -43,14 +45,14 @@ export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemSta
     });
   };
 
-  updateTimeline = (_evt: MatrixEvent, room: Room | undefined) => { 
+  updateTimeline = (_evt: MatrixEvent, room: Room | undefined) => {
     if (!room) return;
     let lastEvent: MatrixEvent | undefined = room.getLastLiveEvent();
     if (!lastEvent) return;
     this.setState({
-      lastEvent: makeHumanReadableEvent(lastEvent, true)
+      lastEvent: makeHumanReadableEvent(lastEvent, true),
     });
-  }
+  };
 
   constructor(props: ChatDMItemProps) {
     super(props);
@@ -69,7 +71,9 @@ export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemSta
   }
 
   componentDidMount() {
-    let user: User | null = shared.mClient.getUser(this.props.room.guessDMUserId());
+    let user: User | null = shared.mClient.getUser(
+      this.props.room.guessDMUserId()
+    );
     if (!user) {
       return;
     }
@@ -80,7 +84,9 @@ export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemSta
   }
 
   componentWillUnmount() {
-    let user: User | null = shared.mClient.getUser(this.props.room.guessDMUserId());
+    let user: User | null = shared.mClient.getUser(
+      this.props.room.guessDMUserId()
+    );
     if (!user) {
       return;
     }
@@ -93,10 +99,8 @@ export default class ChatDMItem extends Component<ChatDMItemProps, ChatDMItemSta
   render() {
     const { presence, displayName, avatarUrl } = this.state;
     let avatar: string;
-    if (avatarUrl)
-      avatar = getAvatarOrDefault(avatarUrl, personIcon);
-    else
-      avatar = personIcon;
+    if (avatarUrl) avatar = getAvatarOrDefault(avatarUrl, personIcon);
+    else avatar = personIcon;
     let lastEvent = this.state.lastEvent;
     if (lastEvent.length >= 33) lastEvent = lastEvent.slice(0, 33) + "...";
 

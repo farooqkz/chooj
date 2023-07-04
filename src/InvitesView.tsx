@@ -8,7 +8,6 @@ import {
 */
 import NoItem from "./NoItem";
 
-
 interface InvitesViewState {
   cursor: number;
 }

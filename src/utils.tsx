@@ -1,11 +1,17 @@
-import { getHttpUriForMxc, Room, MatrixClient, MatrixEvent, IContent } from "matrix-js-sdk";
+import {
+  getHttpUriForMxc,
+  Room,
+  MatrixClient,
+  MatrixEvent,
+  IContent,
+} from "matrix-js-sdk";
 import { render } from "inferno";
 import { RoomsViewState } from "./types";
 import shared from "./shared";
 
 const defaultAvatarSize = 36;
 
-function urlBase64ToUint8Array(base64String: string) : Uint8Array {
+function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
 
@@ -18,7 +24,7 @@ function urlBase64ToUint8Array(base64String: string) : Uint8Array {
   return outputArray;
 }
 
-function updateState(room: Room, state: RoomsViewState) : RoomsViewState {
+function updateState(room: Room, state: RoomsViewState): RoomsViewState {
   let isAlreadyOurRoom = false;
   // ^ is <room> a room we already have in this.state.rooms?
   state.rooms = state.rooms.map((ourRoom: Room) => {
@@ -33,15 +39,27 @@ function updateState(room: Room, state: RoomsViewState) : RoomsViewState {
   return state;
 }
 
-function isDM(room: Room) : boolean {
-  return room.getJoinedMemberCount() === 2 && room.getMyMembership() === "join" && !room.isSpaceRoom();
+function isDM(room: Room): boolean {
+  return (
+    room.getJoinedMemberCount() === 2 &&
+    room.getMyMembership() === "join" &&
+    !room.isSpaceRoom()
+  );
 }
 
-function isRoom(room: Room) : boolean {
-  return room.getJoinedMemberCount() > 2 && room.getMyMembership() === "join" && !room.isSpaceRoom();
+function isRoom(room: Room): boolean {
+  return (
+    room.getJoinedMemberCount() > 2 &&
+    room.getMyMembership() === "join" &&
+    !room.isSpaceRoom()
+  );
 }
 
-function getAvatarOrDefault(mxcUrl: string | undefined, defaultUrl: string, size?: number) : string {
+function getAvatarOrDefault(
+  mxcUrl: string | undefined,
+  defaultUrl: string,
+  size?: number
+): string {
   size = size || defaultAvatarSize;
   if (mxcUrl && shared.mClient) {
     return getHttpUriForMxc(
@@ -61,7 +79,7 @@ function startDM(_client: MatrixClient, _userId: string) {
   // TODO
 }
 
-function eventSender(sender: string, myself: boolean, dm?: boolean) : string {
+function eventSender(sender: string, myself: boolean, dm?: boolean): string {
   if (myself) {
     return "You";
   } else {
@@ -73,7 +91,7 @@ function eventSender(sender: string, myself: boolean, dm?: boolean) : string {
   }
 }
 
-function makeHumanReadableEvent(evt: MatrixEvent, dm?: boolean) : string {
+function makeHumanReadableEvent(evt: MatrixEvent, dm?: boolean): string {
   if (!(evt instanceof Object)) {
     console.log("BOOO", evt);
   }
@@ -99,7 +117,9 @@ function makeHumanReadableEvent(evt: MatrixEvent, dm?: boolean) : string {
       );
     case "m.room.message":
       if (!content.msgtype)
-        throw new Error("The event is a room message but msgtype is not defined");
+        throw new Error(
+          "The event is a room message but msgtype is not defined"
+        );
       return (
         eventSender(sender, myself, dm) +
         ": " +
@@ -112,7 +132,7 @@ function makeHumanReadableEvent(evt: MatrixEvent, dm?: boolean) : string {
   }
 }
 
-function bytesToHigherScale(b: number) : string {
+function bytesToHigherScale(b: number): string {
   let units: string[] = ["B", "KiB", "MiB", "GiB"];
   let unit: number = 0;
   while (b >= 512 && unit < 3) {
@@ -122,7 +142,7 @@ function bytesToHigherScale(b: number) : string {
   return `${b.toFixed(2)}${units[unit]}`;
 }
 
-function msToHigherScale(ms: number) : string {
+function msToHigherScale(ms: number): string {
   let units: string[] = ["s", "m", "h"];
   let unit: number = 0;
   ms /= 1000;
@@ -133,7 +153,7 @@ function msToHigherScale(ms: number) : string {
   return `${ms.toFixed(2)}${units[unit]}`;
 }
 
-function mxcMediaToHttp(hsUrl: string, mxcUrl: string) : string {
+function mxcMediaToHttp(hsUrl: string, mxcUrl: string): string {
   let [serverName, mediaId] = mxcUrl.split("/").slice(2, 4);
   return `${hsUrl}/_matrix/media/v3/download/${serverName}/${mediaId}`;
 }
@@ -144,12 +164,11 @@ function toast(message: string, timeout: number) {
   container.style.display = "block";
   render(<p $HasTextChildren>{message}</p>, container);
   setTimeout(() => {
-    if (container) 
-      container.style.display = "none";
+    if (container) container.style.display = "none";
   }, timeout);
 }
 
-function readableTimestamp(ts: number, includeSeconds?: boolean) : string {
+function readableTimestamp(ts: number, includeSeconds?: boolean): string {
   let date = new Date(ts);
   let h = date.getHours().toString();
   let m = date.getMinutes().toString();
@@ -170,7 +189,7 @@ function readableTimestamp(ts: number, includeSeconds?: boolean) : string {
   return "[" + d + "] ";
 }
 
-function getSomeDisplayName(userId: string) : string {
+function getSomeDisplayName(userId: string): string {
   let userObj = shared.mClient.getUser(userId);
   if (userObj) {
     return userObj.displayName || userObj.userId.split(":")[0].replace("@", "");

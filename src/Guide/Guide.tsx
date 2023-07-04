@@ -11,7 +11,6 @@ import StepSeven from "./StepSeven";
 import StepFinal from "./StepFinal";
 import "./Step.css";
 
-
 const NUMBER_OF_STEPS = 8;
 
 interface GuideState {
@@ -22,9 +21,9 @@ interface GuideProps {
   endCb: () => void;
 }
 
-class Guide extends Component<GuideProps, GuideState> { 
+class Guide extends Component<GuideProps, GuideState> {
   public state: GuideState;
-  
+
   centerText = () => {
     if (this.state.step >= NUMBER_OF_STEPS) {
       return "Finish";
@@ -56,7 +55,7 @@ class Guide extends Component<GuideProps, GuideState> {
       return "Prev.";
     }
   };
-  
+
   rightCb = () => {
     if (this.rightText() === "") {
       return;
@@ -67,12 +66,12 @@ class Guide extends Component<GuideProps, GuideState> {
         return state;
       });
     }
-  }
+  };
 
   constructor(props: any) {
     super(props);
     this.state = {
-      step: 0
+      step: 0,
     };
   }
 

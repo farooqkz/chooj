@@ -16,19 +16,29 @@ interface ChatRoomItemState {
   displayName: string;
 }
 
-export default class ChatRoomItem extends Component<ChatRoomItemProps, ChatRoomItemState> {
+export default class ChatRoomItem extends Component<
+  ChatRoomItemProps,
+  ChatRoomItemState
+> {
   public state: ChatRoomItemState;
   onRoomNameUpdate = (room: Room) => {
     this.setState((state: ChatRoomItemState) => {
       state.displayName = room.name || state.displayName;
     });
   };
-  
-  onTimelineUpdate = (_evt: MatrixEvent, room: Room | undefined, _toStartOfTimeline: boolean | undefined, _removed: boolean, _data: IRoomTimelineData) => {
+
+  onTimelineUpdate = (
+    _evt: MatrixEvent,
+    room: Room | undefined,
+    _toStartOfTimeline: boolean | undefined,
+    _removed: boolean,
+    _data: IRoomTimelineData
+  ) => {
     this.setState((state: ChatRoomItemState) => {
       if (room) {
         let lastEvent: MatrixEvent | undefined = room.getLastLiveEvent();
-        state.lastEvent = (lastEvent && makeHumanReadableEvent(lastEvent)) || state.lastEvent;
+        state.lastEvent =
+          (lastEvent && makeHumanReadableEvent(lastEvent)) || state.lastEvent;
       }
       return state;
     });
@@ -41,29 +51,34 @@ export default class ChatRoomItem extends Component<ChatRoomItemProps, ChatRoomI
       let lastEvent: MatrixEvent | undefined = room.getLastLiveEvent();
       this.state = {
         lastEvent: (lastEvent && makeHumanReadableEvent(lastEvent)) || "",
-        avatarUrl: room.getAvatarUrl(shared.mClient.baseUrl, 36, 36, "scale") || roomIcon,
+        avatarUrl:
+          room.getAvatarUrl(shared.mClient.baseUrl, 36, 36, "scale") ||
+          roomIcon,
         displayName: room.name,
       };
     } else {
       this.state = {
         lastEvent: "",
         avatarUrl: roomIcon,
-        displayName: "Room not found"
+        displayName: "Room not found",
       };
     }
-    
   }
 
   componentDidMount() {
     let room: Room | null = shared.mClient.getRoom(this.props.roomId);
-    if (!room) { return; } 
+    if (!room) {
+      return;
+    }
     room.on(RoomEvent.Name, this.onRoomNameUpdate);
     room.on(RoomEvent.Timeline, this.onTimelineUpdate);
   }
-  
+
   componentWillUnmount() {
     let room: Room | null = shared.mClient.getRoom(this.props.roomId);
-    if (!room) { return; } 
+    if (!room) {
+      return;
+    }
     room.off(RoomEvent.Name, this.onRoomNameUpdate);
     room.off(RoomEvent.Timeline, this.onTimelineUpdate);
   }
@@ -72,7 +87,8 @@ export default class ChatRoomItem extends Component<ChatRoomItemProps, ChatRoomI
     const { avatarUrl, displayName } = this.state;
 
     let lastEvent = this.state.lastEvent;
-    lastEvent = lastEvent.length >= 25 ? lastEvent.slice(0, 25) + "..." : lastEvent;
+    lastEvent =
+      lastEvent.length >= 25 ? lastEvent.slice(0, 25) + "..." : lastEvent;
 
     return (
       <IconListItem
