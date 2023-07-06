@@ -104,7 +104,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
   softRightText = () => {
     switch (this.tabs[this.state.currentTab]) {
       case "About":
-        return "";
+        return "Repo.";
       case "People":
         return "Options";
       case "Rooms":
@@ -121,7 +121,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
   softCenterText = () => {
     switch (this.tabs[this.state.currentTab]) {
       case "About":
-        return "Repo.";
+        return "";
       case "People":
         return "Open";
       case "Rooms":
@@ -165,6 +165,9 @@ class Matrix extends Component<MatrixProps, MatrixState> {
           });
       });
     }
+    if (this.softRightText() === "Repo.") {
+        window.open("https://github.com/farooqkz/chooj", "_blank");
+    }
   };
 
   softLeftCb = () => {
@@ -199,7 +202,6 @@ class Matrix extends Component<MatrixProps, MatrixState> {
     if (!menu || (menu && menu.innerHTML)) return;
     switch (this.tabs[this.state.currentTab]) {
       case "About":
-        window.open("https://github.com/farooqkz/chooj", "_blank");
         break;
       case "People":
       case "Rooms":
