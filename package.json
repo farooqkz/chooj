@@ -17,7 +17,7 @@
     "addAds": "yarn node addAds.js"
   },
   "author": "Farooq Karimi Zadeh",
-  "license": "GPLv3+",
+  "license": "GPLv3-or-later",
   "dependencies": {
     "KaiUI": "npm:kaiuing-inferno@^3.3.0",
     "abortcontroller-polyfill": "^1.7.5",
