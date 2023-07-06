@@ -1192,10 +1192,10 @@
   resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.21.0.tgz#cd242c6551ffb51830049d68d9743ab65b45b820"
   integrity sha512-/J4WBTpWtQ4itN1rb3ao8LfClmVcmz2pO6oYb7Qd4h7VSqUhIbJIvrykz9Ew1WMg6eFWsKdsMHc5uPbFxqlCpg==
 
-"KaiUI@npm:kaiuing-inferno@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/kaiuing-inferno/-/kaiuing-inferno-3.1.0.tgz#b0f9249bad6c3efa6dde2d2932081edfd73acaeb"
-  integrity sha512-H/K+AWhfiOFJpYzFRhrB700zM/ma0X4/NdApJyfaWULofEH5p3+vX1wyYRBj9fIBvE89vONFaXMJgLKDJlkohQ==
+"KaiUI@npm:kaiuing-inferno@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/kaiuing-inferno/-/kaiuing-inferno-3.3.0.tgz#dfd763b95dce7ffa0acd96e19bb5a6b042f41787"
+  integrity sha512-kMqCbDFcD/y+f+CwfT3QZMRnpw29b63VNpoLMIod8q8jQqZQnAicDXuSHuPgld4tdCzd7oYw6TBr0xPHr2a6EA==
   dependencies:
     "@swc/helpers" "^0.4.14"
     KaiUI "npm:kaiuing@^2.1.0"
@@ -1885,6 +1885,11 @@ csstype@^3.1.1:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.1.tgz#841b532c45c758ee546a11d5bd7b7b473c8c30b9"
   integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==
 
+csstype@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.2.tgz#1d4bf9d572f11c14031f0436e1c10bc1f571f50b"
+  integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
+
 debug@2.6.9, debug@^2.6.0:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -2497,13 +2502,27 @@ inferno-vnode-flags@8.0.6:
   resolved "https://registry.yarnpkg.com/inferno-vnode-flags/-/inferno-vnode-flags-8.0.6.tgz#1234a0d8e4112f7ec683de0911f3e9767ecc252f"
   integrity sha512-hG9AdtdsK/8ZWojT5ebRqQ7LWHJLLM53ZeiVht7U4bTVzhvMnZHHZ72Ef0SBXZ8hsOVUY/X1GvfUvN9vAaw0NA==
 
-inferno@8.0.6, inferno@^8.0.6:
+inferno-vnode-flags@8.2.2:
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/inferno-vnode-flags/-/inferno-vnode-flags-8.2.2.tgz#c47793c77c410e657e7308979ad6c5be3706482c"
+  integrity sha512-ZyGXfFdaBpWCrU25jf/8PqB+C53WnFzpnctCYqL80fV0rQSem3Fjb6nIHGPOJdVc81TkXSKoyoCua/Qfbtc0rw==
+
+inferno@8.0.6:
   version "8.0.6"
   resolved "https://registry.yarnpkg.com/inferno/-/inferno-8.0.6.tgz#df51607cd3f1dd3dc1a4d9647881d465f346e935"
   integrity sha512-hHJRPi6On8Dbsh7WwIkZXKs4q+RrK4ewIUbAHZj7Gfagb5uXuxqH5eGbgkF8ayBwxj6PYp8a2slEFnuEGOs03g==
   dependencies:
     csstype "^3.1.1"
     inferno-vnode-flags "8.0.6"
+    opencollective-postinstall "^2.0.3"
+
+inferno@^8.2.2:
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/inferno/-/inferno-8.2.2.tgz#55d5491937386d9d683a9eaf7eb2c6c31aba04d4"
+  integrity sha512-KyCPnsK6eEzAzC6Ulmkc2S3LQSZC6DJSLHdH4zurK2DQ7lyu7e+Q5SziG7/qKufhWtCUgTwUHVzaYk5E2BzI2Q==
+  dependencies:
+    csstype "^3.1.2"
+    inferno-vnode-flags "8.2.2"
     opencollective-postinstall "^2.0.3"
 
 inflight@^1.0.4:
