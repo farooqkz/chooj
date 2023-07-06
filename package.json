@@ -13,16 +13,17 @@
     "checkBase": "tsc -p ./tsconfig.json --noEmit",
     "checkSw": "tsc -p ./tsconfig.service-worker.json --noEmit",
     "check": "yarn run checkBase && yarn run checkSw",
-    "pretty": "yarn run prettier -w src"
+    "pretty": "yarn run prettier -w src",
+    "addAds": "yarn node addAds.js"
   },
   "author": "Farooq Karimi Zadeh",
   "license": "GPLv3+",
   "dependencies": {
-    "KaiUI": "npm:kaiuing-inferno@^3.1.0",
+    "KaiUI": "npm:kaiuing-inferno@^3.3.0",
     "abortcontroller-polyfill": "^1.7.5",
     "classnames": "^2.3.1",
     "core-js": "^3.26.1",
-    "inferno": "^8.0.6",
+    "inferno": "^8.2.2",
     "inferno-dev-utils": "^6.0.4",
     "inferno-extras": "^8.0.6",
     "localforage": "^1.10.0",
