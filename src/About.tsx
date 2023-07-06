@@ -1,7 +1,33 @@
 import { Component } from "inferno";
-import { ListViewKeyed, IconListItem, TextListItem, Separator } from "KaiUI";
+import {
+  ListViewKeyed,
+  IconListItem,
+  TextListItem,
+  Button,
+  Separator
+} from "KaiUI";
+import shared from "./shared";
+import { Room, ClientEvent } from "matrix-js-sdk";
+import { RoomsViewState } from "./types";
+import { toast } from "./utils";
 
 import FarooqAvatar from "./FarooqAvatar.png";
+
+const choojRoom = "#chooj:mozilla.org";
+
+function joinChoojRoom() {
+  shared.mClient.joinRoom(choojRoom).then((room: Room) => {
+    shared.mClient.once(ClientEvent.Sync, () => {
+      let state: RoomsViewState | undefined = shared.stateStores.get("RoomsView");
+      state?.rooms.push(room);
+      state && shared.stateStores.set("RoomsView", state);
+      toast("Joined!", 1000); 
+    });
+  }).catch((e: any) => {
+    window.alert("Some error occured during joining:" + e.toString());
+    console.log("some error occured during joining", e);
+  });
+}
 
 class About extends Component<{}, {}> {
   public state: null = null;
@@ -20,12 +46,6 @@ class About extends Component<{}, {}> {
         console.log("MozActivity", error);
         window.alert("Cannot start Email app :(");
       };
-    }
-    if (evt.key === "Backspace" || evt.key === "b") {
-      if (this.state.showContactScreen) {
-        evt.preventDefault();
-        this.setState({ showContactScreen: false });
-      }
     }
   };
 
@@ -46,6 +66,11 @@ class About extends Component<{}, {}> {
       <TextListItem
         key="call-Farooq"
         tertiary="Press Call button while in this tab to contact Farooq the developer of this app"
+      />,
+      <Button
+        key="join-btn"
+        text="Join our chatroom" 
+        onClick={joinChoojRoom}
       />,
       <IconListItem
         key="dev-Farooq"

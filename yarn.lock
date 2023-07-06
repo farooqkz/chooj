@@ -1192,10 +1192,10 @@
   resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.21.0.tgz#cd242c6551ffb51830049d68d9743ab65b45b820"
   integrity sha512-/J4WBTpWtQ4itN1rb3ao8LfClmVcmz2pO6oYb7Qd4h7VSqUhIbJIvrykz9Ew1WMg6eFWsKdsMHc5uPbFxqlCpg==
 
-"KaiUI@npm:kaiuing-inferno@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/kaiuing-inferno/-/kaiuing-inferno-3.3.0.tgz#dfd763b95dce7ffa0acd96e19bb5a6b042f41787"
-  integrity sha512-kMqCbDFcD/y+f+CwfT3QZMRnpw29b63VNpoLMIod8q8jQqZQnAicDXuSHuPgld4tdCzd7oYw6TBr0xPHr2a6EA==
+"KaiUI@npm:kaiuing-inferno@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/kaiuing-inferno/-/kaiuing-inferno-3.3.1.tgz#a95f55efee055bc736dada9d8c7021e339522da4"
+  integrity sha512-xls4zFckyc1PvQ10fQ8VY7qITS3YbiAtjuwXwCL8vXglNNz4gztN85D/8Hn2ZFA0pbo1/2XE67Y82HtHA8Dp8A==
   dependencies:
     "@swc/helpers" "^0.4.14"
     KaiUI "npm:kaiuing@^2.1.0"
