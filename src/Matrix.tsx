@@ -11,7 +11,12 @@ import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
 import Settings from "./Settings";
 import InvitesView from "./InvitesView";
-import { urlBase64ToUint8Array, toast, getInvite, getRoomsByPredicate } from "./utils";
+import {
+  urlBase64ToUint8Array,
+  toast,
+  getInvite,
+  getRoomsByPredicate,
+} from "./utils";
 import shared from "./shared";
 import { RoomsViewState } from "./types";
 import { CallEventHandlerEvent } from "matrix-js-sdk/lib/webrtc/callEventHandler";
@@ -85,7 +90,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
     });
   };
 
-  joinRoom = (roomId: string) => {
+  joinRoom = (roomId: string, callback?: () => void) => {
     toast("Joining", 1000);
     shared.mClient
       .joinRoom(roomId)
@@ -97,15 +102,17 @@ class Matrix extends Component<MatrixProps, MatrixState> {
               return state;
             });
           } else {
-            let roomsViewState: RoomsViewState | undefined = shared.stateStores.get("RoomsView")
+            let roomsViewState: RoomsViewState | undefined =
+              shared.stateStores.get("RoomsView");
             if (roomsViewState) {
               roomsViewState.rooms.push(room);
             } else {
-              roomsViewState = { rooms: [ room ], cursor: 0 };
+              roomsViewState = { rooms: [room], cursor: 0 };
             }
             shared.stateStores.set("RoomsView", roomsViewState);
           }
           toast("Joined", 1750);
+          callback && callback();
         });
       })
       .catch((e) => {
@@ -203,8 +210,20 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       window.open("https://github.com/farooqkz/chooj", "_blank");
     }
     if (this.softRightText() === "Reject" && this.invite) {
-      shared.mClient.forget(this.invite.roomId);
-      this.invitesViewRef.current?.forceUpdate();
+      toast("Rejecting", 1000);
+      shared.mClient.leave(this.invite.roomId).then(() => {
+        if (this.invitesViewRef.current) {
+          this.invitesViewRef.current.invites =
+            this.invitesViewRef.current.invites.filter((room: Room) =>
+              this.invite ? room.roomId !== this.invite.roomId : true
+            );
+          if (this.invitesViewRef.current.invites.length === 0) {
+            this.invite = null;
+          }
+          this.invitesViewRef.current.forceUpdate();
+          toast("Rejected", 1000);
+        }
+      });
     }
   };
 
@@ -219,8 +238,18 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       this.joinRoom(roomAlias);
     }
     if (this.softLeftText() === "Accept" && this.invite) {
-      this.joinRoom(this.invite.roomId);
-      this.invitesViewRef.current?.forceUpdate();
+      this.joinRoom(this.invite.roomId, () => {
+        if (this.invitesViewRef.current) {
+          this.invitesViewRef.current.invites =
+            this.invitesViewRef.current.invites.filter((room: Room) =>
+              this.invite ? room.roomId !== this.invite.roomId : true
+            );
+          if (this.invitesViewRef.current.invites.length === 0) {
+            this.invite = null;
+          }
+          this.invitesViewRef.current.forceUpdate();
+        }
+      });
     }
   };
 
@@ -355,7 +384,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
         />
       );
     }
-    
+
     let numberOfInvites: number = getNumberOfInvites();
     let tabLabels: string[] = Array.from(this.tabs);
     if (numberOfInvites !== 0) {
@@ -384,7 +413,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
               ref={this.roomsViewRef}
             />
             <InvitesView
-              selectedInviteCb={(invite: Room) => {
+              selectedInviteCb={(invite: Room | null) => {
                 this.invite = invite;
               }}
               ref={this.invitesViewRef}
