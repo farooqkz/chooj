@@ -56,18 +56,20 @@ export default class ChatDMItem extends Component<
 
   constructor(props: ChatDMItemProps) {
     super(props);
-    let user: User | null = shared.mClient.getUser(props.room.guessDMUserId());
+    let guessedUserId: string = props.room.guessDMUserId();
+    let user: User | null = shared.mClient.getUser(guessedUserId);
     if (!user) {
-      throw Error("User not found");
+      console.error("User not found");
     }
     let lastEvent: MatrixEvent | undefined = props.room.getLastLiveEvent();
     this.state = {
-      presence: user.presence,
-      lastActiveAgo: user.lastActiveAgo,
-      avatarUrl: user.avatarUrl,
-      displayName: user.displayName || user.userId,
+      presence: user?.presence || "",
+      lastActiveAgo: user?.lastActiveAgo || 0,
+      avatarUrl: user?.avatarUrl,
+      displayName: user?.displayName || user?.userId || guessedUserId,
       lastEvent: (lastEvent && makeHumanReadableEvent(lastEvent, true)) || "",
     };
+    console.log("construction of " + props.room.name);
   }
 
   componentDidMount() {
