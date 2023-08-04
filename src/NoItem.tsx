@@ -1,4 +1,4 @@
-import "./NoItem";
+import "./NoItem.css";
 
 interface NoItemProps {
   text: string;
@@ -7,7 +7,7 @@ interface NoItemProps {
 export default function NoItem({ text }: NoItemProps) {
   return (
     <div className="noitem">
-      <h1 $HasTextChildren>{text}</h1>
+      <h3 $HasTextChildren>{text}</h3>
     </div>
   );
 }
