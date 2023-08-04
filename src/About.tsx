@@ -4,7 +4,7 @@ import {
   IconListItem,
   TextListItem,
   Button,
-  Separator
+  Separator,
 } from "KaiUI";
 import shared from "./shared";
 import { Room, ClientEvent } from "matrix-js-sdk";
@@ -16,17 +16,21 @@ import FarooqAvatar from "./FarooqAvatar.png";
 const choojRoom = "#chooj:mozilla.org";
 
 function joinChoojRoom() {
-  shared.mClient.joinRoom(choojRoom).then((room: Room) => {
-    shared.mClient.once(ClientEvent.Sync, () => {
-      let state: RoomsViewState | undefined = shared.stateStores.get("RoomsView");
-      state?.rooms.push(room);
-      state && shared.stateStores.set("RoomsView", state);
-      toast("Joined!", 1000); 
+  shared.mClient
+    .joinRoom(choojRoom)
+    .then((room: Room) => {
+      shared.mClient.once(ClientEvent.Sync, () => {
+        let state: RoomsViewState | undefined =
+          shared.stateStores.get("RoomsView");
+        state?.rooms.push(room);
+        state && shared.stateStores.set("RoomsView", state);
+        toast("Joined!", 1000);
+      });
+    })
+    .catch((e: any) => {
+      window.alert("Some error occured during joining:" + e.toString());
+      console.log("some error occured during joining", e);
     });
-  }).catch((e: any) => {
-    window.alert("Some error occured during joining:" + e.toString());
-    console.log("some error occured during joining", e);
-  });
 }
 
 class About extends Component<{}, {}> {
@@ -69,7 +73,7 @@ class About extends Component<{}, {}> {
       />,
       <Button
         key="join-btn"
-        text="Join our chatroom" 
+        text="Join our chatroom"
         onClick={joinChoojRoom}
       />,
       <IconListItem
