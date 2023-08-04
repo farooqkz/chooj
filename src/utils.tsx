@@ -198,6 +198,14 @@ function getSomeDisplayName(userId: string): string {
   }
 }
 
+function getInvite(room: Room): boolean {
+  return room.getMyMembership() === "invite";
+}
+
+function getRoomsByPredicate(predicate: (room: Room) => boolean): Room[] {
+  return shared.mClient.getRooms().filter(predicate);
+}
+
 export {
   updateState,
   isRoom,
@@ -212,4 +220,6 @@ export {
   toast,
   readableTimestamp,
   getSomeDisplayName,
+  getInvite,
+  getRoomsByPredicate,
 };

@@ -1,4 +1,4 @@
-import { Component, createPortal } from "inferno";
+import { Component, createPortal, createRef, RefObject } from "inferno";
 import { createClient, MatrixCall, Room, ClientEvent } from "matrix-js-sdk";
 import * as localforage from "localforage";
 
@@ -11,7 +11,7 @@ import RoomView from "./RoomView";
 import CallScreen from "./CallScreen";
 import Settings from "./Settings";
 import InvitesView from "./InvitesView";
-import { urlBase64ToUint8Array, toast } from "./utils";
+import { urlBase64ToUint8Array, toast, getInvite, getRoomsByPredicate } from "./utils";
 import shared from "./shared";
 import { RoomsViewState } from "./types";
 import { CallEventHandlerEvent } from "matrix-js-sdk/lib/webrtc/callEventHandler";
@@ -38,11 +38,16 @@ interface MatrixState {
   optionsMenu: boolean;
 }
 
+function getNumberOfInvites(): number {
+  return getRoomsByPredicate(getInvite).length;
+}
+
 class Matrix extends Component<MatrixProps, MatrixState> {
   private readonly tabs: string[];
   private roomId: string;
   private call: MatrixCall | null;
-  private roomsViewRef?: RoomsView;
+  private roomsViewRef: RefObject<RoomsView>;
+  private invitesViewRef: RefObject<InvitesView>;
   private invite: Room | null;
   public state: MatrixState;
 
@@ -80,6 +85,35 @@ class Matrix extends Component<MatrixProps, MatrixState> {
     });
   };
 
+  joinRoom = (roomId: string) => {
+    toast("Joining", 1000);
+    shared.mClient
+      .joinRoom(roomId)
+      .then((room: Room) => {
+        shared.mClient.once(ClientEvent.Sync, () => {
+          if (this.roomsViewRef) {
+            this.roomsViewRef.current?.setState((state: RoomsViewState) => {
+              state.rooms.push(room);
+              return state;
+            });
+          } else {
+            let roomsViewState: RoomsViewState | undefined = shared.stateStores.get("RoomsView")
+            if (roomsViewState) {
+              roomsViewState.rooms.push(room);
+            } else {
+              roomsViewState = { rooms: [ room ], cursor: 0 };
+            }
+            shared.stateStores.set("RoomsView", roomsViewState);
+          }
+          toast("Joined", 1750);
+        });
+      })
+      .catch((e) => {
+        window.alert("Some error occured during joining:" + e);
+        console.log(e);
+      });
+  };
+
   onTabChange = (index: number) => {
     if (!this.state.optionsMenu) this.setState({ currentTab: index });
   };
@@ -93,7 +127,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       case "Rooms":
         return "Join";
       case "Invites":
-        return "";
+        return this.invite ? "Accept" : "";
       case "Settings":
         return "";
       default:
@@ -110,7 +144,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       case "Rooms":
         return "Options";
       case "Invites":
-        return "";
+        return this.invite ? "Reject" : "";
       case "Settings":
         return "Log out";
       default:
@@ -166,7 +200,11 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       });
     }
     if (this.softRightText() === "Repo.") {
-        window.open("https://github.com/farooqkz/chooj", "_blank");
+      window.open("https://github.com/farooqkz/chooj", "_blank");
+    }
+    if (this.softRightText() === "Reject" && this.invite) {
+      shared.mClient.forget(this.invite.roomId);
+      this.invitesViewRef.current?.forceUpdate();
     }
   };
 
@@ -178,22 +216,11 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       if (!roomAlias) {
         return;
       }
-      toast("Joining", 1000);
-      shared.mClient
-        .joinRoom(roomAlias)
-        .then((room: Room) => {
-          shared.mClient.once(ClientEvent.Sync, () => {
-            this.roomsViewRef?.setState((state: RoomsViewState) => {
-              state.rooms.push(room);
-              return state;
-            });
-            toast("Joined", 1750);
-          });
-        })
-        .catch((e) => {
-          window.alert("Some error occured during joining:" + e);
-          console.log(e);
-        });
+      this.joinRoom(roomAlias);
+    }
+    if (this.softLeftText() === "Accept" && this.invite) {
+      this.joinRoom(this.invite.roomId);
+      this.invitesViewRef.current?.forceUpdate();
     }
   };
 
@@ -236,7 +263,7 @@ class Matrix extends Component<MatrixProps, MatrixState> {
         window.confirm(`Are you sure to leave '${roomToLeave.name}'?`)
       ) {
         shared.mClient.leave(this.roomId).then(() => {
-          this.roomsViewRef?.setState((state: RoomsViewState) => {
+          this.roomsViewRef?.current?.setState((state: RoomsViewState) => {
             state.rooms = state.rooms.filter(
               (room) => room.roomId != this.roomId
             );
@@ -294,7 +321,8 @@ class Matrix extends Component<MatrixProps, MatrixState> {
     this.roomId = "";
     this.invite = null;
     this.call = null;
-    //this.roomsViewRef = null;
+    this.roomsViewRef = createRef();
+    this.invitesViewRef = createRef();
     this.state = {
       currentTab: 0,
       call: null,
@@ -327,11 +355,19 @@ class Matrix extends Component<MatrixProps, MatrixState> {
         />
       );
     }
+    
+    let numberOfInvites: number = getNumberOfInvites();
+    let tabLabels: string[] = Array.from(this.tabs);
+    if (numberOfInvites !== 0) {
+      tabLabels[2] += ` (${numberOfInvites})`;
+      // Remember that tabs[2] is "Invites"
+    }
+
     if (openRoomId === "") {
       return (
         <>
           <TabView
-            tabLabels={this.tabs}
+            tabLabels={tabLabels}
             onChangeIndex={this.onTabChange}
             defaultActiveTab={currentTab}
           >
@@ -345,14 +381,13 @@ class Matrix extends Component<MatrixProps, MatrixState> {
               selectedRoomCb={(roomId) => {
                 this.roomId = roomId || "";
               }}
-              ref={(r: RoomsView) => {
-                this.roomsViewRef = r;
-              }}
+              ref={this.roomsViewRef}
             />
             <InvitesView
-              selectedInviteCb={(invite) => {
+              selectedInviteCb={(invite: Room) => {
                 this.invite = invite;
               }}
+              ref={this.invitesViewRef}
             />
             <Settings />
             <About />
