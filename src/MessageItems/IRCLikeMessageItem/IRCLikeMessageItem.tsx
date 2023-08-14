@@ -186,7 +186,7 @@ function IRCLikeMessageItemAudio({
         Duration: {createTextVNode(msToHigherScale(duration))}
         <br />
         Size: {createTextVNode(bytesToHigherScale(size))}
-        <audio src={url} autoPlay={false} />
+        <audio src={url} autoPlay={false />
       </p>
     </div>
   );
@@ -266,7 +266,7 @@ function IRCLikeMessageItem({
           text={content.body}
           duration={content.info.duration}
           size={content.info.size}
-          url={content.url.content_uri}
+          url={content.url}
           status={status}
           isFocused={isFocused}
         />
