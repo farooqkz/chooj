@@ -27,11 +27,12 @@ const handler = new DomHandler((error, dom) => {
     console.error("No <head> found...");
     process.exit(1);
   }
-  head.children.push(new Element("script", { src: "/kaiads.js", defer: true }));
+  head.children.push(new Element("script", { src: "/kaiads.js", defer: "" }));
   fs.writeFileSync("./build/index.html", render(dom));
   console.log("Successfully added the <script> tag");
 });
 const parser = new Parser(handler);
 parser.write(html);
 parser.end();
-fs.copyFile(sdkPath, "./build/kaiads.js");
+fs.copyFileSync(sdkPath, "./build/kaiads.js");
+console.log("Successfully integrated KaiAds");
