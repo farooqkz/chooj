@@ -14,7 +14,7 @@
     "checkSw": "tsc -p ./tsconfig.service-worker.json --noEmit",
     "check": "yarn run checkBase && yarn run checkSw",
     "pretty": "yarn run prettier -w src",
-    "addAds": "yarn node addAds.js"
+    "addAds": "yarn node addAds.js --path ./kaiads"
   },
   "author": "Farooq Karimi Zadeh",
   "license": "GPLv3-or-later",
