@@ -5,6 +5,7 @@ declare global {
   }
   interface Window {
     MozActivity: MozActivity;
+    getKaiAd?: KaiAdFunc
   }
   interface VolumeManager {
     requestShow: () => void;
@@ -31,6 +32,19 @@ declare global {
 
   class XMLHttpRequest {
     constructor(options: undefined | { mozSystem?: boolean }): XMLHttpRequest;
+  }
+
+  type getKaiAd = (opts: KaiAdOpts) => void;
+  interface KaiAdOpts {
+    publisher: string;
+    app: string;
+    slot: string;
+    onerror: (err: any) => void;
+    onready: (ad: any) => void;
+    h?: number;
+    w?: number;
+    container?: HTMLDivElement;
+    timeout?: number;
   }
 }
 
