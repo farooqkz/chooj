@@ -30,11 +30,4 @@ interface LoginData {
   well_known: WellKnown;
 }
 
-interface Preferences {
-  adShowFreq: "startup" | number;
-  serversForPublicDirectory: string[];
-  mediaLoading: "always" | "only_on_wifi" | "only_on_request";
-  inviteAutoAccept: boolean;
-}
-
-export { RoomsViewState, RoomsViewProps, startCall, LoginData, WellKnown, Preferences };
+export { RoomsViewState, RoomsViewProps, startCall, LoginData, WellKnown };
