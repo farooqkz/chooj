@@ -1,4 +1,4 @@
-# chooj
+# chooj [Farooq is away from chooj till end of the year]
 ## Matrix client for KaiOS with VoIP call support
 
 ### Looking for sponsors! Contact me!
