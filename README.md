@@ -1,7 +1,7 @@
 # chooj
 ## Matrix client for KaiOS with VoIP call support
 
-### Farooq the Developer is away from chooj till end of the year
+### Farooq the Developer is away from chooj till Feb 2024
 ### 🇵🇸  🇺🇦  Invaders could be from the East or the West. The developer of chooj stands with people of Ukraine and Palestine.
 ### Looking for sponsors! Contact me!
 
