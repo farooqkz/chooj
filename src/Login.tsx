@@ -100,35 +100,45 @@ class Login extends Component<{}, LoginState> {
     }
   };
 
+  tryWellKnown = () => {
+    this.homeserverName = this.homeserverName.replace("https://", "");
+    this.homeserverName = this.homeserverName.replace("http://", "");
+    let url = `https://${this.homeserverName}/.well-known/matrix/client`;
+    return fetch(url)
+      .then((r: Response) => {
+        if (r.ok) {
+          r.json().then((j: WellKnown) => {
+            this.homeserverUrl = j["m.homeserver"].base_url;
+          });
+        } else {
+          console.log(`.well-known not found at ${url}`);
+        }
+      })
+      .catch((e) => {
+        // This can fail for a number of reasons, such as CORS, and still not be a problem yet
+        console.log(`.well-known not found at ${url}`);
+      });
+  };
+
   rightCb = () => {
     switch (this.state.stage) {
       case 0:
-        this.homeserverName = this.homeserverName.replace("https://", "");
-        this.homeserverName = this.homeserverName.replace("http://", "");
-        fetch(`https://${this.homeserverName}/.well-known/matrix/client`)
-          .then((r: Response) => {
-            if (r.ok) {
-              r.json().then((j: WellKnown) => {
-                this.homeserverUrl = j["m.homeserver"].base_url;
-                shared.mClient = createClient({
-                  baseUrl: this.homeserverUrl,
-                  fetchFn: customFetch,
-                });
-                shared.mClient
-                  .loginFlows()
-                  .then((result) => {
-                    this.loginFlows = result.flows;
-                    this.setState({ cursor: 0, stage: 1 });
-                  })
-                  .catch((e: any) => console.log(e));
-              });
-            } else {
-              alert(
-                "Cannot connect to homeserver. Are you sure the address valid?"
-              );
-            }
-          })
-          .catch((e) => console.log(e));
+        this.tryWellKnown().then(() => {
+          if (!this.homeserverUrl) {
+            this.homeserverUrl = "https://" + this.homeserverName;
+          }
+          shared.mClient = createClient({
+            baseUrl: this.homeserverUrl,
+            fetchFn: customFetch,
+          });
+          shared.mClient
+            .loginFlows()
+            .then((result) => {
+              this.loginFlows = result.flows;
+              this.setState({ cursor: 0, stage: 1 });
+            })
+            .catch((e: any) => console.log(e));
+        });
         break;
       case 1:
         this.selectedLoginFlow = this.loginFlows[this.state.cursor];
