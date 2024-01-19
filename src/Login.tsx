@@ -71,6 +71,11 @@ class Login extends Component<{}, LoginState> {
             this.password
           )
           .then((result: any) => {
+            if (result.well_known) {
+              localforage.setItem("well_known", result.well_known).then(() => {
+                console.log("Received a well_known from client login property. Updating previous settings.")
+              });
+            }
             localforage.setItem("login", result).then(() => {
               alert("Logged in as " + this.username);
               window.location = window.location;
