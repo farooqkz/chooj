@@ -127,6 +127,10 @@ class Login extends Component<{}, LoginState> {
           if (!this.homeserverUrl) {
             this.homeserverUrl = "https://" + this.homeserverName;
           }
+          localforage.setItem("well_known", {
+            "m.homeserver": {"base_url": this.homeserverUrl},
+            "m.identity_server": {"base_url": "https://vector.im"},  // TODO Where to infer this outside of actual .well-known?
+            })
           shared.mClient = createClient({
             baseUrl: this.homeserverUrl,
             fetchFn: customFetch,
