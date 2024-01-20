@@ -57,52 +57,6 @@ class Login extends Component<{}, LoginState> {
     }
   };
 
-  doLogin = () => {
-    if (!this.selectedLoginFlow) {
-      throw new Error("selectedLoginFlow is not defined");
-    }
-    switch (this.selectedLoginFlow.type) {
-      case "m.login.password":
-        shared.mClient
-          .loginWithPassword(
-            `@${this.username}:${this.homeserverName}`,
-            this.password
-          )
-          .then((result: any) => {
-            if (result.well_known) {
-              localforage.setItem("well_known", result.well_known).then(() => {
-                console.log("Received a well_known from client login property. Updating previous settings.")
-              });
-            }
-            localforage.setItem("login", result).then(() => {
-              alert("Logged in as " + this.username);
-              window.location = window.location;
-            });
-          })
-          .catch((err: any) => {
-            switch (err.errcode) {
-              case "M_FORBIDDEN":
-                alert("Incorrect login credentials");
-                break;
-              case "M_USER_DEACTIVATED":
-                alert("This account has been deactivated");
-                break;
-              case "M_LIMIT_EXCEEDED":
-                const retry = Math.ceil(err.retry_after_ms / 1000);
-                alert("Too many requests! Retry after" + retry.toString());
-                break;
-              default:
-                alert("Login failed for some unknown reason");
-                break;
-            }
-          });
-        break;
-      default:
-        alert("Invalid/unsupported login method. This is likely a bug");
-        break;
-    }
-  };
-
   rightCb = () => {
     switch (this.state.stage) {
       case 0:
@@ -122,7 +76,14 @@ class Login extends Component<{}, LoginState> {
         }
         break;
       case 2:
-        this.doLogin();
+        let loginData = {'username': this.username, 'password': this.password};
+        if (this.selectedLoginFlow !== undefined) {
+          this.loginHandler.doLogin(this.selectedLoginFlow, loginData).then(() => {
+            window.location = window.location;
+          }).catch((e) => alert(e.message));
+        } else {
+          throw new Error("Undefined selectedLoginFlow")
+        }
         break;
       default:
         alert("Invalid stage!");
