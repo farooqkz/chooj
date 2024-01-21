@@ -95,16 +95,24 @@ export default class LoginHandler {
       base_url = "https://" + name;
     } finally {
       this.base_url = base_url;
+      try {
+        shared.mClient = createClient({
+          baseUrl: base_url,
+          fetchFn: customFetch,
+        });
+        let result = await shared.mClient.loginFlows()
+        if (! result.flows) {
+          throw new Error("Got no flows");
+        }
+        this.loginFlows = result.flows;
+      } catch (e) {
+        alert(`No server found at ${base_url}`)
+        console.log(e);
+      }
       this.setWellKnown({
         "m.homeserver": {"base_url": base_url},
         "m.identity_server": {"base_url": "https://vector.im"},  // TODO Where to infer this outside of actual .well-known?
       })
-      shared.mClient = createClient({
-        baseUrl: base_url,
-        fetchFn: customFetch,
-      });
-      let result = await shared.mClient.loginFlows()
-      this.loginFlows = result.flows;
     }
   }
 }
