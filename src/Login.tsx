@@ -1,8 +1,5 @@
 import { Component } from "inferno";
-import * as localforage from "localforage";
 import { TextListItem, TextInput, Header, SoftKey, ListViewKeyed } from "KaiUI";
-import shared from "./shared";
-import { WellKnown } from "./types";
 import LoginWithQR from "./LoginWithQR";
 import LoginHandler from "./LoginHandler";
 import { LoginFlow } from "matrix-js-sdk/lib/@types/auth";
