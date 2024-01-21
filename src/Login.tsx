@@ -121,7 +121,8 @@ class Login extends Component<{}, LoginState> {
 
   render() {
     if (this.state.loginWithQr) {
-      return <LoginWithQR />;
+      return <LoginWithQR loginHandler={this.loginHandler} />;
+      // return <LoginWithQR />;
     }
     let listViewChildren;
     switch (this.state.stage) {
@@ -147,7 +148,7 @@ class Login extends Component<{}, LoginState> {
           },
           {
             tertiary:
-              "Press Call button and scan a QR in the following format to login with QR code instead of typing all these(PASS = password authentication): PASS server_name username password",
+              "Press Call button and scan a QR in the following format to login with QR code instead of typing all these (PASS = password authentication): PASS server_name username password",
             type: "text",
             key: "qrHint",
           },
