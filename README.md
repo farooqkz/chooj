@@ -1,7 +1,7 @@
 # chooj
 ## Matrix client for KaiOS with VoIP call support
 
-### Farooq the Developer is away from chooj till Feb 2024
+### Do NOT open PRs here. The repository is about to move to codeberg
 ### 🇵🇸  🇺🇦  Invaders could be from the East or the West. The developer of chooj stands with people of Ukraine and Palestine.
 ### Looking for sponsors! Contact me!
 
@@ -10,9 +10,7 @@
 [![Chat on Matrix](https://img.shields.io/matrix/chooj:mozilla.org.svg?server_fqdn=mozilla.modular.im)](https://matrix.to/#/#chooj:mozilla.org?via=mozilla.org)
 [![CodeFactor](https://www.codefactor.io/repository/github/farooqkz/chooj/badge)](https://www.codefactor.io/repository/github/farooqkz/chooj)
 [![DeepScan grade](https://deepscan.io/api/teams/15094/projects/18237/branches/443145/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=15094&pid=18237&bid=443145)
-![Lines of code](https://img.shields.io/tokei/lines/github/farooqkz/chooj)
 ![GitHub repo size](https://img.shields.io/github/repo-size/farooqkz/chooj)
-![GitHub Repo stars](https://img.shields.io/github/stars/farooqkz/chooj?style=social)
 ![Licence badge](https://img.shields.io/badge/licence-GPLv3-yellow)
 ![KaiOS badge](https://img.shields.io/badge/KaiOS-2.5%2B-%236f02b5)
 
