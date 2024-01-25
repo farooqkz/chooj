@@ -1,3 +1,11 @@
+/*
+ * When targeting Firefox 48, parcel builds both a nomodule build
+ * and a module build. But since the target is *only* Firefox 48, 
+ * the module part is just a waste of space and of no use.
+ * This script removes the Javascript modules.
+ */
+
+
 const htmlparser2 = require("htmlparser2");
 
 const fs = require("node:fs");
