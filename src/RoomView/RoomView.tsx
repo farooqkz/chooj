@@ -134,22 +134,11 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     }
 
     if (this.state.imageViewer) {
-      if (!this.imageViewer) {
-        alert("Image viewer is null! This is a bug. please report it :)");
-        return;
-      }
-      if (evt.key.startsWith("Arrow")) {
-        let key = evt.key.replace("Arrow", "").toLowerCase();
-        this.imageViewer.move(key);
-      } else if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
-        // if it is backspace
-        evt.preventDefault();
-        this.setState({ imageViewer: false });
-      }
+      this.handleImageViewerEvents(evt); 
       return;
     }
     const lastEventIndex = this.getVisibleEvents().length - 1;
-    if (VALID_KEYS.slice(0, 2).includes(evt.key)) {
+    if (evt.key === "Backspace" || evt.key === "b") {
       if (textInputFocus && message) return;
       evt.preventDefault();
       closeRoomView();
@@ -165,6 +154,20 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       } else {
         this.setState({ cursor: Math.max(0, cursor - 1) });
       }
+    }
+  };
+  
+  handleImageViewerEvents = (evt: KeyboardEvent) => {
+    if (!this.imageViewer) {
+      alert("Image viewer is null! This is a bug. please report it :)");
+      return;
+    }
+    if (evt.key.startsWith("Arrow")) {
+      let key = evt.key.replace("Arrow", "").toLowerCase();
+      this.imageViewer.move(key);
+    } else if (evt.key === "Backspace" || evt.key === "b") {
+      evt.preventDefault();
+      this.setState({ imageViewer: false });
     }
   };
 
