@@ -157,7 +157,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       if (cursor === lastEventIndex) {
         this.setState({ textInputFocus: true });
       } else {
-        this.setState({ cursor: cursor + 1 });
+        this.setState({ cursor: Math.min(this.getVisibleEvents().length - 1, cursor + 1) });
       }
     } else if (evt.key === "ArrowUp") {
       if (textInputFocus) {
@@ -516,16 +516,17 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       typing,
       imageViewer,
     } = this.state;
+    console.log(this.state);
     return (
       <>
         {imageViewer &&
-        this.currentEvent?.getContent().msgtype === "m.image" ? (
+        this.currentEvent?.getContent().msgtype === "m.image" && this.currentEvent?.getContent().url ? (
           <ImageViewer
             ref={(ref) => {
               this.imageViewer = ref;
             }}
             url={shared.mClient.mxcUrlToHttp(
-              this.currentEvent?.getContent().url
+              this.currentEvent.getContent().url
             )}
             height={this.currentEvent?.getContent().info.h}
             width={this.currentEvent?.getContent().info.w}
