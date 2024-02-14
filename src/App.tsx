@@ -15,14 +15,14 @@ interface AppState {
 
 class App extends Component<{}, AppState> {
   private loginData: null | LoginData;
-  private well_known: null | WellKnown;
+  private wellKnown: null | WellKnown;
   private timeout: null | number;
   public state: AppState;
 
   constructor(props: {}) {
     super(props);
     this.loginData = null;
-    this.well_known = null;
+    this.wellKnown = null;
     this.timeout = null;
     this.state = {
       state: null,
@@ -38,7 +38,7 @@ class App extends Component<{}, AppState> {
       }
     });
     localforage.getItem("well_known").then((well_known: unknown) => {
-        this.well_known = well_known as WellKnown;
+        this.wellKnown = well_known as WellKnown;
     });
     localforage.getItem("guide").then((value: unknown) => {
       this.setState({ guide: Boolean(value) });
@@ -83,7 +83,7 @@ class App extends Component<{}, AppState> {
     }
 
     if (state === "matrix") {
-      return <Matrix data={this.loginData} well_known={this.well_known} />;
+      return <Matrix data={this.loginData} well_known={this.wellKnown} />;
     }
     alert("Some error occured. This must not happen");
     window.close();

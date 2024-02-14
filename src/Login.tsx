@@ -117,12 +117,12 @@ class Login extends Component<{}, LoginState> {
   }
 
   render() {
-    if (this.state.loginWithQr) {
+    const { loginWithQr, cursor, stage } = this.state;
+    if (loginWithQr) {
       return <LoginWithQR loginHandler={this.loginHandler} />;
-      // return <LoginWithQR />;
     }
     let listViewChildren;
-    switch (this.state.stage) {
+    switch (stage) {
       case 0:
         listViewChildren = [
           {
@@ -186,10 +186,10 @@ class Login extends Component<{}, LoginState> {
     }
     return (
       <div>
-        <Header text={this.stageNames[this.state.stage]} />
+        <Header text={this.stageNames[stage]} />
         <ListViewKeyed
           cursorChangeCb={this.cursorChangeCb}
-          cursor={this.state.cursor}
+          cursor={cursor}
           $HasKeyedChildren
         >
           {listViewChildren}
@@ -199,7 +199,7 @@ class Login extends Component<{}, LoginState> {
             leftText="Quit"
             leftCb={() => window.close()}
             centerCb={this.centerCb}
-            centerText={this.state.stage === 2 ? "Show" : ""}
+            centerText={stage === 2 ? "Show" : ""}
             rightText="Next"
             rightCb={this.rightCb}
           />

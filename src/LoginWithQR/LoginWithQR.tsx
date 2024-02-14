@@ -4,13 +4,13 @@ import { LoginFlow } from "matrix-js-sdk/lib/@types/auth";
 
 import "./LoginWithQR.css";
 import { SoftKey } from "KaiUI";
-import LoginHandler from "../LoginHandler";
+import LoginHandler, { LoginData } from "../LoginHandler";
 
 interface LoginWithQRProps {
   loginHandler: LoginHandler;
 }
 
-class LoginWithQR extends Component<LoginWithQRProps, {}> {
+class LoginWithQR extends Component<LoginWithQRProps, null> {
   private video?: HTMLVideoElement;
   private loginHandler: LoginHandler;
 
@@ -29,44 +29,44 @@ class LoginWithQR extends Component<LoginWithQRProps, {}> {
     scanner.start();
   };
 
-  private login_flows_short: {[key: string]: string} = {
+  private readonly loginFlowsShort: Record<string, string> = {
     "PASS": "m.login.password"
   }
 
   private async doLogin (data: string) {
     let decodedParts: string[] = data.split(" ", 4);
     let flow = decodedParts[0];
-    const server_name = decodedParts[1];
+    const serverName = decodedParts[1];
     const username = decodedParts[2];
-    const start = flow.length + server_name.length + username.length + 3;
+    const start = flow.length + serverName.length + username.length + 3;
     let password: string = data.substring(start);
     // TODO implement more flows
     if (window.confirm(
-        `Do you confirm? Flow: ${flow} | Server name: ${server_name} | Username: ${username}`)) {
+        `Do you confirm? Flow: ${flow} | Server name: ${serverName} | Username: ${username}`)) {
       // users can either write the full m.login.password (or whatever other flow) or use a shorthand
       // This maps the shorthand to the actual flow identificator
       if (!flow.startsWith("m.login")) {
-        flow = this.login_flows_short[flow];
+        flow = this.loginFlowsShort[flow];
       }
       if (flow !== "m.login.password") {
         alert("Password authentication is the only supported flow currently")
         return;
       }
       try {
-        await this.loginHandler.findHomeserver(server_name);
-        let selected_flow: LoginFlow | undefined;
-        for (let available_flow of this.loginHandler.loginFlows) {
-          if (available_flow.type === flow) {
-            selected_flow = available_flow;
+        await this.loginHandler.findHomeserver(serverName);
+        let selectedFlow: LoginFlow | undefined;
+        for (let availableFlow of this.loginHandler.loginFlows) {
+          if (availableFlow.type === flow) {
+            selectedFlow = availableFlow;
           }
         }
-        if (selected_flow !== undefined) {
-          let loginData = {'username': username, 'password': password};
-          await this.loginHandler.doLogin(selected_flow, loginData); 
-          window.location = window.location;
+        if (selectedFlow !== undefined) {
+          const loginData: LoginData = {username: username, password: password};
+          await this.loginHandler.doLogin(selectedFlow, loginData); 
+          window.location = window.location; // restart the app
         }
       } catch (e) {
-        alert(e)
+        alert(e);
       }
     }
   };

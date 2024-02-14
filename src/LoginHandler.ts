@@ -5,8 +5,14 @@ import * as localforage from "localforage";
 import { createClient } from "matrix-js-sdk";
 import shared from "./shared";
 
+
+export type LoginData = {
+  username: string,
+  password: string,
+};
+
 export default class LoginHandler {
-  public base_url: string;
+  public baseUrl: string;
   public homeserverName: string;
   public username: string;
   public password: string;
@@ -17,14 +23,14 @@ export default class LoginHandler {
     this.username = "";
     this.password = "";
     this.loginFlows = [];
-    this.base_url = "";
+    this.baseUrl = "";
   }
 
-  private setWellKnown(well_known: WellKnown) {
-    return localforage.setItem("well_known", well_known);
+  private setWellKnown(wellKnown: WellKnown) {
+    return localforage.setItem("well_known", wellKnown);
   }
 
-  public async doLogin(loginFlow: LoginFlow, loginData: any) {
+  public async doLogin(loginFlow: LoginFlow, loginData: LoginData) {
     // TODO implement more login flows
     // Instead of implementing them one by one, consider using mClient.login
     // and passing loginData (which needs to be properly formed according to their spec)
@@ -40,7 +46,6 @@ export default class LoginHandler {
           break;
         default:
           throw new Error("Unsupported");
-          break;
       }
       if (loginResult.well_known) {
         this.setWellKnown(loginResult.well_known)
@@ -80,38 +85,38 @@ export default class LoginHandler {
     name = name.replace("https://", "");
     name = name.replace("http://", "");
     this.homeserverName = name;
-    let base_url: string = "";
-    let well_known_url = `https://${name}/.well-known/matrix/client`;
+    let baseUrl: string = "";
+    let wellKnownUrl: string = `https://${name}/.well-known/matrix/client`;
       try {
-      let r: Response = await fetch(well_known_url);
+      let r: Response = await fetch(wellKnownUrl);
       if (!r.ok) {
         throw new Error("404");
-
       }
-      let well_known: WellKnown = await r.json();
-      base_url = well_known["m.homeserver"].base_url;
+      let wellKnown: WellKnown = await r.json();
+      baseUrl = wellKnown["m.homeserver"].base_url;
     } catch (e: any) {
-      console.log(`.well-known not found or malformed at ${well_known_url}`);
-      base_url = "https://" + name;
+      console.warn(`.well-known not found or malformed at ${wellKnownUrl}`);
+      baseUrl = "https://" + name;
     } finally {
-      this.base_url = base_url;
+      this.baseUrl = baseUrl;
       try {
         shared.mClient = createClient({
-          baseUrl: base_url,
+          baseUrl: baseUrl,
           fetchFn: customFetch,
         });
         let result = await shared.mClient.loginFlows()
-        if (! result.flows) {
+        if (!result.flows) {
           throw new Error("Got no flows");
         }
         this.loginFlows = result.flows;
       } catch (e) {
-        alert(`No server found at ${base_url}`)
-        console.log(e);
+        alert(`No server found at ${baseUrl}`)
+        console.error(e);
       }
       this.setWellKnown({
-        "m.homeserver": {"base_url": base_url},
-        "m.identity_server": {"base_url": "https://vector.im"},  // TODO Where to infer this outside of actual .well-known?
+        "m.homeserver": {"base_url": baseUrl},
+        "m.identity_server": {"base_url": "https://vector.im"},
+        // TODO Where to infer this outside of actual .well-known?
       })
     }
   }
