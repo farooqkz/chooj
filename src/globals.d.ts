@@ -5,7 +5,7 @@ declare global {
   }
   interface Window {
     MozActivity: MozActivity;
-    getKaiAd?: KaiAdFunc
+    getKaiAd?: KaiAdFunc;
   }
   interface VolumeManager {
     requestShow: () => void;

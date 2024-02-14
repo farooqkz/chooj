@@ -38,7 +38,7 @@ class App extends Component<{}, AppState> {
       }
     });
     localforage.getItem("well_known").then((well_known: unknown) => {
-        this.wellKnown = well_known as WellKnown;
+      this.wellKnown = well_known as WellKnown;
     });
     localforage.getItem("guide").then((value: unknown) => {
       this.setState({ guide: Boolean(value) });

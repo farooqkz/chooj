@@ -1,15 +1,9 @@
-
-
-
 interface Preferences {
   adShowFreq: "startup" | number;
   serversForPublicDirectory: string[];
   mediaLoading: "always" | "only_on_wifi" | "only_on_request";
   inviteAutoAccept: boolean;
 }
-
-
-
 
 function Settings() {
   return (

@@ -57,15 +57,19 @@ class Login extends Component<{}, LoginState> {
   rightCb = () => {
     switch (this.state.stage) {
       case 0:
-            this.loginHandler.findHomeserver(this.homeserverName).then( () => {
-                this.setState({ cursor: 0, stage: 1})
-            }).catch((e: any) => {
-                window.alert("Could not connect to homeserver");
-                console.log(e);
-            });
+        this.loginHandler
+          .findHomeserver(this.homeserverName)
+          .then(() => {
+            this.setState({ cursor: 0, stage: 1 });
+          })
+          .catch((e: any) => {
+            window.alert("Could not connect to homeserver");
+            console.log(e);
+          });
         break;
       case 1:
-        this.selectedLoginFlow = this.loginHandler.loginFlows[this.state.cursor];
+        this.selectedLoginFlow =
+          this.loginHandler.loginFlows[this.state.cursor];
         if (this.selectedLoginFlow.type !== "m.login.password") {
           window.alert("The selected login method is not implemented, yet.");
         } else {
@@ -73,13 +77,16 @@ class Login extends Component<{}, LoginState> {
         }
         break;
       case 2:
-        let loginData = {'username': this.username, 'password': this.password};
+        let loginData = { username: this.username, password: this.password };
         if (this.selectedLoginFlow !== undefined) {
-          this.loginHandler.doLogin(this.selectedLoginFlow, loginData).then(() => {
-            window.location = window.location;
-          }).catch((e) => alert(e.message));
+          this.loginHandler
+            .doLogin(this.selectedLoginFlow, loginData)
+            .then(() => {
+              window.location = window.location;
+            })
+            .catch((e) => alert(e.message));
         } else {
-          throw new Error("Undefined selectedLoginFlow")
+          throw new Error("Undefined selectedLoginFlow");
         }
         break;
       default:
@@ -100,7 +107,7 @@ class Login extends Component<{}, LoginState> {
     this.username = "";
     this.password = "";
     this.stageNames = ["Login Info", "Login method", "Login"];
-    this.loginHandler = new LoginHandler()
+    this.loginHandler = new LoginHandler();
     this.state = {
       stage: 0,
       cursor: 0,
@@ -155,9 +162,13 @@ class Login extends Component<{}, LoginState> {
         });
         break;
       case 1:
-        listViewChildren = this.loginHandler.loginFlows.map((flow: LoginFlow) => {
-          return <TextListItem key={"flow" + flow.type} primary={flow.type} />;
-        });
+        listViewChildren = this.loginHandler.loginFlows.map(
+          (flow: LoginFlow) => {
+            return (
+              <TextListItem key={"flow" + flow.type} primary={flow.type} />
+            );
+          }
+        );
         break;
       case 2:
         if (!this.selectedLoginFlow) {

@@ -134,7 +134,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     }
 
     if (this.state.imageViewer) {
-      this.handleImageViewerEvents(evt); 
+      this.handleImageViewerEvents(evt);
       return;
     }
     const lastEventIndex = this.getVisibleEvents().length - 1;
@@ -146,7 +146,9 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       if (cursor === lastEventIndex) {
         this.setState({ textInputFocus: true });
       } else {
-        this.setState({ cursor: Math.min(this.getVisibleEvents().length - 1, cursor + 1) });
+        this.setState({
+          cursor: Math.min(this.getVisibleEvents().length - 1, cursor + 1),
+        });
       }
     } else if (evt.key === "ArrowUp") {
       if (textInputFocus) {
@@ -156,7 +158,7 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
       }
     }
   };
-  
+
   handleImageViewerEvents = (evt: KeyboardEvent) => {
     if (!this.imageViewer) {
       alert("Image viewer is null! This is a bug. please report it :)");
@@ -523,7 +525,8 @@ class RoomView extends Component<RoomViewProps, RoomViewState> {
     return (
       <>
         {imageViewer &&
-        this.currentEvent?.getContent().msgtype === "m.image" && this.currentEvent?.getContent().url ? (
+        this.currentEvent?.getContent().msgtype === "m.image" &&
+        this.currentEvent?.getContent().url ? (
           <ImageViewer
             ref={(ref) => {
               this.imageViewer = ref;

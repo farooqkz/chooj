@@ -30,10 +30,10 @@ class LoginWithQR extends Component<LoginWithQRProps, null> {
   };
 
   private readonly loginFlowsShort: Record<string, string> = {
-    "PASS": "m.login.password"
-  }
+    PASS: "m.login.password",
+  };
 
-  private async doLogin (data: string) {
+  private async doLogin(data: string) {
     let decodedParts: string[] = data.split(" ", 4);
     let flow = decodedParts[0];
     const serverName = decodedParts[1];
@@ -41,15 +41,18 @@ class LoginWithQR extends Component<LoginWithQRProps, null> {
     const start = flow.length + serverName.length + username.length + 3;
     let password: string = data.substring(start);
     // TODO implement more flows
-    if (window.confirm(
-        `Do you confirm? Flow: ${flow} | Server name: ${serverName} | Username: ${username}`)) {
+    if (
+      window.confirm(
+        `Do you confirm? Flow: ${flow} | Server name: ${serverName} | Username: ${username}`
+      )
+    ) {
       // users can either write the full m.login.password (or whatever other flow) or use a shorthand
       // This maps the shorthand to the actual flow identificator
       if (!flow.startsWith("m.login")) {
         flow = this.loginFlowsShort[flow];
       }
       if (flow !== "m.login.password") {
-        alert("Password authentication is the only supported flow currently")
+        alert("Password authentication is the only supported flow currently");
         return;
       }
       try {
@@ -61,15 +64,18 @@ class LoginWithQR extends Component<LoginWithQRProps, null> {
           }
         }
         if (selectedFlow !== undefined) {
-          const loginData: LoginData = {username: username, password: password};
-          await this.loginHandler.doLogin(selectedFlow, loginData); 
+          const loginData: LoginData = {
+            username: username,
+            password: password,
+          };
+          await this.loginHandler.doLogin(selectedFlow, loginData);
           window.location = window.location; // restart the app
         }
       } catch (e) {
         alert(e);
       }
     }
-  };
+  }
 
   constructor(props: any) {
     super(props);

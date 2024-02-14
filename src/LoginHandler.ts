@@ -5,10 +5,9 @@ import * as localforage from "localforage";
 import { createClient } from "matrix-js-sdk";
 import shared from "./shared";
 
-
 export type LoginData = {
-  username: string,
-  password: string,
+  username: string;
+  password: string;
 };
 
 export default class LoginHandler {
@@ -41,16 +40,20 @@ export default class LoginHandler {
       switch (loginFlow.type) {
         case "m.login.password":
           let password: string = loginData.password;
-          loginResult = await shared.mClient
-            .loginWithPassword(username, password);
+          loginResult = await shared.mClient.loginWithPassword(
+            username,
+            password
+          );
           break;
         default:
           throw new Error("Unsupported");
       }
       if (loginResult.well_known) {
-        this.setWellKnown(loginResult.well_known)
-        console.log("Received a well_known from client login property. Updating previous settings.")
-        console.log(loginResult.well_known)
+        this.setWellKnown(loginResult.well_known);
+        console.log(
+          "Received a well_known from client login property. Updating previous settings."
+        );
+        console.log(loginResult.well_known);
       }
       await localforage.setItem("login", loginResult);
       alert("Logged in as " + username);
@@ -69,7 +72,7 @@ export default class LoginHandler {
           break;
         default:
           if (e.message === "Unsupported") {
-            message = "Login flow selected is unsupported"
+            message = "Login flow selected is unsupported";
           } else if (e.errcode) {
             message = e.errcode;
           } else {
@@ -77,7 +80,7 @@ export default class LoginHandler {
           }
           break;
       }
-      throw new Error(message)
+      throw new Error(message);
     }
   }
 
@@ -87,7 +90,7 @@ export default class LoginHandler {
     this.homeserverName = name;
     let baseUrl: string = "";
     let wellKnownUrl: string = `https://${name}/.well-known/matrix/client`;
-      try {
+    try {
       let r: Response = await fetch(wellKnownUrl);
       if (!r.ok) {
         throw new Error("404");
@@ -104,20 +107,20 @@ export default class LoginHandler {
           baseUrl: baseUrl,
           fetchFn: customFetch,
         });
-        let result = await shared.mClient.loginFlows()
+        let result = await shared.mClient.loginFlows();
         if (!result.flows) {
           throw new Error("Got no flows");
         }
         this.loginFlows = result.flows;
       } catch (e) {
-        alert(`No server found at ${baseUrl}`)
+        alert(`No server found at ${baseUrl}`);
         console.error(e);
       }
       this.setWellKnown({
-        "m.homeserver": {"base_url": baseUrl},
-        "m.identity_server": {"base_url": "https://vector.im"},
+        "m.homeserver": { base_url: baseUrl },
+        "m.identity_server": { base_url: "https://vector.im" },
         // TODO Where to infer this outside of actual .well-known?
-      })
+      });
     }
   }
 }
