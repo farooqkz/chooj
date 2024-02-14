@@ -1,11 +1,7 @@
 import { Component } from "inferno";
-import { createClient } from "matrix-js-sdk";
-import * as localforage from "localforage";
 import { TextListItem, TextInput, Header, SoftKey, ListViewKeyed } from "KaiUI";
-import shared from "./shared";
-import { fetch as customFetch } from "./fetch";
-import { WellKnown } from "./types";
 import LoginWithQR from "./LoginWithQR";
+import LoginHandler from "./LoginHandler";
 import { LoginFlow } from "matrix-js-sdk/lib/@types/auth";
 
 interface LoginState {
@@ -15,14 +11,13 @@ interface LoginState {
 }
 
 class Login extends Component<{}, LoginState> {
-  private homeserverUrl: string;
-  private homeserverName: string;
-  private loginFlows: LoginFlow[];
   private readonly stageNames: string[];
   private selectedLoginFlow?: LoginFlow;
+  public state: LoginState;
+  private loginHandler: LoginHandler;
+  private homeserverName: string;
   private username: string;
   private password: string;
-  public state: LoginState;
 
   cursorChangeCb = (cursor: number) => {
     this.setState({ cursor: cursor });
@@ -59,79 +54,18 @@ class Login extends Component<{}, LoginState> {
     }
   };
 
-  doLogin = () => {
-    if (!this.selectedLoginFlow) {
-      throw new Error("selectedLoginFlow is not defined");
-    }
-    switch (this.selectedLoginFlow.type) {
-      case "m.login.password":
-        shared.mClient
-          .loginWithPassword(
-            `@${this.username}:${this.homeserverName}`,
-            this.password
-          )
-          .then((result: any) => {
-            localforage.setItem("login", result).then(() => {
-              alert("Logged in as " + this.username);
-              window.location = window.location;
-            });
-          })
-          .catch((err: any) => {
-            switch (err.errcode) {
-              case "M_FORBIDDEN":
-                alert("Incorrect login credentials");
-                break;
-              case "M_USER_DEACTIVATED":
-                alert("This account has been deactivated");
-                break;
-              case "M_LIMIT_EXCEEDED":
-                const retry = Math.ceil(err.retry_after_ms / 1000);
-                alert("Too many requests! Retry after" + retry.toString());
-                break;
-              default:
-                alert("Login failed for some unknown reason");
-                break;
-            }
-          });
-        break;
-      default:
-        alert("Invalid/unsupported login method. This is likely a bug");
-        break;
-    }
-  };
-
   rightCb = () => {
     switch (this.state.stage) {
       case 0:
-        this.homeserverName = this.homeserverName.replace("https://", "");
-        this.homeserverName = this.homeserverName.replace("http://", "");
-        fetch(`https://${this.homeserverName}/.well-known/matrix/client`)
-          .then((r: Response) => {
-            if (r.ok) {
-              r.json().then((j: WellKnown) => {
-                this.homeserverUrl = j["m.homeserver"].base_url;
-                shared.mClient = createClient({
-                  baseUrl: this.homeserverUrl,
-                  fetchFn: customFetch,
-                });
-                shared.mClient
-                  .loginFlows()
-                  .then((result) => {
-                    this.loginFlows = result.flows;
-                    this.setState({ cursor: 0, stage: 1 });
-                  })
-                  .catch((e: any) => console.log(e));
-              });
-            } else {
-              alert(
-                "Cannot connect to homeserver. Are you sure the address valid?"
-              );
-            }
-          })
-          .catch((e) => console.log(e));
+            this.loginHandler.findHomeserver(this.homeserverName).then( () => {
+                this.setState({ cursor: 0, stage: 1})
+            }).catch((e: any) => {
+                window.alert("Could not connect to homeserver");
+                console.log(e);
+            });
         break;
       case 1:
-        this.selectedLoginFlow = this.loginFlows[this.state.cursor];
+        this.selectedLoginFlow = this.loginHandler.loginFlows[this.state.cursor];
         if (this.selectedLoginFlow.type !== "m.login.password") {
           window.alert("The selected login method is not implemented, yet.");
         } else {
@@ -139,7 +73,14 @@ class Login extends Component<{}, LoginState> {
         }
         break;
       case 2:
-        this.doLogin();
+        let loginData = {'username': this.username, 'password': this.password};
+        if (this.selectedLoginFlow !== undefined) {
+          this.loginHandler.doLogin(this.selectedLoginFlow, loginData).then(() => {
+            window.location = window.location;
+          }).catch((e) => alert(e.message));
+        } else {
+          throw new Error("Undefined selectedLoginFlow")
+        }
         break;
       default:
         alert("Invalid stage!");
@@ -155,12 +96,11 @@ class Login extends Component<{}, LoginState> {
 
   constructor(props: any) {
     super(props);
-    this.stageNames = ["Login Info", "Login method", "Login"];
-    this.loginFlows = [];
+    this.homeserverName = "";
     this.username = "";
     this.password = "";
-    this.homeserverName = "";
-    this.homeserverUrl = "";
+    this.stageNames = ["Login Info", "Login method", "Login"];
+    this.loginHandler = new LoginHandler()
     this.state = {
       stage: 0,
       cursor: 0,
@@ -178,7 +118,8 @@ class Login extends Component<{}, LoginState> {
 
   render() {
     if (this.state.loginWithQr) {
-      return <LoginWithQR />;
+      return <LoginWithQR loginHandler={this.loginHandler} />;
+      // return <LoginWithQR />;
     }
     let listViewChildren;
     switch (this.state.stage) {
@@ -204,7 +145,7 @@ class Login extends Component<{}, LoginState> {
           },
           {
             tertiary:
-              "Press Call button and scan a QR in the following format to login with QR code instead of typing all these(PASS = password authentication): PASS server_name username password",
+              "Press Call button and scan a QR in the following format to login with QR code instead of typing all these (PASS = password authentication): PASS server_name username password",
             type: "text",
             key: "qrHint",
           },
@@ -214,7 +155,7 @@ class Login extends Component<{}, LoginState> {
         });
         break;
       case 1:
-        listViewChildren = this.loginFlows.map((flow: LoginFlow) => {
+        listViewChildren = this.loginHandler.loginFlows.map((flow: LoginFlow) => {
           return <TextListItem key={"flow" + flow.type} primary={flow.type} />;
         });
         break;

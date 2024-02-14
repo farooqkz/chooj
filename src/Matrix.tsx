@@ -27,6 +27,7 @@ const vapidPublicKey =
 
 interface MatrixProps {
   data: any;
+  well_known: any;
 }
 
 interface Call {
@@ -321,10 +322,10 @@ class Matrix extends Component<MatrixProps, MatrixState> {
       userId: props.data.user_id,
       accessToken: props.data.access_token,
       deviceId: props.data.device_id,
-      baseUrl: props.data.well_known["m.homeserver"].base_url,
+      baseUrl: props.well_known["m.homeserver"].base_url,
       identityServer:
-        props.data.well_known["m.identity_server"] &&
-        props.data.well_known["m.identity_server"].base_url,
+        props.well_known["m.identity_server"] &&
+        props.well_known["m.identity_server"].base_url,
       //      store: new matrixcs.IndexedDBStore({ indexedDB: window.indexedDB, localStorage: window.localStorage }),
     });
     const client = shared.mClient;

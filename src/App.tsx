@@ -5,7 +5,7 @@ import * as localforage from "localforage";
 import Matrix from "./Matrix";
 import Login from "./Login";
 import Guide from "./Guide";
-import { LoginData } from "./types";
+import { LoginData, WellKnown } from "./types";
 
 interface AppState {
   state: string | null;
@@ -15,12 +15,14 @@ interface AppState {
 
 class App extends Component<{}, AppState> {
   private loginData: null | LoginData;
+  private well_known: null | WellKnown;
   private timeout: null | number;
   public state: AppState;
 
   constructor(props: {}) {
     super(props);
     this.loginData = null;
+    this.well_known = null;
     this.timeout = null;
     this.state = {
       state: null,
@@ -34,6 +36,9 @@ class App extends Component<{}, AppState> {
       } else {
         this.setState({ state: "login" });
       }
+    });
+    localforage.getItem("well_known").then((well_known: unknown) => {
+        this.well_known = well_known as WellKnown;
     });
     localforage.getItem("guide").then((value: unknown) => {
       this.setState({ guide: Boolean(value) });
@@ -78,7 +83,7 @@ class App extends Component<{}, AppState> {
     }
 
     if (state === "matrix") {
-      return <Matrix data={this.loginData} />;
+      return <Matrix data={this.loginData} well_known={this.well_known} />;
     }
     alert("Some error occured. This must not happen");
     window.close();
