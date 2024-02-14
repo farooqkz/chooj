@@ -28,5 +28,5 @@
     }
   },
   "messages": [{ "push": "/index.html" }, { "push-register": "/index.html" }],
-  "origin": "app://chooj.bananahackers.net"
+  "origin": "app://kaios.chooj.app"
 }
