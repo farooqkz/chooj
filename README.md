@@ -1,7 +1,8 @@
 # chooj
 ## Matrix client for KaiOS with VoIP call support
 
-### Do NOT open PRs here. The repository is about to move to codeberg
+
+### The repository is has moved to [codeberg](https://codeberg.org/chooj/chooj).
 ### 🇵🇸  🇺🇦  Invaders could be from the East or the West. The developer of chooj stands with people of Ukraine and Palestine.
 ### Looking for sponsors! Contact me!
 
